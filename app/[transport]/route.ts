@@ -2,7 +2,7 @@ import { withAuthkit } from "@/lib/with-authkit";
 import createMcpHandler from "@vercel/mcp-adapter/next";
 import { z } from "zod";
 
-const handler = withAuthkit(
+const handler = withAuthkit((request, auth) =>
   createMcpHandler(
     (server) => {
       server.tool(
@@ -23,6 +23,10 @@ const handler = withAuthkit(
                 type: "text",
                 text: JSON.stringify({ rolls, sum }),
               },
+              {
+                type: "text",
+                text: `These rolls were generated for user with ID ${auth.claims.sub}`,
+              },
             ],
           };
         },
@@ -39,7 +43,7 @@ const handler = withAuthkit(
       maxDuration: 60,
       verboseLogs: true,
     },
-  ),
+  )(request),
 );
 
 export { handler as GET, handler as POST };

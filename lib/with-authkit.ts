@@ -13,7 +13,7 @@ export interface Authorization {
 }
 
 export function withAuthkit(
-  next: (request: NextRequest) => Promise<Response>,
+  next: (request: NextRequest, auth: Authorization) => Promise<Response>,
 ): (request: NextRequest) => Promise<Response> {
   const authkitDomain = process.env.AUTHKIT_DOMAIN;
 
@@ -80,6 +80,6 @@ export function withAuthkit(
     //  claims: payload,
     //};
 
-    return next(request);
+    return next(request, { accessToken: token, claims: payload });
   };
 }
