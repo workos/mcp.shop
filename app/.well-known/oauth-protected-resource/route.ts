@@ -1,6 +1,4 @@
-import { NextRequest } from "next/server";
-
-export function GET(_request: NextRequest): Response {
+export function GET(): Response {
   const mcpServerDomain =
     process.env.NEXT_PUBLIC_VERCEL_URL ?? "localhost:3000";
   const protocol = mcpServerDomain.startsWith("localhost") ? "http" : "https";

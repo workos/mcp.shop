@@ -73,6 +73,7 @@ export function withAuthkit(
       throw error;
     }
 
+    console.log("User: ", payload.sub);
     // TODO
     //(req as unknown as { auth: Authorization }).auth = {
     //  accessToken: token,

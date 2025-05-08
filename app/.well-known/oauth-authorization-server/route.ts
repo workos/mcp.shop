@@ -1,6 +1,4 @@
-import { NextRequest } from "next/server";
-
-export function GET(_request: NextRequest): Response {
+export function GET(): Response {
   const authkitDomain = process.env.AUTHKIT_DOMAIN;
 
   return new Response(
