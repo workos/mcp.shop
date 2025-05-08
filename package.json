@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/mcp-adapter": "^0.2.3",
     "@workos-inc/authkit-nextjs": "^2.3.2",
     "next": "15.3.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
