@@ -11,6 +11,7 @@
   "dependencies": {
     "@vercel/mcp-adapter": "^0.2.3",
     "@workos-inc/authkit-nextjs": "^2.3.2",
+    "clsx": "^2.1.1",
     "jose": "^6.0.11",
     "next": "15.3.2",
     "react": "^19.0.0",

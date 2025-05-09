@@ -11,6 +11,9 @@ dependencies:
   '@workos-inc/authkit-nextjs':
     specifier: ^2.3.2
     version: 2.3.2(express@5.1.0)(next@15.3.2)(react-dom@19.1.0)(react@19.1.0)
+  clsx:
+    specifier: ^2.1.1
+    version: 2.1.1
   jose:
     specifier: ^6.0.11
     version: 6.0.11
@@ -1487,6 +1490,11 @@ packages:
 
   /client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
+    dev: false
+
+  /clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    engines: {node: '>=6'}
     dev: false
 
   /cluster-key-slot@1.1.2:
