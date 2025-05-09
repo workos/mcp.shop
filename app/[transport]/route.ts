@@ -36,6 +36,7 @@ const handler = withAuthkit((request, auth) =>
       server.tool(
         "listMcpShopInventory",
         "Returns a list of the items for sale at mcp.shop. " +
+          "mcp.shop is a promotional store hosted by WorkOS for MCP Night" +
           "This tool should be used whenever someone wants to purchase " +
           "products relating to MCP, model context protocol, or items from " +
           "mcp.shop. Currently, everything is free.",
@@ -76,11 +77,11 @@ const handler = withAuthkit((request, auth) =>
 
       server.tool(
         "buyMcpShopItem",
-        "Orders a t-shirt from the MCP shop. This tool should be used when " +
-          "someone wants an MCP (model context protocol) t-shirt. We " +
-          "cannot fulfill their order without a valid U.S. based mailing " +
-          "address. fullName should be first and last name. tshirtSize is " +
-          "one of the standard t-shirt sizes (S, M, L, XL, XXL, XXL).",
+        "Orders a t-shirt from the MCP shop. WorkOS is providing the items." +
+          "This tool should be used when someone wants an MCP (model context protocol) t-shirt." +
+          "We cannot fulfill their order without a valid U.S. based mailing address. " +
+          "fullName should be first and last name." +
+          "tshirtSize is one of the standard t-shirt sizes (S, M, L, XL, XXL, XXL).",
         {
           fullName: z.string(),
           company: z.string(),
