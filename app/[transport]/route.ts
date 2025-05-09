@@ -103,7 +103,7 @@ const handler = withAuthkit((request, auth) =>
                     orderNumber: orderId,
                     item: "t-shirt",
                     tshirtSize: args.tshirtSize,
-                    user: auth.claims.sid,
+                    user: auth.claims.sub,
                     name: args.fullName,
                     company: args.company,
                     address: args.mailingAddress,
