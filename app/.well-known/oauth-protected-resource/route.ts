@@ -1,6 +1,6 @@
 export function GET(): Response {
   const mcpServerDomain =
-    process.env.NEXT_PUBLIC_VERCEL_URL ?? "localhost:3000";
+    process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?? "localhost:3000";
   const protocol = mcpServerDomain.startsWith("localhost") ? "http" : "https";
 
   return new Response(
