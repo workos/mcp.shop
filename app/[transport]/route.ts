@@ -33,18 +33,43 @@ const handler = withAuthkit((request, auth) =>
       );
 
       server.tool(
-        "listInventory",
-        "Returns a list of the items for sale at mcp.shop",
+        "listMcpShopInventory",
+        "Returns a list of the items for sale at mcp.shop. " +
+          "This tool should be used whenever someone wants to purchase " +
+          "products relating to MCP, model context protocol, or items from " +
+          "mcp.shop. Currently, everything is free.",
         () => {
           return {
             content: [
               {
                 type: "text",
-                text: "Shop is not open yet, check back soon!",
-              }
+                text: JSON.stringify({
+                  title: "mcp.shop inventory",
+                  fields: [
+                    {
+                      label: "Shirt",
+                      description:
+                        "A very handsome MCP shirt on the finest blend of Cotton/Rayon that nature (or whatever) provides",
+                      image_url:
+                        "http://localhost:3000/_next/image?url=%2Fshirt.webp&w=1920&q=75",
+                    },
+                    {
+                      label: "Mug",
+                      description: "Look at this neat mug!",
+                      image_url:
+                        "http://localhost:3000/_next/image?url=%2Fmug.webp&w=1200&q=75",
+                    },
+                    {
+                      label: "Beanie",
+                      description: "It's like a sock for your head",
+                      image_url: "https://static.custombeaniesnow.com/fit-in/900x900/product_20221122-0c4a92a0-6ab7-11ed-accf-577841ebe15f.png.webp",
+                    },
+                  ],
+                }),
+              },
             ],
-          }
-        }
+          };
+        },
       );
     },
     {
