@@ -31,6 +31,21 @@ const handler = withAuthkit((request, auth) =>
           };
         },
       );
+
+      server.tool(
+        "listInventory",
+        "Returns a list of the items for sale at mcp.shop",
+        () => {
+          return {
+            content: [
+              {
+                type: "text",
+                text: "Shop is not open yet, check back soon!",
+              }
+            ],
+          }
+        }
+      );
     },
     {
       // Optional server options
