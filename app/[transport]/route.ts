@@ -1,6 +1,7 @@
 import { withAuthkit } from "@/lib/with-authkit";
 import createMcpHandler from "@vercel/mcp-adapter/next";
 import { z } from "zod";
+import redis from "@/lib/redis";
 
 const handler = withAuthkit((request, auth) =>
   createMcpHandler(
@@ -45,7 +46,7 @@ const handler = withAuthkit((request, auth) =>
                 type: "text",
                 text: JSON.stringify({
                   title: "mcp.shop inventory",
-                  fields: [
+                  products: [
                     {
                       label: "Shirt",
                       description:
@@ -62,13 +63,64 @@ const handler = withAuthkit((request, auth) =>
                     {
                       label: "Beanie",
                       description: "It's like a sock for your head",
-                      image_url: "https://static.custombeaniesnow.com/fit-in/900x900/product_20221122-0c4a92a0-6ab7-11ed-accf-577841ebe15f.png.webp",
+                      image_url:
+                        "https://static.custombeaniesnow.com/fit-in/900x900/product_20221122-0c4a92a0-6ab7-11ed-accf-577841ebe15f.png.webp",
                     },
                   ],
                 }),
               },
             ],
           };
+        },
+      );
+
+      server.tool(
+        "buyMcpShopItem",
+        "Orders a t-shirt from the MCP shop. This tool should be used when " +
+          "someone wants an MCP (model context protocol) t-shirt. We " +
+          "cannot fulfill their order without a valid U.S. based mailing " +
+          "address. fullName should be first and last name. tshirtSize is " +
+          "one of the standard t-shirt sizes (S, M, L, XL, XXL, XXL).",
+        {
+          fullName: z.string(),
+          company: z.string(),
+          mailingAddress: z.string(),
+          tshirtSize: z.string(),
+        },
+        async (args) => {
+          // TODO: do some validation of the order?
+          try {
+            // should this be ulid instead?
+            const orderId = await redis.incr("order:id:counter");
+            await redis.hSet(`orders:${orderId}`, args);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify({
+                    status: "success",
+                    orderNumber: orderId,
+                    item: "t-shirt",
+                    tshirtSize: args.tshirtSize,
+                    user: auth.claims.sid,
+                    name: args.fullName,
+                    company: args.company,
+                    address: args.mailingAddress,
+                  }),
+                },
+              ],
+            };
+          } catch (e) {
+            console.error("Error placing order", e);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: "Something went wrong. Try again later.",
+                },
+              ],
+            };
+          }
         },
       );
     },
