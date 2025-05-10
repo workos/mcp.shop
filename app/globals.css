@@ -24,3 +24,20 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+dialog a {
+  color: var(--color-purple-500);
+  text-decoration: underline;
+}
+
+dialog code {
+  background-color: var(--color-neutral-800);
+  border: 1px solid var(--color-neutral-700);
+  border-radius: var(--radius-sm);
+  padding-inline: calc(var(--spacing) * 2);
+}

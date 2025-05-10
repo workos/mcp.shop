@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ThreeItemGrid } from "@/components/grid/three-items";
+import { Instructions } from "./instructions";
 
 export default async function Home() {
   return (
@@ -12,7 +13,7 @@ export default async function Home() {
         <ThreeItemGrid />
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <code>https://mcp.shop/mcp</code>
+        <Instructions openButtonLabel="Take my money!" />
       </footer>
     </>
   );
