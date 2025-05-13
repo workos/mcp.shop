@@ -26,7 +26,7 @@ export const placeOrder = async (
   const order: Order = {
     id: orderId,
     userId: user.id,
-    orderDate: new Date().toUTCString(),
+    orderDate: new Date().toISOString(),
     sku: "MCP-NTSHRT-25-GW01",
     firstName: user.firstName ?? "UNKNOWN",
     lastName: user.lastName ?? "UNKNOWN",
