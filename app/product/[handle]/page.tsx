@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 
-import Image from "next/image";
 import { Gallery } from "@/components/product/gallery";
 import { ProductDescription } from "@/components/product/product-description";
 import { Image as ProductImage, getProduct } from "@/lib/products";

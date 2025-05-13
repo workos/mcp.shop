@@ -1,6 +1,5 @@
 "use client";
 
-import { PlusIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { useProduct } from "@/components/product/product-context";
 import { Product, ProductVariant } from "@/lib/products";

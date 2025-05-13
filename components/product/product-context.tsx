@@ -59,6 +59,10 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
       updateOption,
       updateImage,
     }),
+    // Note: I copied this from Vercel's demo, so I don't know why this is
+    // done this way. But trying to mollify it causes a cascade of problems I
+    // didn't want to deal with.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [state],
   );
 
