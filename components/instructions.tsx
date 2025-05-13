@@ -11,10 +11,14 @@ declare module "react" {
 }
 
 interface InstructionsProps {
+  openButtonClassname?: string;
   openButtonLabel: string;
 }
 
-export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
+export const Instructions = ({
+  openButtonClassname,
+  openButtonLabel,
+}: InstructionsProps) => {
   const dialogRef = React.useRef<HTMLDialogElement>(null);
 
   return (
@@ -102,7 +106,10 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
       </dialog>
 
       <button
-        className="mt-6 px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-full shadow-md hover:shadow-purple-500/40 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+        className={
+          openButtonClassname ??
+          "mt-6 px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-full shadow-md hover:shadow-purple-500/40 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+        }
         onClick={() => {
           dialogRef.current?.showModal();
         }}

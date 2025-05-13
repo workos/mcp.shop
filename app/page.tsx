@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ThreeItemGrid } from "@/components/grid/three-items";
-import { Instructions } from "./instructions";
+import { Instructions } from "@/components/instructions";
 
 export default async function Home() {
   return (

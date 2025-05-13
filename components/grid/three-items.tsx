@@ -1,21 +1,6 @@
 import { GridTileImage } from "./tile";
-// import { getCollectionProducts } from 'lib/shopify';
-// import type { Product } from 'lib/shopify/types';
 import Link from "next/link";
-
-interface Product {
-  handle: string;
-  featuredImage: {
-    url: string;
-  };
-  priceRange: {
-    maxVariantPrice: {
-      amount: string;
-      currencyCode: string;
-    };
-  };
-  title: string;
-}
+import { type Product, products } from "@/lib/products";
 
 function ThreeItemGridItem({
   item,
@@ -36,7 +21,7 @@ function ThreeItemGridItem({
     >
       <Link
         className="relative block aspect-square h-full w-full"
-        href={`#/product/${item.handle}`}
+        href={`/product/${item.handle}`}
         prefetch={false}
       >
         <GridTileImage
@@ -50,7 +35,7 @@ function ThreeItemGridItem({
           priority={priority}
           alt={item.title}
           label={{
-            position: size === "full" ? "center" : "bottom",
+            position: "bottom", // size === "full" ? "center" : "bottom",
             title: item.title as string,
             amount: item.priceRange.maxVariantPrice.amount,
             currencyCode: item.priceRange.maxVariantPrice.currencyCode,
@@ -62,47 +47,7 @@ function ThreeItemGridItem({
 }
 
 export async function ThreeItemGrid() {
-  const homepageItems: Product[] = [
-    {
-      handle: "shirt",
-      featuredImage: {
-        url: "/shirt.webp",
-      },
-      priceRange: {
-        maxVariantPrice: {
-          amount: "20.00",
-          currencyCode: "USD",
-        },
-      },
-      title: "MCP tee shirt",
-    },
-    {
-      handle: "mug",
-      featuredImage: {
-        url: "/mug.webp",
-      },
-      priceRange: {
-        maxVariantPrice: {
-          amount: "15.00",
-          currencyCode: "USD",
-        },
-      },
-      title: "MCP coffee mug",
-    },
-    {
-      handle: "beanie",
-      featuredImage: {
-        url: "/beanie.webp",
-      },
-      priceRange: {
-        maxVariantPrice: {
-          amount: "30.00",
-          currencyCode: "USD",
-        },
-      },
-      title: "MCP beanie",
-    },
-  ];
+  const homepageItems = Object.values(products);
 
   if (!homepageItems[0] || !homepageItems[1] || !homepageItems[2]) return null;
 
