@@ -41,6 +41,7 @@ const OrderCard = ({ order }: { order: Order }) => {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
+    timeZone: "UTC",
   }).format(new Date(order.orderDate));
 
   return (
@@ -55,7 +56,7 @@ const OrderCard = ({ order }: { order: Order }) => {
       <div className="space-y-3 text-sm">
         <div className="flex justify-between">
           <span className="text-white/[60%]">Order date</span>
-          <span className="text-white">{formattedDate}</span>
+          <span className="text-white">{formattedDate} (UTC)</span>
         </div>
         <div className="flex justify-between">
           <span className="text-white/[60%]">Name</span>
