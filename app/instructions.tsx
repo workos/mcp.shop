@@ -4,6 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
+declare module "react" {
+  interface DialogHTMLAttributes<T> extends HTMLAttributes<T> {
+    closedby?: string;
+  }
+}
+
 interface InstructionsProps {
   openButtonLabel: string;
 }
