@@ -38,7 +38,7 @@ const OrderCard = ({ order }: { order: Order }) => {
       <div className="mb-4 flex items-center justify-between border-b border-neutral-700 pb-4">
         <h2 className="font-medium text-white">Order Details</h2>
         <span className="rounded-full bg-purple-600 px-3 py-1 text-xs text-white">
-          {order.id}
+          #{order.id}
         </span>
       </div>
 
