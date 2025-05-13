@@ -33,6 +33,16 @@ const OrderCard = ({ order }: { order: Order }) => {
     .join(" ")
     .trim();
 
+  const formattedDate = Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  }).format(new Date(order.orderDate));
+
   return (
     <div className="flex flex-col rounded-lg border border-neutral-800 bg-black p-6 hover:border-purple-700 transition duration-200">
       <div className="mb-4 flex items-center justify-between border-b border-neutral-700 pb-4">
@@ -45,7 +55,7 @@ const OrderCard = ({ order }: { order: Order }) => {
       <div className="space-y-3 text-sm">
         <div className="flex justify-between">
           <span className="text-white/[60%]">Order date</span>
-          <span className="text-white">{order.orderDate}</span>
+          <span className="text-white">{formattedDate}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-white/[60%]">Name</span>
