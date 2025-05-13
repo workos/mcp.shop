@@ -1,9 +1,8 @@
-import Image from "next/image";
-import Link from "next/link";
 import { AuthKitProvider } from "@workos-inc/authkit-nextjs/components";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "@/components/navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,19 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthKitProvider>
-          <nav className="flex items-center justify-between p-4">
-            <Link className="flex" href="/">
-              <Image
-                alt="MCP Shop logo"
-                src="/logo.png"
-                height={30}
-                width={30}
-              />
-              <div className="flex w-full items-center font-bold pl-1">
-                MCP Shop
-              </div>
-            </Link>
-          </nav>
+          <Navbar />
           {children}
         </AuthKitProvider>
       </body>
