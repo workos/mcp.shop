@@ -1,4 +1,5 @@
 import { placeOrder } from "@/lib/orders";
+import { products } from "@/lib/products";
 import { withAuthkit } from "@/lib/with-authkit";
 import createMcpHandler from "@vercel/mcp-adapter/next";
 import { z } from "zod";
@@ -23,22 +24,21 @@ const handler = withAuthkit((request, auth) =>
                   products: [
                     {
                       label: "Shirt",
-                      description:
-                        "A very handsome MCP shirt on the finest blend of Cotton/Rayon that nature (or whatever) provides",
+                      description: products.shirt.descriptionHtml,
                       image_url:
                         "http://localhost:3000/_next/image?url=%2Fshirt.webp&w=1920&q=75",
                     },
                     {
                       label: "Mug",
-                      description: "Look at this neat mug!",
+                      description: products.mug.descriptionHtml,
                       image_url:
                         "http://localhost:3000/_next/image?url=%2Fmug.webp&w=1200&q=75",
                     },
                     {
                       label: "Beanie",
-                      description: "It's like a sock for your head",
+                      description: products.beanie.descriptionHtml,
                       image_url:
-                        "https://static.custombeaniesnow.com/fit-in/900x900/product_20221122-0c4a92a0-6ab7-11ed-accf-577841ebe15f.png.webp",
+                        "http://localhost:3000/_next/image?url=%2Fbeanie.webp&w=1200&q=75",
                     },
                   ],
                 }),
