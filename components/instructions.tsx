@@ -40,6 +40,11 @@ export const Instructions = ({
           Welcome to MCP Shop’s LLM storefront! Place your order by connecting
           your favorite MCP-compatible LLM to MCP Shop’s MCP server.
         </p>
+        <p>
+          MCP Shop uses <Link href="https://www.authkit.com">AuthKit</Link>, so
+          after you’ve installed the MCP server, you’ll be prompted to sign up
+          for an MCP Shop account.
+        </p>
         <h4 className="text-lg font-bold my-1">Claude Integrations</h4>
         <p className="my-1">
           Claude recently added{" "}
