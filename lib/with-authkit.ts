@@ -1,7 +1,13 @@
 import { NextRequest } from "next/server";
 import * as jose from "jose";
+import { getWorkOS } from "@workos-inc/authkit-nextjs";
+
+export type User = Awaited<
+  ReturnType<ReturnType<typeof getWorkOS>["userManagement"]["getUser"]>
+>;
 
 export interface Authorization {
+  user: User;
   accessToken: string;
   claims: {
     iss: string;
@@ -72,7 +78,9 @@ export function withAuthkit(
 
       throw error;
     }
+    const workos = getWorkOS();
+    const user = await workos.userManagement.getUser(payload.sub);
 
-    return next(request, { accessToken: token, claims: payload });
+    return next(request, { user, accessToken: token, claims: payload });
   };
 }

@@ -63,24 +63,15 @@ const handler = withAuthkit((request, auth) =>
           tshirtSize: z.string(),
         },
         async (args) => {
-          // TODO: do some validation of the order?
           try {
-            // should this be ulid instead?
-            const orderId = await redis.incr("order:id:counter");
-            await redis.hSet(`orders:${orderId}`, args);
+            const order = await placeOrder(args, auth.user);
             return {
               content: [
                 {
                   type: "text",
                   text: JSON.stringify({
                     status: "success",
-                    orderNumber: orderId,
-                    item: "t-shirt",
-                    tshirtSize: args.tshirtSize,
-                    user: auth.claims.sub,
-                    name: args.fullName,
-                    company: args.company,
-                    address: args.mailingAddress,
+                    ...order,
                   }),
                 },
               ],
