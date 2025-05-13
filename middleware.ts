@@ -7,4 +7,4 @@ export default authkitMiddleware({
       : process.env.NEXT_PUBLIC_WORKOS_REDIRECT_URI,
 });
 
-export const config = { matcher: ["/", "/product/:handle*"] };
+export const config = { matcher: ["/", "/orders", "/product/:handle*"] };

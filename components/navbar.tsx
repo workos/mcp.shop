@@ -1,20 +1,24 @@
 import { getSignInUrl, signOut, withAuth } from "@workos-inc/authkit-nextjs";
 import Link from "next/link";
 import Image from "next/image";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 export async function Navbar() {
   const { user } = await withAuth();
 
   return (
-    <nav className="flex items-center justify-between p-4">
+    <nav className="flex items-center justify-between p-4 text-neutral-400">
       <Link className="flex" href="/">
         <Image alt="MCP Shop logo" src="/logo.png" height={30} width={30} />
         <div className="flex w-full items-center font-bold pl-1">MCP Shop</div>
       </Link>
       <div>
         {user ? (
-          <>
-            Welcome back, {user.firstName ?? user.email}.{" "}
+          <div className="flex gap-2 items-center">
+            <Link className="flex gap-2 items-center" href="/orders">
+              <ShoppingCartIcon className="h-5 border rounded m-1 text-foreground" />
+              <div>Welcome back, {user.firstName ?? user.email}.</div>
+            </Link>
             <form
               className="inline"
               action={async () => {
@@ -26,7 +30,7 @@ export async function Navbar() {
                 Sign out
               </button>
             </form>
-          </>
+          </div>
         ) : (
           <Link href={await getSignInUrl()}>Sign in</Link>
         )}
