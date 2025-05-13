@@ -42,16 +42,13 @@ export const placeOrder = async (
 
 export const getOrders = async (user: User): Promise<Order[]> => {
   const orders: Order[] = [];
-  let cursor = 0;
-  do {
-    const orderKeys = await redis.scan(cursor, {
-      MATCH: `orders:${user.id}:*`,
-      COUNT: 100,
-    });
-    for (const key of orderKeys.keys) {
-      orders.push((await redis.hGetAll(key)) as unknown as Order);
-    }
-    cursor = orderKeys.cursor;
-  } while (cursor !== 0);
+
+  for await (const key of redis.scanIterator({
+    MATCH: `orders:${user.id}:*`,
+    COUNT: 100,
+  })) {
+    orders.push((await redis.hGetAll(key)) as unknown as Order);
+  }
+
   return orders;
 };
