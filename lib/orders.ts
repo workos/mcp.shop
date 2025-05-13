@@ -1,7 +1,7 @@
 import redis from "@/lib/redis";
 import { User } from "./with-authkit";
 
-export interface Order extends HSETObject {
+export interface Order {
   id: number;
   userId: User["id"];
   orderDate: string;
