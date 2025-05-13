@@ -3,7 +3,6 @@ import { User } from "./with-authkit";
 
 export const placeOrder = async (
   args: {
-    fullName: string;
     company: string;
     mailingAddress: string;
     tshirtSize: string;
@@ -16,10 +15,8 @@ export const placeOrder = async (
     id: orderId,
     userId: user.id,
     sku: "MCP-NTSHRT-25-GW01",
-    fullName:
-      user.firstName && user.lastName
-        ? `${user.firstName} ${user.lastName}`
-        : args.fullName,
+    firstName: user.firstName ?? "UNKNOWN",
+    lastName: user.lastName ?? "UNKNOWN",
     email: user.email,
     company: args.company,
     tshirtSize: args.tshirtSize,

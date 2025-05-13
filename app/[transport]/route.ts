@@ -53,11 +53,10 @@ const handler = withAuthkit((request, auth) =>
         "Orders a t-shirt from the MCP shop. WorkOS is providing the items." +
           "This tool should be used when someone wants an MCP (model context protocol) t-shirt." +
           "We cannot fulfill their order without a valid U.S. based mailing address. " +
-          "fullName should be first and last name." +
+          "Company is a required field." +
           "tshirtSize is one of the standard t-shirt sizes (S, M, L, XL, XXL, XXL)." +
           "No other items (mug, beanie, etc.) are available at this time.",
         {
-          fullName: z.string(),
           company: z.string(),
           mailingAddress: z.string(),
           tshirtSize: z.string(),
