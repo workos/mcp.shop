@@ -1,4 +1,4 @@
-import { placeOrder } from "@/lib/orders";
+import { getOrders, placeOrder } from "@/lib/orders";
 import { products } from "@/lib/products";
 import { withAuthkit } from "@/lib/with-authkit";
 import createMcpHandler from "@vercel/mcp-adapter/next";
@@ -77,6 +77,40 @@ const handler = withAuthkit((request, auth) =>
             };
           } catch (e) {
             console.error("Error placing order", e);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: "Something went wrong. Try again later.",
+                },
+              ],
+            };
+          }
+        },
+      );
+
+      server.tool(
+        "listMcpShopOrders",
+        "Lists the orders placed by the user at mcp.shop" +
+          "Use this tool if a user needs to review the orders they've " +
+          "placed. There is no way to adjust an order at this time. " +
+          "(The user should contact WorkOS instead).",
+        async () => {
+          try {
+            const orders = await getOrders(auth.user);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify({
+                    status: "success",
+                    orders,
+                  }),
+                },
+              ],
+            };
+          } catch (e) {
+            console.error("Error listing orders", e);
             return {
               content: [
                 {
