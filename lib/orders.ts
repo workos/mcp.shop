@@ -35,20 +35,25 @@ export const placeOrder = async (
     tshirtSize: args.tshirtSize,
   };
 
-  await withTimeout(redis.hSet(`orders:${user.id}:${orderId}`, { ...order }));
+  await withTimeout(redis.hset(`orders:${user.id}:${orderId}`, { ...order }));
 
   return order;
 };
 
 export const getOrders = async (user: User): Promise<Order[]> => {
   const orders: Order[] = [];
+  let cursor = "0";
 
-  for await (const key of redis.scanIterator({
-    MATCH: `orders:${user.id}:*`,
-    COUNT: 100,
-  })) {
-    orders.push((await redis.hGetAll(key)) as unknown as Order);
-  }
+  do {
+    const [nextCursor, keys] = await redis.scan(cursor, {
+      match: `orders:${user.id}:*`,
+      count: 100,
+    });
+    cursor = nextCursor;
+    for (const key of keys) {
+      orders.push((await redis.hgetall(key)) as unknown as Order);
+    }
+  } while (cursor !== "0");
 
   return orders;
 };
