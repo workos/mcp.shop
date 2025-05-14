@@ -1,9 +1,5 @@
 import { createClient } from "redis";
 
-const redis = createClient({ url: process.env.REDIS_URL });
-await redis.connect();
-export default redis;
-
 export const withTimeout = <T,>(promise: Promise<T>, ms: number = 2_000) =>
   Promise.race([
     promise,
@@ -11,3 +7,12 @@ export const withTimeout = <T,>(promise: Promise<T>, ms: number = 2_000) =>
       setTimeout(() => reject(new Error("Operation timed out")), ms),
     ),
   ]);
+
+const redis = createClient({ url: process.env.REDIS_URL });
+
+withTimeout(
+  redis.connect(),
+  100
+);
+
+export default redis;
