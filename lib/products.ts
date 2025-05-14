@@ -80,12 +80,11 @@ export const products: Record<string, Product> = {
     },
     title: "MCP tee shirt",
     descriptionHtml: `<p class="my-2">Minimalist, mysterious, and maybe a little meta.</p>
-      <p class="my-2">This sleek silver-grey tee features the phrase “Model Context Protocol” emblazoned in a soft-rounded rectangle—just enough to spark curiosity and conversation. Whether you’re a machine learning enthusiast, a protocol purist, or just someone who loves obscure tech references, this shirt delivers subtle nerd cred with style.</p>
+      <p class="my-2">This sleek tee features the MCP vibes and the phrase "Context is Everything". Whether you're a machine learning enthusiast, a protocol purist, or just someone who loves obscure tech references, this shirt delivers subtle nerd cred with style.</p>
       <ul class="list-disc list-inside my-2">
 	      <li>Soft, lightweight cotton blend</li>
 	      <li>Unisex fit, pre-shrunk</li>
 	      <li>Printed with durable, fade-resistant ink</li>
-	      <li>Color: Silver-grey with black graphic</li>
 			</ul>
       <p class="my-2">Join the protocol. Set the context.</p>`,
     options: [
