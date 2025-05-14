@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@upstash/redis": "^1.34.9",
     "@vercel/mcp-adapter": "^0.2.3",
     "@workos-inc/authkit-nextjs": "^2.3.2",
     "clsx": "^2.1.1",
