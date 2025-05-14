@@ -1,4 +1,4 @@
-import redis from "@/lib/redis";
+import redis, { withTimeout } from "@/lib/redis";
 import { User } from "./with-authkit";
 
 export interface Order {
@@ -21,7 +21,7 @@ export const placeOrder = async (
   },
   user: User,
 ) => {
-  const orderId = await redis.incr("order:id:counter");
+  const orderId = await withTimeout(redis.incr("order:id:counter"), 500);
 
   const order: Order = {
     id: orderId,
@@ -35,7 +35,7 @@ export const placeOrder = async (
     tshirtSize: args.tshirtSize,
   };
 
-  await redis.hSet(`orders:${user.id}:${orderId}`, { ...order });
+  await withTimeout(redis.hSet(`orders:${user.id}:${orderId}`, { ...order }));
 
   return order;
 };
