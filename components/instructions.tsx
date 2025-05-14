@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 "use client";
 
 import Image from "next/image";
@@ -39,12 +37,12 @@ export const Instructions = ({
           ⊗
         </button>
         <p className="mt-2 mb-1">
-          Welcome to MCP Shop's LLM storefront! Place your order by connecting
-          your favorite MCP-compatible LLM to MCP Shop's MCP server.
+          Welcome to MCP Shop&apos;s LLM storefront! Place your order by connecting
+          your favorite MCP-compatible LLM to MCP Shop&apos;s MCP server.
         </p>
         <p>
           MCP Shop uses <Link href="https://www.authkit.com">AuthKit</Link>, so
-          after you've installed the MCP server, you'll be prompted to sign up
+          after you&apos;ve installed the MCP server, you&apos;ll be prompted to sign up
           for an MCP Shop account.
         </p>
         <h4 className="text-lg font-bold my-1">Claude Integrations</h4>
@@ -58,8 +56,8 @@ export const Instructions = ({
         </p>
         <p className="my-1">
           If your Claude account has Integrations available, go to the
-          Integrations section of the Settings menu, select "Add more", and
-          enter "MCP Shop" in the name, and <code>https://mcp.shop/sse</code> in
+          Integrations section of the Settings menu, select &quot;Add more&quot;, and
+          enter &quot;MCP Shop&quot; in the name, and <code>https://mcp.shop/sse</code> in
           the URL field.
         </p>
         <Image
