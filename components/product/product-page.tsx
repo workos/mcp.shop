@@ -13,10 +13,10 @@ export default async function ProductPage() {
 
   return (
     <ProductProvider>
-      <div className="mx-auto max-w-(--breakpoint-2xl) px-4">
-        <div className="flex flex-col rounded-lg border p-8 md:p-12 lg:flex-row lg:gap-8 border-neutral-800 bg-black">
-          <div className="h-full w-full basis-full lg:basis-4/6">
-            <Suspense
+      <div className="mx-auto max-w-[--breakpoint-2xl] px-4">
+        <div className="flex flex-col rounded-lg border p-8 md:p-12 lg:flex-row lg:gap-0 border-neutral-800 bg-black justify-center lg:rounded-none lg:border-none">          
+        <div className="h-full w-full basis-full lg:basis-1/2 lg:mr-8">
+          <Suspense
               fallback={
                 <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
               }
@@ -32,7 +32,7 @@ export default async function ProductPage() {
             </Suspense>
           </div>
 
-          <div className="basis-full lg:basis-2/6">
+          <div className="basis-full lg:basis-2/6 lg:pl-0">
             <Suspense fallback={null}>
               <ProductDescription product={product} />
             </Suspense>

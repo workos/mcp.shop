@@ -24,12 +24,12 @@ export const Instructions = ({
   return (
     <>
       <dialog
-        className="fixed inset-0 m-auto max-w-3xl p-8 rounded-xl border border-purple-700 bg-background text-foreground shadow-xl shadow-purple-950"
+        className="fixed inset-0 m-auto max-w-3xl p-12 rounded-xl border-2 border-blue-500 bg-background text-foreground shadow-xl shadow-yellow-950"
         closedby="any"
         ref={dialogRef}
       >
         <button
-          className="absolute right-2 top-1 text-4xl hover:text-5xl transition-all text-purple-500 font-bold"
+          className="absolute right-2 top-1 text-4xl hover:text-5xl transition-all text-blue-500 font-bold"
           onClick={() => {
             dialogRef.current?.close();
           }}
@@ -45,8 +45,8 @@ export const Instructions = ({
           after you&apos;ve installed the MCP server, you&apos;ll be prompted to sign up
           for an MCP Shop account.
         </p>
-        <h4 className="text-lg font-bold my-1">Claude Integrations</h4>
-        <p className="my-1">
+        <h4 className="text-lg font-bold my-2 pt-4">Claude Integrations</h4>
+        <p className="my2-1">
           Claude recently added{" "}
           <Link href="https://www.anthropic.com/news/integrations">
             support for Integrations
@@ -62,12 +62,12 @@ export const Instructions = ({
         </p>
         <Image
           alt="Screenshot of Claude Desktop&apos;s Settings screen, with the add-custom-integration screen showing."
-          className="m-auto my-1 max-w-1/2"
+          className="m-auto my-1 max-w-1/2 pt-4"
           height={2068}
           src="/add-custom-integration.png"
           width={2048}
         />
-        <h4 className="text-lg font-bold my-1">Local MCP</h4>
+        <h4 className="text-lg font-bold my-2 pt-4">Local MCP</h4>
         <p className="my-1">
           You can also order MCP swag via a local MCP server via{" "}
           <Link href="https://github.com/geelen/mcp-remote">
@@ -100,7 +100,7 @@ export const Instructions = ({
         </p>
         <div className="flex justify-center">
           <button
-            className="mt-6 px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-full shadow-md hover:shadow-purple-500/40 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+            className="mt-6 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-md hover:shadow-blue-500/40 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             onClick={() => {
               dialogRef.current?.close();
             }}

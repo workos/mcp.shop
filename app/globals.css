@@ -31,7 +31,7 @@ dialog::backdrop {
 }
 
 dialog a {
-  color: var(--color-purple-500);
+  color: var(--color-blue-500);
   text-decoration: underline;
 }
 
