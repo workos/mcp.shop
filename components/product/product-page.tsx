@@ -6,11 +6,8 @@ import { Image as ProductImage, getProduct } from "@/lib/products";
 import { Suspense } from "react";
 import { ProductProvider } from "@/components/product/product-context";
 
-export default async function ProductPage(props: {
-  params: Promise<{ handle: string }>;
-}) {
-  const params = await props.params;
-  const product = await getProduct(params.handle);
+export default async function ProductPage() {
+  const product = await getProduct('shirt');
 
   if (!product) return notFound();
 

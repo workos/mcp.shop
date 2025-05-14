@@ -1,15 +1,13 @@
-import { ThreeItemGrid } from "@/components/grid/three-items";
+import ProductPage from "@/components/product/product-page";
 import { Instructions } from "@/components/instructions";
 
-export default async function Home() {
+export default function Home() {
   return (
-    <>
-      <main>
-        <ThreeItemGrid />
+    <div className="flex min-h-screen flex-col">
+      
+      <main className="flex-1">
+        <ProductPage />
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <Instructions openButtonLabel="Take my money!" />
-      </footer>
-    </>
+    </div>
   );
 }

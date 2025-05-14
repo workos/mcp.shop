@@ -37,12 +37,12 @@ export const Instructions = ({
           ⊗
         </button>
         <p className="mt-2 mb-1">
-          Welcome to MCP Shop’s LLM storefront! Place your order by connecting
-          your favorite MCP-compatible LLM to MCP Shop’s MCP server.
+          Welcome to MCP Shop's LLM storefront! Place your order by connecting
+          your favorite MCP-compatible LLM to MCP Shop's MCP server.
         </p>
         <p>
           MCP Shop uses <Link href="https://www.authkit.com">AuthKit</Link>, so
-          after you’ve installed the MCP server, you’ll be prompted to sign up
+          after you've installed the MCP server, you'll be prompted to sign up
           for an MCP Shop account.
         </p>
         <h4 className="text-lg font-bold my-1">Claude Integrations</h4>
@@ -56,12 +56,12 @@ export const Instructions = ({
         </p>
         <p className="my-1">
           If your Claude account has Integrations available, go to the
-          Integrations section of the Settings menu, select “Add more”, and
-          enter “MCP Shop” in the name, and <code>https://mcp.shop/sse</code> in
+          Integrations section of the Settings menu, select "Add more", and
+          enter "MCP Shop" in the name, and <code>https://mcp.shop/sse</code> in
           the URL field.
         </p>
         <Image
-          alt="Screenshot of Claude Desktop’s Settings screen, with the add-custom-integration screen showing."
+          alt="Screenshot of Claude Desktop's Settings screen, with the add-custom-integration screen showing."
           className="m-auto my-1 max-w-1/2"
           height={2068}
           src="/add-custom-integration.png"
@@ -113,7 +113,7 @@ export const Instructions = ({
       <button
         className={
           openButtonClassname ??
-          "mt-6 px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-full shadow-md hover:shadow-purple-500/40 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+          "relative flex w-full items-center justify-center rounded-full bg-gradient-to-r from-sky-300 via-neutral-100 to-yellow-200 p-4 tracking-wide text-black font-semibold shadow-md hover:opacity-90 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-opacity-50"
         }
         onClick={() => {
           dialogRef.current?.showModal();
