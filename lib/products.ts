@@ -61,7 +61,7 @@ export const products: Record<string, Product> = {
     ],
     priceRange: {
       maxVariantPrice: {
-        amount: "20.00",
+        amount: "Free with MCP",
         currencyCode: "USD",
       },
     },
@@ -117,7 +117,7 @@ export const products: Record<string, Product> = {
     ],
     priceRange: {
       maxVariantPrice: {
-        amount: "15.00",
+        amount: "Coming soon",
         currencyCode: "USD",
       },
     },
@@ -165,7 +165,7 @@ export const products: Record<string, Product> = {
     ],
     priceRange: {
       maxVariantPrice: {
-        amount: "30.00",
+        amount: "Coming soon",
         currencyCode: "USD",
       },
     },
