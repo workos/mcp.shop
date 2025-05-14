@@ -26,7 +26,7 @@ const handler = withAuthkit((request, auth) =>
                       label: "Shirt",
                       description: products.shirt.descriptionHtml,
                       image_url:
-                        "http://localhost:3000/_next/image?url=%2Fshirt.webp&w=1920&q=75",
+                        "http://localhost:3000/_next/image?url=%2Fshirt.jpg&w=1920&q=75",
                     },
                     {
                       label: "Mug",
