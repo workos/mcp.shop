@@ -12,7 +12,7 @@ const redis = createClient({ url: process.env.REDIS_URL });
 
 withTimeout(
   redis.connect(),
-  100
+  2_000
 );
 
 export default redis;
