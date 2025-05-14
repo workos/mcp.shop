@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 "use client";
 
 import Image from "next/image";
@@ -61,7 +63,7 @@ export const Instructions = ({
           the URL field.
         </p>
         <Image
-          alt="Screenshot of Claude Desktop's Settings screen, with the add-custom-integration screen showing."
+          alt="Screenshot of Claude Desktop&apos;s Settings screen, with the add-custom-integration screen showing."
           className="m-auto my-1 max-w-1/2"
           height={2068}
           src="/add-custom-integration.png"

@@ -1,8 +1,5 @@
 "use client";
 
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-import { GridTileImage } from "@/components/grid/tile";
-import { useProduct, useUpdateURL } from "@/components/product/product-context";
 import Image from "next/image";
 
 export function Gallery({
@@ -30,7 +27,7 @@ export function Gallery({
       )}
       {/* Two images below, side by side */}
       <div className="flex flex-row justify-center items-center gap-1 h-1/3">
-        {subImages.map((img, idx) => (
+        {subImages.map((img) => (
           <div key={img.src} className="relative w-1/2 h-full">
             <Image
               className="object-contain rounded-md"
