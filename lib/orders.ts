@@ -1,4 +1,4 @@
-import redis, { withTimeout } from "@/lib/redis";
+import redis, { scan, withTimeout } from "@/lib/redis";
 import { User } from "./with-authkit";
 
 export interface Order {
@@ -44,18 +44,10 @@ export const placeOrder = async (
 
 export const getOrders = async (user: User): Promise<Order[]> => {
   const orders: Order[] = [];
-  let cursor = "0";
 
-  do {
-    const [nextCursor, keys] = await redis.scan(cursor, {
-      match: `orders:${user.id}:*`,
-      count: 100,
-    });
-    cursor = nextCursor;
-    for (const key of keys) {
-      orders.push((await redis.hgetall(key)) as unknown as Order);
-    }
-  } while (cursor !== "0");
+  for await (const key of scan({ match: `orders:${user.id}:*`, count: 100 })) {
+    orders.push((await redis.hgetall(key)) as unknown as Order);
+  }
 
   return orders;
 };
