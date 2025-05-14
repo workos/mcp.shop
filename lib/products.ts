@@ -55,24 +55,36 @@ export const products: Record<string, Product> = {
       {
         altText: "MCP tee shirt",
         height: 1024,
-        url: "/shirt.webp",
+        url: "/shirt.jpg",
         width: 1024,
       },
+      {
+        altText: "Zoomed in design",
+        height: 512,
+        url: "/zoom.jpg",
+        width: 512,
+      },
+      {
+        altText: "Man wearing the shirt",
+        height: 512,
+        url: "/man.jpg",
+        width: 512,
+      },
+      
     ],
     priceRange: {
       maxVariantPrice: {
-        amount: "20.00",
+        amount: "Free through MCP",
         currencyCode: "USD",
       },
     },
     title: "MCP tee shirt",
     descriptionHtml: `<p class="my-2">Minimalist, mysterious, and maybe a little meta.</p>
-      <p class="my-2">This sleek silver-grey tee features the phrase “Model Context Protocol” emblazoned in a soft-rounded rectangle—just enough to spark curiosity and conversation. Whether you’re a machine learning enthusiast, a protocol purist, or just someone who loves obscure tech references, this shirt delivers subtle nerd cred with style.</p>
+      <p class="my-2">This sleek tee features the MCP vibes and the phrase "Context is Everything". Whether you're a machine learning enthusiast, a protocol purist, or just someone who loves obscure tech references, this shirt delivers subtle nerd cred with style.</p>
       <ul class="list-disc list-inside my-2">
 	      <li>Soft, lightweight cotton blend</li>
 	      <li>Unisex fit, pre-shrunk</li>
 	      <li>Printed with durable, fade-resistant ink</li>
-	      <li>Color: Silver-grey with black graphic</li>
 			</ul>
       <p class="my-2">Join the protocol. Set the context.</p>`,
     options: [
@@ -117,7 +129,7 @@ export const products: Record<string, Product> = {
     ],
     priceRange: {
       maxVariantPrice: {
-        amount: "15.00",
+        amount: "Coming soon",
         currencyCode: "USD",
       },
     },
@@ -165,7 +177,7 @@ export const products: Record<string, Product> = {
     ],
     priceRange: {
       maxVariantPrice: {
-        amount: "30.00",
+        amount: "Coming soon",
         currencyCode: "USD",
       },
     },

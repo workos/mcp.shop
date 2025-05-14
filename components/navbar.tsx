@@ -9,8 +9,8 @@ export async function Navbar() {
   return (
     <nav className="flex items-center justify-between p-4 text-neutral-400">
       <Link className="flex" href="/">
-        <Image alt="MCP Shop logo" src="/logo.png" height={30} width={30} />
-        <div className="flex w-full items-center font-bold pl-1">MCP Shop</div>
+        <Image alt="MCP Shop logo" src="/logo.png" height={40} width={40} />
+        <div className="flex w-full items-center font-bold text-lg pl-1">mcp.shop</div>
       </Link>
       <div>
         {user ? (
