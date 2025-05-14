@@ -10,88 +10,39 @@ export function Gallery({
 }: {
   images: { src: string; altText: string }[];
 }) {
-  const { state, updateImage } = useProduct();
-  const updateURL = useUpdateURL();
-  const imageIndex = state.image ? parseInt(state.image) : 0;
-
-  const nextImageIndex = imageIndex + 1 < images.length ? imageIndex + 1 : 0;
-  const previousImageIndex =
-    imageIndex === 0 ? images.length - 1 : imageIndex - 1;
-
-  const buttonClassName =
-    "h-full px-6 transition-all ease-in-out hover:scale-110 hover:text-black dark:hover:text-white flex items-center justify-center";
+  // Only show the first three images
+  const [mainImage, ...restImages] = images;
+  const subImages = restImages.slice(0, 2);
 
   return (
-    <form>
-      <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden">
-        {images[imageIndex] && (
+    <div className="w-full max-w-[550px] aspect-[2/3] flex flex-col gap-1">      {/* Main image on top, full width */}
+      {mainImage && (
+        <div className="w-full h-2/3 relative">
           <Image
-            className="h-full w-full object-contain"
+            className="object-contain rounded-md"
             fill
-            sizes="(min-width: 1024px) 66vw, 100vw"
-            alt={images[imageIndex]?.altText as string}
-            src={images[imageIndex]?.src as string}
+            sizes="100vw"
+            alt={mainImage.altText}
+            src={mainImage.src}
             priority={true}
           />
-        )}
-
-        {images.length > 1 ? (
-          <div className="absolute bottom-[15%] flex w-full justify-center">
-            <div className="mx-auto flex h-11 items-center rounded-full border border-white bg-neutral-50/80 text-neutral-500 backdrop-blur-sm dark:border-black dark:bg-neutral-900/80">
-              <button
-                formAction={() => {
-                  const newState = updateImage(previousImageIndex.toString());
-                  updateURL(newState);
-                }}
-                aria-label="Previous product image"
-                className={buttonClassName}
-              >
-                <ArrowLeftIcon className="h-5" />
-              </button>
-              <div className="mx-1 h-6 w-px bg-neutral-500"></div>
-              <button
-                formAction={() => {
-                  const newState = updateImage(nextImageIndex.toString());
-                  updateURL(newState);
-                }}
-                aria-label="Next product image"
-                className={buttonClassName}
-              >
-                <ArrowRightIcon className="h-5" />
-              </button>
-            </div>
+        </div>
+      )}
+      {/* Two images below, side by side */}
+      <div className="flex flex-row justify-center items-center gap-1 h-1/3">
+        {subImages.map((img, idx) => (
+          <div key={img.src} className="relative w-1/2 h-full">
+            <Image
+              className="object-contain rounded-md"
+              fill
+              sizes="50vw"
+              alt={img.altText}
+              src={img.src}
+              priority={false}
+            />
           </div>
-        ) : null}
+        ))}
       </div>
-
-      {images.length > 1 ? (
-        <ul className="my-12 flex items-center flex-wrap justify-center gap-2 overflow-auto py-1 lg:mb-0">
-          {images.map((image, index) => {
-            const isActive = index === imageIndex;
-
-            return (
-              <li key={image.src} className="h-20 w-20">
-                <button
-                  formAction={() => {
-                    const newState = updateImage(index.toString());
-                    updateURL(newState);
-                  }}
-                  aria-label="Select product image"
-                  className="h-full w-full"
-                >
-                  <GridTileImage
-                    alt={image.altText}
-                    src={image.src}
-                    width={80}
-                    height={80}
-                    active={isActive}
-                  />
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
-    </form>
+    </div>
   );
 }
