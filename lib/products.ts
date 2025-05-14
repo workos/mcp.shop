@@ -58,10 +58,23 @@ export const products: Record<string, Product> = {
         url: "/shirt.webp",
         width: 1024,
       },
+      {
+        altText: "MCP tee shirt",
+        height: 1024,
+        url: "/shirt.webp",
+        width: 1024,
+      },
+      {
+        altText: "MCP tee shirt",
+        height: 1024,
+        url: "/shirt.webp",
+        width: 1024,
+      },
+      
     ],
     priceRange: {
       maxVariantPrice: {
-        amount: "Free with MCP",
+        amount: "Free through MCP",
         currencyCode: "USD",
       },
     },
