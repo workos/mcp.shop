@@ -15,7 +15,7 @@ export default async function ProductPage() {
     <ProductProvider>
       <div className="mx-auto max-w-[--breakpoint-2xl] px-4">
         <div className="flex flex-col rounded-lg border p-8 md:p-12 lg:flex-row lg:gap-0 border-neutral-800 bg-black justify-center lg:rounded-none lg:border-none">          
-        <div className="h-full w-full basis-full lg:basis-1/2 lg:mr-8">
+        <div className="h-full w-full basis-full lg:basis-1/2 lg:mr-8 lg:max-h-[600px] overflow-y-auto scrollbar-hide mb-10">
           <Suspense
               fallback={
                 <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden" />
