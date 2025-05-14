@@ -1,12 +1,14 @@
 import ProductPage from "@/components/product/product-page";
-import { Instructions } from "@/components/instructions";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       
       <main className="flex-1">
-        <ProductPage />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ProductPage />
+        </Suspense>
       </main>
     </div>
   );
