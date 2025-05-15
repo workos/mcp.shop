@@ -28,20 +28,6 @@ const handler = withAuthkit((request, auth) =>
                       image_url:
                         "https://mcp.shop/shirt.jpg",
                     },
-                    // {
-                    //   label: "Mug",
-                    //   description: products.mug.descriptionHtml,
-                    //   image_url:
-                    //     "http://localhost:3000/_next/image?url=%2Fmug.webp&w=1200&q=75",
-                    //   status: "Out of stock",
-                    // },
-                    // {
-                    //   label: "Beanie",
-                    //   description: products.beanie.descriptionHtml,
-                    //   image_url:
-                    //     "http://localhost:3000/_next/image?url=%2Fbeanie.webp&w=1200&q=75",
-                    //   status: "Out of stock",
-                    // },
                   ],
                 }),
               },
