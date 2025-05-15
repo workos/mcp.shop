@@ -1,6 +1,6 @@
 import { withAuth } from "@workos-inc/authkit-nextjs";
 
-export async function GET(_req: Request) {
+export async function GET() {
   const { permissions } = await withAuth();
   if (!permissions?.includes("orders:manage")) {
     return new Response("Forbidden", {
