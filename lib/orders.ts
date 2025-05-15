@@ -10,6 +10,7 @@ export interface Order {
   lastName: string;
   email: string;
   company: string;
+  mailingAddress: string;
   tshirtSize: string;
 }
 
@@ -30,6 +31,7 @@ export const placeOrder = async (
     sku: "MCP-NTSHRT-25-GW01",
     firstName: user.firstName ?? "UNKNOWN",
     lastName: user.lastName ?? "UNKNOWN",
+    mailingAddress: args.mailingAddress ?? "UNKNOWN",
     email: user.email,
     company: args.company,
     tshirtSize: args.tshirtSize,
