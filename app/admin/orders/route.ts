@@ -1,3 +1,4 @@
+import { getOrdersForAllUsers } from "@/lib/orders";
 import { withAuth } from "@workos-inc/authkit-nextjs";
 
 export async function GET() {
@@ -7,5 +8,7 @@ export async function GET() {
       status: 403,
     });
   }
-  return Response.json("cool");
+
+  const allOrders = await getOrdersForAllUsers();
+  return Response.json(allOrders);
 }
