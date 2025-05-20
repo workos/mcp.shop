@@ -59,15 +59,15 @@ export const products: Record<string, Product> = {
         width: 1024,
       },
       {
-        altText: "Zoomed in design",
-        height: 512,
-        url: "/zoom.jpg",
-        width: 512,
-      },
-      {
         altText: "Man wearing the shirt",
         height: 512,
         url: "/man.jpg",
+        width: 512,
+      },
+      {
+        altText: "Zoomed in design",
+        height: 512,
+        url: "/zoom.jpg",
         width: 512,
       },
     ],
