@@ -26,7 +26,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
   }, []);
 
   if (isMobile) {
-    // Mobile: all images same size, horizontal scroll
+    // Mobile: all images same size, horizontal scroll, show part of next image
     return (
       <div
         style={{
@@ -43,8 +43,8 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
             src={img.src}
             alt={img.altText}
             style={{
-              width: 500,
-              height: 500,
+              width: 360, // smaller width to show part of next image
+              height: 360,
               objectFit: "cover",
               borderRadius: 12,
               flex: "0 0 auto",
