@@ -26,7 +26,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
   }, []);
 
   if (isMobile) {
-    // Mobile: all images same size, horizontal scroll, show part of next image
+    // Mobile: all images same size, horizontal scroll, show part of next image, with left and right padding
     return (
       <div
         style={{
@@ -35,6 +35,8 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
           gap: 8,
           overflowX: "auto",
           width: "100%",
+          paddingLeft: 16,
+          paddingRight: 16,
         }}
       >
         {images.map((img) => (
