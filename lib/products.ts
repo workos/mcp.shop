@@ -46,7 +46,7 @@ export const products: Record<string, Product> = {
     handle: "shirt",
     availableForSale: true,
     featuredImage: {
-      altText: "MCP tee shirt",
+      altText: "The MCP tee",
       height: 1024,
       url: "/shirt.webp",
       width: 1024,
@@ -70,7 +70,6 @@ export const products: Record<string, Product> = {
         url: "/man.jpg",
         width: 512,
       },
-      
     ],
     priceRange: {
       maxVariantPrice: {
@@ -78,7 +77,7 @@ export const products: Record<string, Product> = {
         currencyCode: "USD",
       },
     },
-    title: "MCP tee shirt",
+    title: "The MCP tee",
     descriptionHtml: `<p class="my-2">Minimalist, mysterious, and maybe a little meta.</p>
       <p class="my-2">This sleek tee features the MCP vibes and the phrase &quot;Context is Everything&quot;. Whether you're a machine learning enthusiast, a protocol purist, or just someone who loves obscure tech references, this shirt delivers subtle nerd cred with style.</p>
       <ul class="list-disc list-inside my-2">
@@ -209,5 +208,5 @@ export const products: Record<string, Product> = {
 };
 
 export const getProduct = async (
-  handle: keyof typeof products,
+  handle: keyof typeof products
 ): Promise<Product> => products[handle];
