@@ -29,7 +29,7 @@ export function ProductDescription({ product }: { product: Product }) {
           html={product.descriptionHtml}
         />
       ) : null}
-      <Instructions openButtonLabel="Order with AI" />
+      <Instructions openButtonLabel="View ordering instructions" />
 
       {/* <AddToCart product={product} /> */}
     </>
