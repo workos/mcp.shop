@@ -90,10 +90,10 @@ export const products: Record<string, Product> = {
       {
         id: "size",
         name: "Size",
-        values: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
+        values: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
       },
     ],
-    variants: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"].map((size) => ({
+    variants: ["XS", "S", "M", "L", "XL", "2XL", "3XL"].map((size) => ({
       id: size.toLowerCase(),
       title: size,
       availableForSale: true,
