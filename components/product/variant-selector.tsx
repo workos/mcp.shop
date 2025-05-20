@@ -3,6 +3,8 @@
 import clsx from "clsx";
 import { useProduct, useUpdateURL } from "@/components/product/product-context";
 import { ProductOption, ProductVariant } from "@/lib/products";
+import { Button } from "@radix-ui/themes";
+import React from "react";
 
 type Combination = {
   id: string;
@@ -35,7 +37,7 @@ export function VariantSelector({
         ...accumulator,
         [option.name.toLowerCase()]: option.value,
       }),
-      {},
+      {}
     ),
   }));
 
@@ -56,42 +58,45 @@ export function VariantSelector({
                 options.find(
                   (option) =>
                     option.name.toLowerCase() === key &&
-                    option.values.includes(value),
-                ),
+                    option.values.includes(value)
+                )
             );
             const isAvailableForSale = combinations.find((combination) =>
               filtered.every(
                 ([key, value]) =>
-                  combination[key] === value && combination.availableForSale,
-              ),
+                  combination[key] === value && combination.availableForSale
+              )
             );
 
             // The option is active if it's in the selected options.
             const isActive = state[optionNameLowerCase] === value;
 
             return (
-              <button
-                formAction={() => {
-                  const newState = updateOption(optionNameLowerCase, value);
-                  updateURL(newState);
-                }}
+              <Button
                 key={value}
-                aria-disabled={!isAvailableForSale}
+                color={isActive ? "purple" : "gray"}
+                variant={isActive ? "solid" : "surface"}
+                highContrast={isActive}
                 disabled={!isAvailableForSale}
+                style={{
+                  borderRadius: 9999,
+                  minWidth: 48,
+                  padding: "0.25rem 0.5rem",
+                  fontSize: "0.875rem",
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (isAvailableForSale) {
+                    React.startTransition(() => {
+                      const newState = updateOption(optionNameLowerCase, value);
+                      updateURL(newState);
+                    });
+                  }
+                }}
                 title={`${option.name} ${value}${!isAvailableForSale ? " (Out of Stock)" : ""}`}
-                className={clsx(
-                  "flex min-w-[48px] items-center justify-center rounded-full border px-2 py-1 text-sm border-neutral-800 bg-neutral-900",
-                  {
-                    "cursor-default ring-2 ring-purple-600": isActive,
-                    "ring-1 ring-transparent transition duration-300 ease-in-out hover:ring-purple-600":
-                      !isActive && isAvailableForSale,
-                    "relative z-10 cursor-not-allowed overflow-hidden ring-1 before:absolute before:inset-x-0 before:-z-10 before:h-px before:-rotate-45 before:transition-transform bg-neutral-900 text-neutral-400 ring-neutral-700 before:bg-neutral-700":
-                      !isAvailableForSale,
-                  },
-                )}
               >
                 {value}
-              </button>
+              </Button>
             );
           })}
         </dd>
