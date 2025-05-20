@@ -13,7 +13,7 @@ export default async function ProductPage() {
 
   return (
     <ProductProvider>
-      <div className="mx-auto max-w-[1440] px-4">
+      <div className="mx-auto max-w-[1440]">
         <div className="flex flex-col rounded-lg border p-8 md:p-12 lg:flex-row lg:gap-0 border-neutral-800 justify-center lg:rounded-none lg:border-none">
           <div className="h-full w-full basis-full lg:basis-1/2 lg:mr-8 lg:max-h-[600px] overflow-y-auto scrollbar-hide mb-10">
             <Suspense
