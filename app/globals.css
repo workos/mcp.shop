@@ -57,3 +57,15 @@ dialog code {
   font-style: normal;
   font-display: swap;
 }
+
+.force-untitled {
+  font-family: "UntitledSans", sans-serif !important;
+}
+
+@font-face {
+  font-family: "AeonikFono";
+  src: url("/fonts/AeonikFonoTRIAL-regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

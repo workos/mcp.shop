@@ -10,7 +10,9 @@ export function ProductDescription({ product }: { product: Product }) {
   return (
     <div className="px-4 md:px-0">
       <div className="mb-2 flex flex-col pb-4 border-neutral-700 gap-2">
-        <h1 className="mb-2 text-5xl font-medium">{product.title}</h1>
+        <h1 className="mb-2 text-5xl font-mediu font-untitled force-untitled">
+          {product.title}
+        </h1>
         <Badge
           color="gray"
           variant="soft"
@@ -27,16 +29,16 @@ export function ProductDescription({ product }: { product: Product }) {
         </Badge>
       </div>
       <div className="mb-6">
-        <div className="font-regular text-lg mb-2 text-white">
+        <div className="font-untitled force-untitled text-lg mb-2 text-white">
           Minimalist, mysterious, and maybe a little meta.
         </div>
-        <div className="mb-2 text-base text-white/70">
+        <div className="font-untitled force-untitled mb-2 text-base text-white/70">
           This sleek tee features the MCP vibes and the phrase "Context is
           Everything". Whether you're a machine learning enthusiast, a protocol
           purist, or just someone who loves obscure tech references, this shirt
           delivers subtle nerd cred with style.
         </div>
-        <div className="font-regular text-lg text-white text-base">
+        <div className="font-untitled force-untitled text-lg text-white text-base">
           Join the protocol. Set the context.
         </div>
       </div>
@@ -52,12 +54,12 @@ export function ProductDescription({ product }: { product: Product }) {
         >
           <Accordion.Item value="tshirt-details">
             <Accordion.Header>
-              <Accordion.Trigger className="w-full flex items-center justify-between text-left text-sm text-neutral-400 py-2 px-2 rounded bg-neutral-900 hover:bg-neutral-800 transition group">
+              <Accordion.Trigger className="font-untitled force-untitled w-full flex items-center justify-between text-left text-sm text-neutral-400 py-2 px-2 rounded bg-neutral-900 hover:bg-neutral-800 transition group">
                 <span>Product Details</span>
                 <ChevronDownIcon className="ml-2 h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </Accordion.Trigger>
             </Accordion.Header>
-            <Accordion.Content className="px-2 pt-2 text-white/60 text-sm overflow-hidden transition-all duration-300 data-[state=closed]:max-h-0 data-[state=open]:max-h-[500px] data-[state=closed]:opacity-0 data-[state=open]:opacity-100">
+            <Accordion.Content className="font-untitled force-untitled px-2 pt-2 text-white/60 text-sm overflow-hidden transition-all duration-300 data-[state=closed]:max-h-0 data-[state=open]:max-h-[500px] data-[state=closed]:opacity-0 data-[state=open]:opacity-100">
               <ul className="list-disc list-inside">
                 <li>Soft, lightweight cotton blend</li>
                 <li>Unisex fit, pre-shrunk</li>
