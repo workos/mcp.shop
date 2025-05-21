@@ -30,7 +30,7 @@ export default async function ProductPage() {
             </Suspense>
           </div>
 
-          <div className="basis-full px-8 lg:basis-2/6 lg:pl-0">
+          <div className="basis-full px-0 lg:basis-2/6 lg:pl-0">
             <Suspense fallback={null}>
               <ProductDescription product={product} />
             </Suspense>
