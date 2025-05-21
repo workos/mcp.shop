@@ -51,14 +51,6 @@ dialog code {
 }
 
 @font-face {
-  font-family: "MyCustomFont";
-  src: url("/fonts/MyCustomFont.otf") format("opentype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "UntitledSans";
   src: url("/fonts/UntitledSans-Regular.otf") format("opentype");
   font-weight: normal;
