@@ -1,5 +1,4 @@
 import Price from "@/components/price";
-import Prose from "@/components/prose";
 import { Product } from "@/lib/products";
 import { Instructions } from "@/components/instructions";
 import { VariantSelector } from "./variant-selector";
