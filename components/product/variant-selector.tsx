@@ -44,7 +44,7 @@ export function VariantSelector({
   return options.map((option) => (
     <form key={option.id}>
       <dl className="mb-8">
-        <dt className="mb-4 text-sm uppercase tracking-wide">{option.name}</dt>
+        {/* <dt className="mb-4 text-sm uppercase tracking-wide">{option.name}</dt> */}
         <dd className="flex flex-row flex-wrap gap-2">
           {option.values.map((value) => {
             const optionNameLowerCase = option.name.toLowerCase();
