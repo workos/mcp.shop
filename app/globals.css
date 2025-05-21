@@ -14,7 +14,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #05080d;
     --foreground: #ededed;
   }
 }
@@ -40,4 +40,32 @@ dialog code {
   border: 1px solid var(--color-neutral-700);
   border-radius: var(--radius-sm);
   padding-inline: calc(var(--spacing) * 2);
+}
+
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+@font-face {
+  font-family: "UntitledSans";
+  src: url("/fonts/UntitledSans-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.force-untitled {
+  font-family: "UntitledSans", sans-serif !important;
+}
+
+@font-face {
+  font-family: "AeonikFono";
+  src: url("/fonts/AeonikFonoTRIAL-regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }

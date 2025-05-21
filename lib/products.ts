@@ -46,7 +46,7 @@ export const products: Record<string, Product> = {
     handle: "shirt",
     availableForSale: true,
     featuredImage: {
-      altText: "MCP tee shirt",
+      altText: "The MCP tee",
       height: 1024,
       url: "/shirt.webp",
       width: 1024,
@@ -59,42 +59,36 @@ export const products: Record<string, Product> = {
         width: 1024,
       },
       {
-        altText: "Zoomed in design",
-        height: 512,
-        url: "/zoom.jpg",
-        width: 512,
-      },
-      {
         altText: "Man wearing the shirt",
         height: 512,
         url: "/man.jpg",
         width: 512,
       },
-      
+      {
+        altText: "Zoomed in design",
+        height: 512,
+        url: "/zoom.jpg",
+        width: 512,
+      },
     ],
     priceRange: {
       maxVariantPrice: {
-        amount: "Free through MCP",
+        amount: "Free with the MCP Server",
         currencyCode: "USD",
       },
     },
-    title: "MCP tee shirt",
+    title: "The MCP tee",
     descriptionHtml: `<p class="my-2">Minimalist, mysterious, and maybe a little meta.</p>
       <p class="my-2">This sleek tee features the MCP vibes and the phrase &quot;Context is Everything&quot;. Whether you're a machine learning enthusiast, a protocol purist, or just someone who loves obscure tech references, this shirt delivers subtle nerd cred with style.</p>
-      <ul class="list-disc list-inside my-2">
-	      <li>Soft, lightweight cotton blend</li>
-	      <li>Unisex fit, pre-shrunk</li>
-	      <li>Printed with durable, fade-resistant ink</li>
-			</ul>
       <p class="my-2">Join the protocol. Set the context.</p>`,
     options: [
       {
         id: "size",
         name: "Size",
-        values: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
+        values: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
       },
     ],
-    variants: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"].map((size) => ({
+    variants: ["XS", "S", "M", "L", "XL", "2XL", "3XL"].map((size) => ({
       id: size.toLowerCase(),
       title: size,
       availableForSale: true,
@@ -209,5 +203,5 @@ export const products: Record<string, Product> = {
 };
 
 export const getProduct = async (
-  handle: keyof typeof products,
+  handle: keyof typeof products
 ): Promise<Product> => products[handle];
