@@ -25,7 +25,7 @@ export const Instructions = ({
   return (
     <>
       <dialog
-        className="fixed inset-0 m-auto w-[90%] sm:w-[85%] md:w-[80%] max-w-3xl p-3 sm:p-6 md:p-8 rounded-xl border-2 border-blue-500 bg-background text-foreground shadow-xl shadow-yellow-950 overflow-y-auto max-h-[85vh] sm:max-h-[90vh]"
+        className="fixed inset-0 m-auto w-[80%] sm:w-[85%] md:w-[80%] max-w-3xl p-3 sm:p-6 md:p-8 border border-neutral-700 rounded-xl bg-background text-foreground overflow-y-auto max-h-[85vh] sm:max-h-[90vh]"
         closedby="any"
         ref={dialogRef}
       >
@@ -115,14 +115,17 @@ export const Instructions = ({
               <code>mcp-remote</code>.
             </p>
             <div className="flex justify-center w-full">
-              <button
-                className="mt-6 px-4 sm:px-5 py-2 sm:py-3 text-base bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-md hover:shadow-blue-500/40 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 w-full sm:w-auto max-w-[200px]"
+              <Button
+                color="gray"
+                variant="outline"
+                highContrast
+                size="3"
                 onClick={() => {
                   dialogRef.current?.close();
                 }}
               >
-                OK
-              </button>
+                Got it!
+              </Button>
             </div>
           </div>
         </div>
@@ -130,10 +133,9 @@ export const Instructions = ({
 
       <Button
         color="gray"
-        variant="surface"
+        variant="outline"
         highContrast
         size="3"
-        style={{ width: "100%" }}
         onClick={() => {
           dialogRef.current?.showModal();
         }}
