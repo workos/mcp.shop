@@ -33,8 +33,8 @@ export function ProductDescription({ product }: { product: Product }) {
           Minimalist, mysterious, and maybe a little meta.
         </div>
         <div className="font-untitled force-untitled mb-2 text-base text-white/70">
-          This sleek tee features the MCP vibes and the phrase "Context is
-          Everything". Whether you're a machine learning enthusiast, a protocol
+          This sleek tee features the MCP vibes and the phrase “Context is
+          Everything”. Whether you’re a machine learning enthusiast, a protocol
           purist, or just someone who loves obscure tech references, this shirt
           delivers subtle nerd cred with style.
         </div>

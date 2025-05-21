@@ -1,6 +1,5 @@
 "use client";
 
-import clsx from "clsx";
 import { useProduct, useUpdateURL } from "@/components/product/product-context";
 import { ProductOption, ProductVariant } from "@/lib/products";
 import { Button } from "@radix-ui/themes";
@@ -37,7 +36,7 @@ export function VariantSelector({
         ...accumulator,
         [option.name.toLowerCase()]: option.value,
       }),
-      {}
+      {},
     ),
   }));
 
@@ -58,14 +57,14 @@ export function VariantSelector({
                 options.find(
                   (option) =>
                     option.name.toLowerCase() === key &&
-                    option.values.includes(value)
-                )
+                    option.values.includes(value),
+                ),
             );
             const isAvailableForSale = combinations.find((combination) =>
               filtered.every(
                 ([key, value]) =>
-                  combination[key] === value && combination.availableForSale
-              )
+                  combination[key] === value && combination.availableForSale,
+              ),
             );
 
             // The option is active if it's in the selected options.

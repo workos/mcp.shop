@@ -54,21 +54,21 @@ export const products: Record<string, Product> = {
     images: [
       {
         altText: "MCP tee shirt",
-        height: 1024,
+        height: 1200,
         url: "/shirt.jpg",
-        width: 1024,
+        width: 1200,
       },
       {
         altText: "Man wearing the shirt",
-        height: 512,
+        height: 588,
         url: "/man.jpg",
-        width: 512,
+        width: 588,
       },
       {
         altText: "Zoomed in design",
-        height: 512,
+        height: 588,
         url: "/zoom.jpg",
-        width: 512,
+        width: 588,
       },
     ],
     priceRange: {
@@ -203,5 +203,5 @@ export const products: Record<string, Product> = {
 };
 
 export const getProduct = async (
-  handle: keyof typeof products
+  handle: keyof typeof products,
 ): Promise<Product> => products[handle];

@@ -16,10 +16,7 @@ interface InstructionsProps {
   openButtonLabel: string;
 }
 
-export const Instructions = ({
-  openButtonClassname,
-  openButtonLabel,
-}: InstructionsProps) => {
+export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
   const dialogRef = React.useRef<HTMLDialogElement>(null);
 
   return (

@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="w-full border-t border-neutral-800 py-4 px-6 flex items-center justify-between bg-black">
       {/* Logo on the left */}
       <div className="flex items-center">
-        <img
+        <Image
           src="https://images.workoscdn.com/images/54fa0640-e1d8-4a4c-be3c-ecb445989a94.png?auto=format&fit=clip&q=80"
           alt="Logo"
           height={75}

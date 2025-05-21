@@ -6,6 +6,8 @@ import Image from "next/image";
 type ImageType = {
   src: string;
   altText: string;
+  height: number;
+  width: number;
 };
 
 type GalleryProps = {
@@ -43,10 +45,12 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
         }}
       >
         {images.map((img) => (
-          <img
+          <Image
             key={img.src}
             src={img.src}
             alt={img.altText}
+            height={img.height}
+            width={img.width}
             style={{
               width: 360, // smaller width to show part of next image
               height: 360,
@@ -66,10 +70,12 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
       {/* Thumbnails */}
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {images.map((img, idx) => (
-          <img
+          <Image
             key={img.src}
             src={img.src}
             alt={img.altText}
+            height={img.height}
+            width={img.width}
             style={{
               width: 60,
               height: 60,
@@ -89,9 +95,11 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
       </div>
       {/* Main Image */}
       <div style={{ marginLeft: 16 }}>
-        <img
+        <Image
           src={images[selectedIndex].src}
           alt={images[selectedIndex].altText}
+          height={images[selectedIndex].height}
+          width={images[selectedIndex].width}
           style={{
             width: "100%",
             maxWidth: 600,

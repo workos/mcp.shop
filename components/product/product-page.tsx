@@ -25,6 +25,8 @@ export default async function ProductPage() {
                 images={product.images.map((image: ProductImage) => ({
                   src: image.url,
                   altText: image.altText,
+                  height: image.height,
+                  width: image.width,
                 }))}
               />
             </Suspense>
