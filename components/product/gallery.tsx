@@ -18,7 +18,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
 
   useEffect(() => {
     // Function to check if the viewport is mobile-sized
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    const checkMobile = () => setIsMobile(window.innerWidth <= 1024);
 
     checkMobile();
     window.addEventListener("resize", checkMobile);
