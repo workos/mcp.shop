@@ -18,7 +18,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
 
   useEffect(() => {
     // Function to check if the viewport is mobile-sized
-    const checkMobile = () => setIsMobile(window.innerWidth <= 1020);
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
 
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -70,12 +70,15 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
             style={{
               width: 60,
               height: 60,
+              minWidth: 60,
+              minHeight: 60,
               aspectRatio: "1/1",
               objectFit: "cover",
               border:
                 idx === selectedIndex ? "2px solid #333" : "1px solid #ccc",
               cursor: "pointer",
               borderRadius: 8,
+              flex: "0 0 auto",
             }}
             onClick={() => setSelectedIndex(idx)}
           />
