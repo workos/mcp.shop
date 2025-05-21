@@ -10,7 +10,8 @@ import { Badge } from "@radix-ui/themes";
 export function ProductDescription({ product }: { product: Product }) {
   return (
     <div className="px-4 md:px-0">
-      <div className="mb-6 flex flex-col border-b pb-6 border-neutral-700 gap-2">
+      <div className="mb-2 flex flex-col pb-4 border-neutral-700 gap-2">
+        <h1 className="mb-2 text-5xl font-medium">{product.title}</h1>
         <Badge
           color="gray"
           variant="soft"
@@ -25,21 +26,28 @@ export function ProductDescription({ product }: { product: Product }) {
             currencyCode={product.priceRange.maxVariantPrice.currencyCode}
           />
         </Badge>
-        <h1 className="mb-2 text-5xl font-medium">{product.title}</h1>
+      </div>
+      <div className="mb-6">
+        <div className="font-regular text-lg mb-2 text-white">
+          Minimalist, mysterious, and maybe a little meta.
+        </div>
+        <div className="mb-2 text-base text-white/70">
+          This sleek tee features the MCP vibes and the phrase "Context is
+          Everything". Whether you're a machine learning enthusiast, a protocol
+          purist, or just someone who loves obscure tech references, this shirt
+          delivers subtle nerd cred with style.
+        </div>
+        <div className="font-regular text-lg text-white text-base">
+          Join the protocol. Set the context.
+        </div>
       </div>
       <VariantSelector options={product.options} variants={product.variants} />
-      {product.descriptionHtml ? (
-        <Prose
-          className="mb-6 text-sm leading-tight text-white/[60%]"
-          html={product.descriptionHtml}
-        />
-      ) : null}
 
       <div className="flex flex-col gap-4">
         <Instructions openButtonLabel="View ordering instructions" />
         <Accordion.Root
           type="single"
-          defaultValue="tshirt-details"
+          defaultValue=""
           collapsible
           className="mb-6"
         >
