@@ -15,10 +15,13 @@ type GalleryProps = {
 export const Gallery: React.FC<GalleryProps> = ({ images }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isSmallMobile, setIsSmallMobile] = useState(false);
 
   useEffect(() => {
-    // Function to check if the viewport is mobile-sized
-    const checkMobile = () => setIsMobile(window.innerWidth <= 1024);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 1024);
+      setIsSmallMobile(window.innerWidth <= 768);
+    };
 
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -26,17 +29,17 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
   }, []);
 
   if (isMobile) {
-    // Mobile: all images same size, horizontal scroll, show part of next image, with left and right padding
+    // Mobile: all images same size, horizontal scroll, show part of next image, with left and right padding only for <= 768px
     return (
       <div
+        className="scrollbar-hide"
         style={{
           display: "flex",
           flexDirection: "row",
           gap: 8,
           overflowX: "auto",
           width: "100%",
-          paddingLeft: 16,
-          paddingRight: 16,
+          ...(isSmallMobile ? { paddingLeft: 16, paddingRight: 16 } : {}),
         }}
       >
         {images.map((img) => (
