@@ -45,7 +45,7 @@ export function VariantSelector({
     <form key={option.id}>
       <dl className="mb-8">
         <dt className="mb-4 text-sm uppercase tracking-wide">{option.name}</dt>
-        <dd className="grid grid-cols-4 sm:grid-cols-4 gap-3">
+        <dd className="flex flex-row flex-wrap gap-2">
           {option.values.map((value) => {
             const optionNameLowerCase = option.name.toLowerCase();
 
@@ -80,7 +80,7 @@ export function VariantSelector({
                 disabled={!isAvailableForSale}
                 style={{
                   borderRadius: 9999,
-                  minWidth: 48,
+                  width: 40,
                   padding: "0.25rem 0.5rem",
                   fontSize: "0.875rem",
                 }}
