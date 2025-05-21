@@ -94,7 +94,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images }) => {
         ))}
       </div>
       {/* Main Image */}
-      <div style={{ marginLeft: 16 }}>
+      <div className="ml-4 w-full">
         <Image
           src={images[selectedIndex].src}
           alt={images[selectedIndex].altText}
