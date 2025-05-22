@@ -209,7 +209,8 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                                 className="mcp-link inline-flex items-center gap-1 no-underline"
                                 style={{ fontSize: "13.8px" }}
                               >
-                                <code>mcp-remote</code>
+                                mcp-remote
+                                <ExternalLinkIcon className="inline w-4 h-4 align-baseline" />
                               </Link>
                               .
                             </p>
