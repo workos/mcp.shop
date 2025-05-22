@@ -42,7 +42,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
     <>
       {dialogOpen && (
         <dialog
-          className="fixed inset-0 m-auto w-[600px] max-w-[600px] p-3 sm:p-6 md:p-6 border border-neutral-700 rounded-xl bg-background text-foreground overflow-y-auto max-h-[85vh] sm:max-h-[90vh]"
+          className="fixed inset-0 m-auto w-[600px] max-w-[90vw] lg:max-w-[600px] p-3 sm:p-6 md:p-6 border border-neutral-700 rounded-xl bg-background text-foreground overflow-y-auto max-h-[85vh] sm:max-h-[90vh]"
           closedby="any"
           ref={dialogRef}
           onClose={() => {
