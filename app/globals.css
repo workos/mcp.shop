@@ -32,7 +32,6 @@ dialog::backdrop {
 
 dialog a {
   color: var(--color-blue-500);
-  text-decoration: underline;
 }
 
 dialog code {
@@ -68,4 +67,22 @@ dialog code {
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+}
+
+a.mcp-link,
+a.mcp-link:visited,
+a.mcp-link:hover,
+a.mcp-link:active,
+a.mcp-link:focus {
+  color: #afa9ff !important;
+  text-decoration: none !important;
+}
+@supports (color: color(display-p3 0.685 0.662 1)) {
+  a.mcp-link,
+  a.mcp-link:visited,
+  a.mcp-link:hover,
+  a.mcp-link:active,
+  a.mcp-link:focus {
+    color: color(display-p3 0.685 0.662 1) !important;
+  }
 }
