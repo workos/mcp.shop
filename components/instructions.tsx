@@ -9,6 +9,7 @@ import {
   ChevronDownIcon,
   Cross2Icon,
   ExternalLinkIcon,
+  InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -87,8 +88,8 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                   AuthKit{" "}
                   <ExternalLinkIcon className="inline w-4 h-4 align-baseline" />
                 </Link>
-                , so after you&apos;ve installed the MCP server, you&apos;ll be
-                prompted to sign up for an MCP Shop account.
+                . After you've installed the MCP server, you'll be prompted to
+                sign up for an MCP Shop account.
               </p>
               <Accordion.Root
                 type="single"
@@ -105,7 +106,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                           Option 1:
                         </span>
                         <span className="not-italic font-normal font-untitled force-untitled">
-                          Ordering with Claude Integrations
+                          Order with Claude Integrations
                         </span>
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
@@ -148,10 +149,9 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                             >
                               If your Claude account has Integrations available,
                               go to the Integrations section of the Settings
-                              menu, select &quot;Add more&quot;, and enter
-                              &quot;MCP Shop&quot; in the name, and{" "}
-                              <code>https://mcp.shop/sse</code> in the URL
-                              field.
+                              menu, select Add more. Enter &quot;MCP Shop&quot;
+                              in the name, and <code>https://mcp.shop/sse</code>{" "}
+                              in the URL field.
                             </p>
                             <div className="w-full flex justify-center">
                               <Image
@@ -176,7 +176,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                           Option 2:
                         </span>
                         <span className="not-italic font-normal font-untitled force-untitled">
-                          Local MCP
+                          Order with Local MCP
                         </span>
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
@@ -202,8 +202,8 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                               className="my-3 break-words font-untitled force-untitled"
                               style={{ fontSize: "13.8px" }}
                             >
-                              You can also order MCP swag via a local MCP server
-                              via{" "}
+                              You can also order from MCP Shop with a local MCP
+                              server via{" "}
                               <Link
                                 href="https://github.com/geelen/mcp-remote"
                                 className="mcp-link inline-flex items-center gap-1 no-underline"
@@ -218,17 +218,18 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                               className="my-3 break-words font-untitled force-untitled"
                               style={{ fontSize: "13.8px" }}
                             >
-                              In Claude, add the following to your{" "}
+                              In&nbsp;
                               <Link
                                 href="https://modelcontextprotocol.io/quickstart/user"
                                 className="mcp-link inline-flex items-center gap-1 no-underline"
                                 style={{ fontSize: "13.8px" }}
                               >
-                                <code>claude_desktop_config.json</code> file
+                                {" "}
+                                Claude Desktop
+                                <ExternalLinkIcon className="inline w-4 h-4 align-baseline" />
                               </Link>
-                              . If you already have stuff in there, make sure to
-                              add it, and not replace it. (And maybe back up the
-                              file first!)
+                              , open the <code>claude_desktop_config.json</code>{" "}
+                              file and add the following:
                             </p>
                             <div className="w-full overflow-x-auto">
                               <pre className="my-3 p-2 sm:p-4 text-xs sm:text-sm border rounded-lg border-neutral-700 bg-neutral-900 whitespace-pre-wrap sm:whitespace-pre">{`{
@@ -239,6 +240,16 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
     }
   }
 }`}</pre>
+                            </div>
+                            <div className="p-3 flex items-start gap-2 bg-neutral-900 rounded-md mt-2">
+                              <InfoCircledIcon className="w-4 h-4 mt-0.5 text-white/70 shrink-0" />
+                              <span
+                                className="font-untitled force-untitled"
+                                style={{ fontSize: "13.8px" }}
+                              >
+                                If you already have other MCP servers installed,
+                                make sure to add it and not replace them.
+                              </span>
                             </div>
                             <p
                               className="my-3 break-words font-untitled force-untitled"
