@@ -135,10 +135,12 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                               Claude recently added{" "}
                               <Link
                                 href="https://www.anthropic.com/news/integrations"
+                                target="_blank"
                                 className="mcp-link inline-flex items-center gap-1 no-underline"
                                 style={{ fontSize: "13.8px" }}
                               >
                                 support for Integrations
+                                <ExternalLinkIcon className="inline w-4 h-4 align-baseline" />
                               </Link>
                               , which support remote MCP servers. With WorkOS,
                               we can add authorization to that MCP server.
@@ -206,6 +208,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                               server via{" "}
                               <Link
                                 href="https://github.com/geelen/mcp-remote"
+                                target="_blank"
                                 className="mcp-link inline-flex items-center gap-1 no-underline"
                                 style={{ fontSize: "13.8px" }}
                               >
@@ -221,6 +224,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                               In&nbsp;
                               <Link
                                 href="https://modelcontextprotocol.io/quickstart/user"
+                                target="_blank"
                                 className="mcp-link inline-flex items-center gap-1 no-underline"
                                 style={{ fontSize: "13.8px" }}
                               >
@@ -255,7 +259,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                               className="my-3 break-words font-untitled force-untitled"
                               style={{ fontSize: "13.8px" }}
                             >
-                              Setup for other tools (like{" "}
+                              Setting up other tools (such as{" "}
                               <Link
                                 href="https://block.github.io/goose/"
                                 className="mcp-link inline-flex items-center gap-1 no-underline"
@@ -263,11 +267,13 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                               >
                                 Goose
                               </Link>
-                              ) is generally pretty similar: a{" "}
-                              <code>command</code> string, and an `args` list of
-                              strings. Support for remote MCP servers is still
-                              new, so for now a lot of tools will require a
-                              proxy like <code>mcp-remote</code>.
+                              ) follows a similar pattern: you'll define a{" "}
+                              <code>command</code> string along with an{" "}
+                              <code>args</code> array of strings. Since support
+                              for remote MCP servers is still evolving, many
+                              tools currently require a proxy like{" "}
+                              <code>mcp-remote</code>&nbsp;to interface with
+                              these servers.
                             </p>
                           </div>
                         </motion.div>
