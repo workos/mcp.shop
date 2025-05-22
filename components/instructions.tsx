@@ -27,7 +27,7 @@ interface InstructionsProps {
 export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
   const dialogRef = React.useRef<HTMLDialogElement>(null);
   const [accordionOpen, setAccordionOpen] = React.useState<string | undefined>(
-    undefined
+    undefined,
   );
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -88,7 +88,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                   AuthKit{" "}
                   <ExternalLinkIcon className="inline w-4 h-4 align-baseline" />
                 </Link>
-                . After you've installed the MCP server, you'll be prompted to
+                . After you’ve installed the MCP server, you’ll be prompted to
                 sign up for an MCP Shop account.
               </p>
               <Accordion.Root
@@ -267,7 +267,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                               >
                                 Goose
                               </Link>
-                              ) follows a similar pattern: you'll define a{" "}
+                              ) follows a similar pattern: you’ll define a{" "}
                               <code>command</code> string along with an{" "}
                               <code>args</code> array of strings. Since support
                               for remote MCP servers is still evolving, many
