@@ -1,3 +1,5 @@
+"use client";
+
 import Price from "@/components/price";
 import { Product } from "@/lib/products";
 import { Instructions } from "@/components/instructions";
@@ -5,8 +7,14 @@ import { VariantSelector } from "./variant-selector";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { Badge } from "@radix-ui/themes";
+import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
 
 export function ProductDescription({ product }: { product: Product }) {
+  const [accordionOpen, setAccordionOpen] = React.useState<string | undefined>(
+    undefined
+  );
+
   return (
     <div className="px-4 md:px-0">
       <div className="mb-2 flex flex-col pb-4 border-neutral-700 gap-2">
@@ -48,9 +56,10 @@ export function ProductDescription({ product }: { product: Product }) {
         <Instructions openButtonLabel="View ordering instructions" />
         <Accordion.Root
           type="single"
-          defaultValue=""
           collapsible
           className="mb-6"
+          value={accordionOpen}
+          onValueChange={setAccordionOpen}
         >
           <Accordion.Item value="tshirt-details">
             <Accordion.Header>
@@ -59,12 +68,29 @@ export function ProductDescription({ product }: { product: Product }) {
                 <ChevronDownIcon className="ml-2 h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </Accordion.Trigger>
             </Accordion.Header>
-            <Accordion.Content className="font-untitled force-untitled px-2 pt-2 text-white/60 text-sm overflow-hidden transition-all duration-300 data-[state=closed]:max-h-0 data-[state=open]:max-h-[500px] data-[state=closed]:opacity-0 data-[state=open]:opacity-100">
-              <ul className="list-disc list-inside">
-                <li>Soft, lightweight cotton blend</li>
-                <li>Unisex fit, pre-shrunk</li>
-                <li>Printed with durable, fade-resistant ink</li>
-              </ul>
+            <Accordion.Content asChild forceMount={true}>
+              <AnimatePresence initial={false}>
+                {accordionOpen === "tshirt-details" && (
+                  <motion.div
+                    key="tshirt-details"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{
+                      type: "tween",
+                      duration: 0.55,
+                      ease: "easeInOut",
+                    }}
+                    className="font-untitled force-untitled px-2 pt-2 text-white/60 text-sm overflow-hidden"
+                  >
+                    <ul className="list-disc list-inside">
+                      <li>Soft, lightweight cotton blend</li>
+                      <li>Unisex fit, pre-shrunk</li>
+                      <li>Printed with durable, fade-resistant ink</li>
+                    </ul>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </Accordion.Content>
           </Accordion.Item>
         </Accordion.Root>
