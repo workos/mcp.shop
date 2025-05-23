@@ -80,7 +80,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
               >
                 MCP Shop uses{" "}
                 <Link
-                  href="https://www.authkit.com"
+                  href="https://workos.com/authkit?utm_source=mcp_shop&utm_medium=referral&utm_campaign=workos_mcp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mcp-link inline-flex items-center gap-1 no-underline"

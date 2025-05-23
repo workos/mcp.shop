@@ -86,3 +86,10 @@ a.mcp-link:focus {
     color: color(display-p3 0.685 0.662 1) !important;
   }
 }
+
+@supports (color: color(display-p3 0.685 0.662 1)) {
+  .footer-social-icon:hover,
+  .footer-social-icon:focus {
+    color: color(display-p3 0.685 0.662 1) !important;
+  }
+}
