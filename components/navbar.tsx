@@ -16,10 +16,10 @@ export async function Navbar() {
       </Link>
       <div>
         {user ? (
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center min-w-0">
             <Link className="flex gap-2 items-center" href="/orders">
               <ShoppingCartIcon className="h-5 border rounded m-1 text-foreground" />
-              <div className="hidden lg:block">
+              <div className="hidden lg:block whitespace-nowrap">
                 Welcome back, {user.firstName ?? user.email}.
               </div>
             </Link>
