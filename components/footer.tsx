@@ -10,6 +10,8 @@ export default function Footer() {
         <Image
           src="https://images.workoscdn.com/images/54fa0640-e1d8-4a4c-be3c-ecb445989a94.png?auto=format&fit=clip&q=80"
           alt="Logo"
+          href="https://www.workos.com/"
+          target="_blank"
           height={75}
           width={75}
           className="mr-2"
@@ -24,14 +26,6 @@ export default function Footer() {
           aria-label="Twitter"
         >
           <FaTwitter className="w-5 h-5 text-neutral-400 hover:text-sky-400 transition" />
-        </Link>
-        <Link
-          href="https://github.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub"
-        >
-          <FaGithub className="w-5 h-5 text-neutral-400 hover:text-white transition" />
         </Link>
         <Link
           href="https://linkedin.com/"
