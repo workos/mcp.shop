@@ -20,6 +20,22 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "MCP Shop",
   description: "The latest and greatest MCP merch",
+  openGraph: {
+    images: [
+      {
+        url: "https://vercel.com/api/www/screenshot?url=https://mcp.shop&width=1200&height=630",
+        width: 1200,
+        height: 630,
+        alt: "MCP Shop Screenshot",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [
+      "https://vercel.com/api/www/screenshot?url=https://mcp.shop&width=1200&height=630",
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -29,6 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
