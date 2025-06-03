@@ -20,6 +20,20 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "MCP Shop",
   description: "The latest and greatest MCP merch",
+  openGraph: {
+    images: [
+      {
+        url: "/images/mcp-shop.png",
+        width: 1200,
+        height: 630,
+        alt: "MCP Shop OG Image",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/images/mcp-shop.png"],
+  },
 };
 
 export default function RootLayout({
