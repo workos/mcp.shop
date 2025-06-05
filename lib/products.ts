@@ -48,26 +48,32 @@ export const products: Record<string, Product> = {
     featuredImage: {
       altText: "The MCP tee",
       height: 1024,
-      url: "/shirt.webp",
+      url: "/Front_01.jpg",
       width: 1024,
     },
     images: [
       {
         altText: "MCP tee shirt",
         height: 1200,
-        url: "/shirt.jpg",
+        url: "/Front_01.jpg",
         width: 1200,
       },
       {
-        altText: "Man wearing the shirt",
+        altText: "MCP tee shirt",
+        height: 1200,
+        url: "/Front_02.jpg",
+        width: 1200,
+      },
+      {
+        altText: "MCP tee shirt back",
         height: 588,
-        url: "/man.jpg",
+        url: "/Back_01.jpg",
         width: 588,
       },
       {
-        altText: "Zoomed in design",
+        altText: "MCP tee shirt back",
         height: 588,
-        url: "/zoom.jpg",
+        url: "/Back_02.jpg",
         width: 588,
       },
     ],
@@ -203,5 +209,5 @@ export const products: Record<string, Product> = {
 };
 
 export const getProduct = async (
-  handle: keyof typeof products,
+  handle: keyof typeof products
 ): Promise<Product> => products[handle];
