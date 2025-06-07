@@ -98,12 +98,70 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                 value={accordionOpen}
                 onValueChange={setAccordionOpen}
               >
-                <Accordion.Item value="claude-integrations">
+                <Accordion.Item value="cursor-integration">
                   <Accordion.Header>
                     <Accordion.Trigger className="w-full flex items-center justify-between text-left text-base text-white py-4 px-4 rounded-lg bg-neutral-900 hover:bg-neutral-800 shadow transition group cursor-pointer">
                       <span className="flex items-center">
                         <span className="font-untitled force-untitled mr-1 text-white/70">
                           Option 1:
+                        </span>
+<span className="not-italic font-normal font-untitled force-untitled">
+                          Connect to Cursor
+                        </span>
+                      </span>
+                      <ChevronDownIcon className="ml-2 h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                    </Accordion.Trigger>
+                  </Accordion.Header>
+                  <Accordion.Content asChild forceMount={true}>
+                    <AnimatePresence initial={false}>
+                      {accordionOpen === "cursor-integration" && (
+                        <motion.div
+                          key="cursor-integration"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{
+                            type: "tween",
+                            duration: 0.55,
+                            ease: "easeInOut",
+                          }}
+                          className="px-4 pt-2 pb-4 text-base text-white/90 bg-neutral-950 rounded-b-lg overflow-hidden"
+                        >
+                          <div>
+                            <p
+                              className="my-3 break-words font-untitled force-untitled"
+                              style={{ fontSize: "13.8px" }}
+                            >
+                              Use this Cursor Deeplink button to connect the MCP
+                              server to your Cursor app. It can then be access
+                              via the Cursor agent chat.
+                            </p>
+                            <div className="flex md:flex-row flex-col justify-left items-center gap-4">
+                              <a
+                                href="https://cursor.com/install-mcp?name=mcp.shop&config=eyJjb21tYW5kIjoibnB4IC15IG1jcC1yZW1vdGUgaHR0cHM6Ly9tY3Auc2hvcC9tY3AifQ%3D%3D"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-block"
+                              >
+                                <img
+                                  src="mcp-install-light.png"
+                                  alt="Add mcp.shop to Cursor"
+                                  style={{ maxHeight: "32px" }}
+                                />
+                              </a>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item value="claude-integrations">
+                  <Accordion.Header>
+                    <Accordion.Trigger className="w-full flex items-center justify-between text-left text-base text-white py-4 px-4 rounded-lg bg-neutral-900 hover:bg-neutral-800 shadow transition group cursor-pointer">
+                      <span className="flex items-center">
+                        <span className="font-untitled force-untitled mr-1 text-white/70">
+                          Option 2:
                         </span>
                         <span className="not-italic font-normal font-untitled force-untitled">
                           Order with Claude Integrations
@@ -175,7 +233,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                     <Accordion.Trigger className="w-full flex items-center justify-between text-left text-base text-white py-4 px-4 rounded-lg bg-neutral-900 hover:bg-neutral-800 shadow transition group cursor-pointer">
                       <span className="flex items-center">
                         <span className="font-untitled force-untitled mr-1 text-white/70">
-                          Option 2:
+                          Option 3:
                         </span>
                         <span className="not-italic font-normal font-untitled force-untitled">
                           Order with Local MCP
