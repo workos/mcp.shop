@@ -143,6 +143,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                                 rel="noopener noreferrer"
                                 className="inline-block"
                               >
+                                {/* TODO: Add a Next.js Image instead of img here */}
                                 <img
                                   src="mcp-install-light.png"
                                   alt="Add mcp.shop to Cursor"
