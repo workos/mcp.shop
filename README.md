@@ -1,6 +1,14 @@
-# mcp.shop
+<p align="center">
+  <h1 align="center">mcp.shop</h1>
+</p>
 
-The world's first MCP-based web shop.
+<p align="center">
+    The world's first MCP-based web shop, built with WorkOS Authkit and Next.js mcp-adaptor.
+</p>
+
+<p align="center">
+  Demo: <a href="https://mcp.shop/">mcp.shop</a>
+</p>
 
 ## Overview
 
@@ -76,7 +84,3 @@ To connect your chat client to the development server, add the following configu
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-[Add your license information here]
