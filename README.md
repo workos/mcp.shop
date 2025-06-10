@@ -3,11 +3,11 @@
 </p>
 
 <p align="center">
-    The world's first MCP-based web shop, built with WorkOS Authkit and Next.js mcp-adaptor.
+  The world's first MCP-based web shop, built with WorkOS AuthKit and Next.js mcp-adaptor.
 </p>
 
 <p align="center">
-  Demo: <a href="https://mcp.shop/">mcp.shop</a>
+  <a href="https://mcp.shop/">Live Demo</a> • <a href="#overview">Overview</a> • <a href="#architecture">Architecture</a> • <a href="#prerequisites">Prerequisites</a> • <a href="#setup">Setup</a>
 </p>
 
 ## Overview
@@ -45,26 +45,30 @@ Key components:
    ```
 
 3. Configure environment variables:
-   Create a `.env` file with the following:
-   ```
-   # WorkOS AuthKit configuration
-   WORKOS_API_KEY=your_api_key
-   WORKOS_CLIENT_ID=your_client_id
    
-   # Redis configuration
-   REDIS_URL=your_redis_url
+   Create a `.env.local` file in the root directory with the following variables:
+
+   ```env
+   # WorkOS Configuration
+   AUTHKIT_DOMAIN=your-authkit-domain
+   WORKOS_API_KEY=your-workos-api-key
+   WORKOS_CLIENT_ID=your-workos-client-id
+
+   # Redis Configuration (Upstash)
+   KV_REST_API_URL=your-upstash-url
+   KV_REST_API_TOKEN=your-upstash-token
    ```
 
-   You can find your WorkOS credentials in the [WorkOS dashboard](https://workos.com/docs/user-management/vanilla/nodejs/1-configure-your-project).
+   > **Note:** You can find your WorkOS credentials in the [WorkOS dashboard](https://workos.com/docs/user-management/vanilla/nodejs/1-configure-your-project). Make sure to set your redirect URI in the dashboard.
 
 4. Start the development server:
    ```bash
    pnpm dev
    ```
 
-The application will be available at:
-- Website: [http://localhost:3000](http://localhost:3000)
-- MCP Server: `/mcp`
+   The application will be available at:
+   - Website: [http://localhost:3000](http://localhost:3000)
+   - MCP Server: `/mcp`
 
 ## Connecting to MCP
 
@@ -84,3 +88,7 @@ To connect your chat client to the development server, add the following configu
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+[MIT](LICENSE)
