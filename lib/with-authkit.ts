@@ -20,16 +20,16 @@ export interface Authorization {
 
 /**
  * Middleware to protect MCP server endpoints with AuthKit authentication.
- * 
+ *
  * This implements the authorization flow for Model Context Protocol (MCP) servers
- * as specified in the MCP authorization spec. AuthKit acts as the OAuth 2.0 
+ * as specified in the MCP authorization spec. AuthKit acts as the OAuth 2.0
  * authorization server while your MCP server is the resource server.
- * 
+ *
  * Prerequisites:
  * - Enable Dynamic Client Registration in WorkOS Dashboard under Applications → Configuration
  * - Set AUTHKIT_DOMAIN environment variable (e.g., "subdomain.authkit.app")
  * - Implement /.well-known/oauth-protected-resource endpoint in your app
- * 
+ *
  * @param next - The handler function to call after successful authentication
  * @returns A middleware function that verifies AuthKit access tokens
  */
@@ -101,7 +101,7 @@ export function withAuthkit(
 
       throw error;
     }
-    
+
     // Fetch the full user profile from WorkOS using the subject claim
     // This provides additional user context beyond what's in the JWT
     const workos = getWorkOS();

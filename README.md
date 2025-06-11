@@ -13,6 +13,7 @@
 ## Overview
 
 This project demonstrates how to use AuthKit with MCP to create a secure web shop where users can:
+
 - Connect to an MCP server
 - Authenticate via AuthKit
 - Order t-shirts using MCP tools
@@ -21,11 +22,13 @@ This project demonstrates how to use AuthKit with MCP to create a secure web sho
 ## Architecture
 
 The application is built on:
+
 - [Next.js B2B Starter Kit](https://workos.com/blog/nextjs-b2b-starter-kit) for the website
 - [Vercel MCP Adapter](https://github.com/vercel/mcp-adapter) for MCP integration
 - [WorkOS AuthKit with MCP](https://workos.com/docs/user-management/mcp) for authentication
 
 Key components:
+
 - Authentication logic: `lib/with-authkit.ts`
 - Client registration: `app/.well-known/`
 - MCP implementation: `app/[transport]/route.ts`
@@ -40,12 +43,13 @@ Key components:
 
 1. Clone the repository
 2. Install dependencies:
+
    ```bash
    pnpm install
    ```
 
 3. Configure environment variables:
-   
+
    Create a `.env.local` file in the root directory with the following variables:
 
    ```env
@@ -62,11 +66,13 @@ Key components:
    > **Note:** You can find your WorkOS credentials in the [WorkOS dashboard](https://workos.com/docs/user-management/vanilla/nodejs/1-configure-your-project). Make sure to set your redirect URI in the dashboard.
 
 4. Start the development server:
+
    ```bash
    pnpm dev
    ```
 
    The application will be available at:
+
    - Website: [http://localhost:3000](http://localhost:3000)
    - MCP Server: `/mcp`
 
@@ -76,12 +82,12 @@ To connect your chat client to the development server, add the following configu
 
 ```json
 {
-    "mcpServers": {
-        "mcp.shop": {
-            "command": "npx",
-            "args": ["-y", "mcp-remote", "http://localhost:3000/mcp"]
-        }
+  "mcpServers": {
+    "mcp.shop": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://localhost:3000/mcp"]
     }
+  }
 }
 ```
 
