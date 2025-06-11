@@ -46,16 +46,16 @@ const getOrdersMatchingPattern = async (pattern: string) => {
   const orders: Order[] = [];
 
   for await (const key of scan({ match: pattern, count: 100 })) {
-    orders.push((await redis.hgetall(key)) as unknown as Order);
+    orders.push((await redis.hgetall(key as string)) as unknown as Order);
   }
 
   return orders;
 };
 
 export const getOrders = async (user: User): Promise<Order[]> => {
-  return getOrdersMatchingPattern(`orders:${user.id}:*`)
-}
+  return getOrdersMatchingPattern(`orders:${user.id}:*`);
+};
 
 export const getOrdersForAllUsers = async (): Promise<Order[]> => {
-  return getOrdersMatchingPattern(`orders:*`)
-}
+  return getOrdersMatchingPattern(`orders:*`);
+};

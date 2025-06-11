@@ -12,7 +12,7 @@ import React from "react";
 
 export function ProductDescription({ product }: { product: Product }) {
   const [accordionOpen, setAccordionOpen] = React.useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   return (

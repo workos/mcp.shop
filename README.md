@@ -1,38 +1,100 @@
-# mcp.shop
+<p align="center">
+  <h1 align="center">mcp.shop</h1>
+</p>
 
-The world's first MCP-based web shop.
+<p align="center">
+  The world's first MCP-based web shop, built with WorkOS AuthKit and Next.js mcp-adaptor.
+</p>
 
-## Getting Started
+<p align="center">
+  <a href="https://mcp.shop/">Live Demo</a> • <a href="#overview">Overview</a> • <a href="#architecture">Architecture</a> • <a href="#prerequisites">Prerequisites</a> • <a href="#setup">Setup</a>
+</p>
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This project demonstrates how to use AuthKit with MCP to create a secure web shop where users can:
+
+- Connect to an MCP server
+- Authenticate via AuthKit
+- Order t-shirts using MCP tools
+- View order details (admin users only)
+
+## Architecture
+
+The application is built on:
+
+- [Next.js B2B Starter Kit](https://workos.com/blog/nextjs-b2b-starter-kit) for the website
+- [Vercel MCP Adapter](https://github.com/vercel/mcp-adapter) for MCP integration
+- [WorkOS AuthKit with MCP](https://workos.com/docs/user-management/mcp) for authentication
+
+Key components:
+
+- Authentication logic: `lib/with-authkit.ts`
+- Client registration: `app/.well-known/`
+- MCP implementation: `app/[transport]/route.ts`
+
+## Prerequisites
+
+- Node.js (latest LTS version recommended)
+- WorkOS account with AuthKit configured
+- Redis service (e.g., Upstash)
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Configure environment variables:
+
+   Create a `.env.local` file in the root directory with the following variables:
+
+   ```env
+   # WorkOS Configuration
+   AUTHKIT_DOMAIN=your-authkit-domain
+   WORKOS_API_KEY=your-workos-api-key
+   WORKOS_CLIENT_ID=your-workos-client-id
+
+   # Redis Configuration (Upstash)
+   KV_REST_API_URL=your-upstash-url
+   KV_REST_API_TOKEN=your-upstash-token
+   ```
+
+   > **Note:** You can find your WorkOS credentials in the [WorkOS dashboard](https://workos.com/docs/user-management/vanilla/nodejs/1-configure-your-project). Make sure to set your redirect URI in the dashboard.
+
+4. Start the development server:
+
+   ```bash
+   pnpm dev
+   ```
+
+   The application will be available at:
+
+   - Website: [http://localhost:3000](http://localhost:3000)
+   - MCP Server: `/mcp`
+
+## Connecting to MCP
+
+To connect your chat client to the development server, add the following configuration to your MCP config file (e.g., `.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "mcp.shop": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "http://localhost:3000/mcp"]
+    }
+  }
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contributing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## License
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[MIT](LICENSE)

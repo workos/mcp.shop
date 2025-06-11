@@ -25,8 +25,7 @@ const handler = withAuthkit((request, auth) =>
                     {
                       label: "Shirt",
                       description: products.shirt.descriptionHtml,
-                      image_url:
-                        "https://mcp.shop/shirt.jpg",
+                      image_url: "https://mcp.shop/shirt.jpg",
                     },
                   ],
                 }),

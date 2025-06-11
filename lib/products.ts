@@ -209,5 +209,5 @@ export const products: Record<string, Product> = {
 };
 
 export const getProduct = async (
-  handle: keyof typeof products
+  handle: keyof typeof products,
 ): Promise<Product> => products[handle];

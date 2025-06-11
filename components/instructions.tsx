@@ -105,7 +105,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                         <span className="font-untitled force-untitled mr-1 text-white/70">
                           Option 1:
                         </span>
-<span className="not-italic font-normal font-untitled force-untitled">
+                        <span className="not-italic font-normal font-untitled force-untitled">
                           Connect to Cursor
                         </span>
                       </span>
