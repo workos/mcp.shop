@@ -37,6 +37,8 @@ export default authkitMiddleware({
       "/man.jpg",
       "/zoom.jpg",
       "/images/:path*",
+      "/image/:path*",
+      "/image",
     ],
   },
 });
