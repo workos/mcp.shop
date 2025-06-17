@@ -19,6 +19,7 @@ export default authkitMiddleware({
       "/sse",
       "/.well-known/:path*",
       "/_next/:path*",
+      "/_next/image/:path*",
       "/static/:path*",
       "/public/:path*",
       "/fonts/:path*",
