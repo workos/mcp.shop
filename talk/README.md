@@ -71,3 +71,23 @@ But here's the kicker: this also gets you ready to eventually sell into the ente
 Stop reinventing the authentication wheel. It's 2025. We have better wheels now. They come with OAuth support, enterprise features, and most importantly, someone else maintains them.
 
 Let auth be auth. Let someone else lose sleep over security vulnerabilities. You've got MCP servers to build.
+
+
+## P.S. Y'all want a shirt?
+
+We can run the localhost and use:
+```json
+{
+    "mcpServers": {
+        "mcp.shop": {
+            "command": "npx",
+            "args": ["-y", "mcp-remote", "http://localhost:3000/mcp"]
+        }
+    }
+}
+```
+
+Or just 
+
+[![Add to Cursor](../public/mcp-install-dark.png)](https://cursor.com/install-mcp?name=mcp.shop&config=eyJjb21tYW5kIjoibnB4IC15IG1jcC1yZW1vdGUgaHR0cHM6Ly9tY3Auc2hvcC9tY3AifQ%3D%3D)
+
