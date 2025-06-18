@@ -91,3 +91,5 @@ Or just
 
 [![Add to Cursor](../public/mcp-install-dark.png)](https://cursor.com/install-mcp?name=mcp.shop&config=eyJjb21tYW5kIjoibnB4IC15IG1jcC1yZW1vdGUgaHR0cHM6Ly9tY3Auc2hvcC9tY3AifQ%3D%3D)
 
+
+<!-- P.S. you can build these notes into slides with `npm install -g @marp-team/marp-cli && node talk/build-slides.js` -->
