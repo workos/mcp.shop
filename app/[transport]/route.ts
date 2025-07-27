@@ -1,7 +1,7 @@
 import { getOrders, placeOrder } from "@/lib/orders";
 import { products } from "@/lib/products";
 import { withAuthkit } from "@/lib/with-authkit";
-import createMcpHandler from "@vercel/mcp-adapter/next";
+import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
 
 const handler = withAuthkit((request, auth) =>
