@@ -63,7 +63,11 @@ Key components:
    KV_REST_API_TOKEN=your-upstash-token
    ```
 
-   > **Note:** You can find your WorkOS credentials in the [WorkOS dashboard](https://workos.com/docs/user-management/vanilla/nodejs/1-configure-your-project). Make sure to set your redirect URI in the dashboard.
+   > **Note:**:
+   >
+   > - You can find your WorkOS credentials in the [WorkOS dashboard](https://workos.com/docs/user-management/vanilla/nodejs/1-configure-your-project). 
+   > - Make sure to set your redirect URI (`http://localhost:3000/callback` for local development or `https://<deployed-url>/callback` for production) in the dashboard.
+   > - Make sure you have enabled **Dynamic Client Registration** on the dashboard. It should be under **Developer** -> **Application** -> **Configuration** page on the dashboard
 
 4. Start the development server:
 
@@ -72,7 +76,6 @@ Key components:
    ```
 
    The application will be available at:
-
    - Website: [http://localhost:3000](http://localhost:3000)
    - MCP Server: `/mcp`
 
