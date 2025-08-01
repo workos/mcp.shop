@@ -8,13 +8,6 @@ export default function Footer() {
       {/* Logo on the left */}
       <div className="flex items-center">
         <Link
-          href="https://github.com/workos/mcp.shop"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <FaGithub className="footer-social-icon w-5 h-5 text-neutral-400 transition" />
-        </Link>
-        <Link
           href="https://workos.com/?utm_source=mcp_shop&utm_medium=referral&utm_campaign=workos_mcp"
           target="_blank"
           rel="noopener noreferrer"
@@ -53,6 +46,13 @@ export default function Footer() {
           aria-label="YouTube"
         >
           <FaYoutube className="footer-social-icon w-5 h-5 text-neutral-400 transition" />
+        </Link>
+        <Link
+          href="https://github.com/workos/mcp.shop"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FaGithub className="footer-social-icon w-5 h-5 text-neutral-400 transition" />
         </Link>
       </div>
     </footer>
