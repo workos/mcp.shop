@@ -45,15 +45,15 @@ export default function RootLayout({
     <html lang="en">
       <head />
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
-        <Theme appearance="dark">
-          <AuthKitProvider>
+        <AuthKitProvider>
+          <Theme appearance="dark" className="flex flex-col">
             <Navbar />
-            {children}
+            <main className="flex-grow">{children}</main>
             <Footer />
-          </AuthKitProvider>
-        </Theme>
+          </Theme>
+        </AuthKitProvider>
       </body>
     </html>
   );
