@@ -81,8 +81,9 @@ export function withAuthkit(
     let payload: Authorization["claims"];
     try {
       // Verify the JWT access token issued by AuthKit
-      // This validates the signature, issuer, and expiration
+      // This validates the signature, audience, issuer, and expiration
       ({ payload } = await jose.jwtVerify(token, jwks, {
+        audience: process.env.WORKOS_CLIENT_ID,
         issuer: `https://${authkitDomain}`,
       }));
     } catch (error) {
