@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-[calc(100vh-13vh)]">
+    <div className="flex flex-col">
       <main className="flex-1">
         <Suspense fallback={<div>Loading...</div>}>
           <ProductPage />
