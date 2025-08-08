@@ -106,7 +106,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                           Option 1:
                         </span>
                         <span className="not-italic font-normal font-untitled force-untitled">
-                          Connect to Cursor
+                          Connect to Cursor or VS Code
                         </span>
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
@@ -132,13 +132,13 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                               className="my-3 break-words font-untitled force-untitled"
                               style={{ fontSize: "13.8px" }}
                             >
-                              Use this Cursor Deeplink button to connect the MCP
-                              server to your Cursor app. It can then be access
-                              via the Cursor agent chat.
+                              Use this Cursor Deeplink or VS Code Add button to connect the MCP
+                              server to your Cursor or VS Code app. It can then be accessed
+                              via the agent chat.
                             </p>
                             <div className="flex md:flex-row flex-col justify-left items-center gap-4">
                               <a
-                                href="https://cursor.com/install-mcp?name=mcp.shop&config=eyJjb21tYW5kIjoibnB4IC15IG1jcC1yZW1vdGUgaHR0cHM6Ly9tY3Auc2hvcC9tY3AifQ%3D%3D"
+                                href="cursor://anysphere.cursor-deeplink/mcp/install?name=mcp.shop&config=eyJ1cmwiOiJodHRwczovL21jcC5zaG9wL21jcCJ9"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-block"
@@ -147,6 +147,18 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                                 <img
                                   src="mcp-install-light.png"
                                   alt="Add mcp.shop to Cursor"
+                                  style={{ maxHeight: "32px" }}
+                                />
+                              </a>
+                              <a
+                                href="vscode:mcp/install?%7B%22name%22%3A%22mcp.shop%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.shop%2Fmcp%22%7D"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-block"
+                              >
+                                <img
+                                  src="https://img.shields.io/badge/VS_Code-Install_mcp.shop-0098FF?style=flat-square&logo=visualstudiocode&logoColor=ffffff"
+                                  alt="Install in VS Code"
                                   style={{ maxHeight: "32px" }}
                                 />
                               </a>
