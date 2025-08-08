@@ -5,7 +5,7 @@ export function GET(): Response {
 
   return new Response(
     JSON.stringify({
-      resource: `${protocol}://${mcpServerDomain}`,
+      resource: `${protocol}://${mcpServerDomain}/mcp`,
       authorization_servers: [`https://${process.env.AUTHKIT_DOMAIN}`],
       bearer_methods_supported: ["header"],
     }),
