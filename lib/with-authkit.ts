@@ -48,25 +48,35 @@ export function withAuthkit(
     process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?? "localhost:3000";
   const protocol = mcpServerDomain.startsWith("localhost") ? "http" : "https";
 
-  // WWW-Authenticate header with resource_metadata challenge parameter
-  // This enables MCP clients to discover the authorization server dynamically
-  // when they receive a 401 response, promoting zero-config interoperability
-  const wwwAuthenticateHeader = [
-    'Bearer error="unauthorized"',
-    'error_description="Authorization needed"',
-    `resource_metadata="${protocol}://${mcpServerDomain}/.well-known/oauth-protected-resource"`,
-  ].join(", ");
-
-  const unauthorized = (error: string) =>
-    new Response(JSON.stringify({ error }), {
-      status: 401,
-      headers: {
-        "WWW-Authenticate": wwwAuthenticateHeader,
-        "Content-Type": "application/json",
-      },
-    });
-
   return async (request: NextRequest) => {
+    let resource: string;
+    switch (request.nextUrl.pathname) {
+      case "/mcp":
+      case "/sse":
+        resource = request.nextUrl.pathname;
+        break;
+      default:
+        resource = "";
+    }
+
+    // WWW-Authenticate header with resource_metadata challenge parameter
+    // This enables MCP clients to discover the authorization server dynamically
+    // when they receive a 401 response, promoting zero-config interoperability
+    const wwwAuthenticateHeader = [
+      'Bearer error="unauthorized"',
+      'error_description="Authorization needed"',
+      `resource_metadata="${protocol}://${mcpServerDomain}/.well-known/oauth-protected-resource${resource}"`,
+    ].join(", ");
+
+    const unauthorized = (error: string) =>
+      new Response(JSON.stringify({ error }), {
+        status: 401,
+        headers: {
+          "WWW-Authenticate": wwwAuthenticateHeader,
+          "Content-Type": "application/json",
+        },
+      });
+
     // Extract Bearer token from Authorization header
     const authorizationHeader = request.headers.get("Authorization");
     if (!authorizationHeader) {
