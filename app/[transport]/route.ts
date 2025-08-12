@@ -1,11 +1,10 @@
 import { getOrders, placeOrder } from "@/lib/orders";
 import { products } from "@/lib/products";
-import { withAuthkit } from "@/lib/with-authkit";
-import { createMcpHandler } from "mcp-handler";
+import { verifyToken, type AuthKitToolContext } from "@/lib/with-authkit";
+import { createMcpHandler, withMcpAuth } from "mcp-handler";
 import { z } from "zod";
 
-const handler = withAuthkit((request, auth) =>
-  createMcpHandler(
+const resourceHandler = createMcpHandler(
     (server) => {
       server.tool(
         "listMcpShopInventory",
@@ -47,9 +46,14 @@ const handler = withAuthkit((request, auth) =>
           mailingAddress: z.string(),
           tshirtSize: z.string(),
         },
-        async (args) => {
+        async (args, extra) => {
           try {
-            const order = await placeOrder(args, auth.user);
+            const { authInfo } = extra as AuthKitToolContext;
+            if (!authInfo?.user) {
+              throw new Error("Authentication required");
+            }
+            const typedArgs = args as { company: string; mailingAddress: string; tshirtSize: string };
+            const order = await placeOrder(typedArgs, authInfo.user);
             return {
               content: [
                 {
@@ -81,9 +85,13 @@ const handler = withAuthkit((request, auth) =>
           "Use this tool if a user needs to review the orders they've " +
           "placed. There is no way to adjust an order at this time. " +
           "(The user should contact WorkOS instead).",
-        async () => {
+        async (extra) => {
           try {
-            const orders = await getOrders(auth.user);
+            const { authInfo } = extra as AuthKitToolContext;
+            if (!authInfo?.user) {
+              throw new Error("Authentication required");
+            }
+            const orders = await getOrders(authInfo.user);
             return {
               content: [
                 {
@@ -120,7 +128,10 @@ const handler = withAuthkit((request, auth) =>
       maxDuration: 600,
       verboseLogs: true,
     },
-  )(request),
 );
 
-export { handler as GET, handler as POST };
+const authHandler = withMcpAuth(resourceHandler, verifyToken, {
+  required: true,
+});
+
+export { authHandler as GET, authHandler as POST };
