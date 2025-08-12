@@ -1,6 +1,6 @@
 import { getOrders, placeOrder } from "@/lib/orders";
 import { products } from "@/lib/products";
-import { verifyToken } from "@/lib/with-authkit";
+import { verifyToken, type AuthKitToolContext } from "@/lib/with-authkit";
 import { createMcpHandler, withMcpAuth } from "mcp-handler";
 import { z } from "zod";
 
@@ -46,9 +46,14 @@ const resourceHandler = createMcpHandler(
           mailingAddress: z.string(),
           tshirtSize: z.string(),
         },
-        async (args) => {
+        async (args, extra) => {
           try {
-            const order = await placeOrder(args, auth.user);
+            const { authInfo } = extra as AuthKitToolContext;
+            if (!authInfo?.user) {
+              throw new Error("Authentication required");
+            }
+            const typedArgs = args as { company: string; mailingAddress: string; tshirtSize: string };
+            const order = await placeOrder(typedArgs, authInfo.user);
             return {
               content: [
                 {
@@ -80,9 +85,13 @@ const resourceHandler = createMcpHandler(
           "Use this tool if a user needs to review the orders they've " +
           "placed. There is no way to adjust an order at this time. " +
           "(The user should contact WorkOS instead).",
-        async () => {
+        async (extra) => {
           try {
-            const orders = await getOrders(auth.user);
+            const { authInfo } = extra as AuthKitToolContext;
+            if (!authInfo?.user) {
+              throw new Error("Authentication required");
+            }
+            const orders = await getOrders(authInfo.user);
             return {
               content: [
                 {
