@@ -38,6 +38,10 @@ export function withAuthkit(
 ): (request: NextRequest) => Promise<Response> {
   const authkitDomain = process.env.AUTHKIT_DOMAIN;
 
+  if (!authkitDomain) {
+    throw new Error("AUTHKIT_DOMAIN is not set");
+  }
+
   // Create a JWKS client to fetch and cache AuthKit's public keys
   // These keys are used to verify the JWT signatures
   const jwks = jose.createRemoteJWKSet(
