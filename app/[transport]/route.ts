@@ -1,11 +1,10 @@
 import { getOrders, placeOrder } from "@/lib/orders";
 import { products } from "@/lib/products";
-import { withAuthkit } from "@/lib/with-authkit";
-import { createMcpHandler } from "mcp-handler";
+import { verifyToken } from "@/lib/with-authkit";
+import { createMcpHandler, withMcpAuth } from "mcp-handler";
 import { z } from "zod";
 
-const handler = withAuthkit((request, auth) =>
-  createMcpHandler(
+const resourceHandler = createMcpHandler(
     (server) => {
       server.tool(
         "listMcpShopInventory",
@@ -120,7 +119,10 @@ const handler = withAuthkit((request, auth) =>
       maxDuration: 600,
       verboseLogs: true,
     },
-  )(request),
 );
 
-export { handler as GET, handler as POST };
+const authHandler = withMcpAuth(resourceHandler, verifyToken, {
+  required: true,
+});
+
+export { authHandler as GET, authHandler as POST };

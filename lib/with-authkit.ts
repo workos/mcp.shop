@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import * as jose from "jose";
 import { getWorkOS } from "@workos-inc/authkit-nextjs";
+import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
 
 export type User = Awaited<
   ReturnType<ReturnType<typeof getWorkOS>["userManagement"]["getUser"]>
@@ -121,4 +122,52 @@ export function withAuthkit(
     // Pass the authenticated user context to the protected handler
     return next(request, { user, accessToken: token, claims: payload });
   };
+}
+
+/**
+ * Verify token function for use with withMcpAuth from mcp-handler.
+ * This adapts the existing AuthKit authentication to work with MCP's auth system.
+ */
+export async function verifyToken(
+  request: Request,
+  bearerToken?: string,
+): Promise<AuthInfo | undefined> {
+  const authkitDomain = process.env.AUTHKIT_DOMAIN;
+  const jwks = jose.createRemoteJWKSet(
+    new URL(`https://${authkitDomain}/oauth2/jwks`),
+  );
+
+  if (!bearerToken) {
+    return undefined;
+  }
+
+  try {
+    // Verify the JWT access token issued by AuthKit
+    const { payload } = await jose.jwtVerify(bearerToken, jwks, {
+      audience: process.env.WORKOS_CLIENT_ID,
+      issuer: `https://${authkitDomain}`,
+    }) as { payload: Authorization["claims"] };
+
+    // Fetch the full user profile from WorkOS
+    const workos = getWorkOS();
+    if (!payload.sub) {
+      console.error("Missing sub claim in token");
+      return undefined;
+    }
+    const user = await workos.userManagement.getUser(payload.sub);
+
+    return {
+      token: bearerToken,
+      clientId: payload.sub,
+      scopes: [], // Add scopes if needed
+      extra: {
+        user,
+        accessToken: bearerToken,
+        claims: payload,
+      },
+    };
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    return undefined;
+  }
 }
