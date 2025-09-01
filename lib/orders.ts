@@ -1,5 +1,5 @@
 import redis, { scan, withTimeout } from "@/lib/redis";
-import { User } from "./with-authkit";
+import { User } from "./verify-authkit-token";
 
 export interface Order {
   id: number;
