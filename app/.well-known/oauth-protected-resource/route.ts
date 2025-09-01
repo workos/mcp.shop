@@ -3,9 +3,24 @@ import {
   metadataCorsOptionsRequestHandler,
 } from "mcp-handler";
 
-function createHandler() {  
+function createHandler() {
+  const authkitDomain = process.env.AUTHKIT_DOMAIN;
+  if (!authkitDomain) {
+    // Return a proper error response instead of throwing
+    return () => new Response(
+      JSON.stringify({ 
+        error: "Server configuration error",
+        message: "AUTHKIT_DOMAIN environment variable is not configured" 
+      }),
+      { 
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+  }
+  
   return protectedResourceHandler({
-    authServerUrls: [`https://${process.env.AUTHKIT_DOMAIN}`],
+    authServerUrls: [`https://${authkitDomain}`],
   });
 }
 
