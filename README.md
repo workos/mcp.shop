@@ -50,7 +50,7 @@ Key components:
 
 3. Configure environment variables:
 
-   Copy [`.env.example`](./.env.example) to `.env.local` and set each value.
+   Copy [`.env.example`](./.env.example) to `.env.local` and set each environment variable appropriately.
 
    > **Note:**
    >
