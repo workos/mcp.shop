@@ -6,7 +6,6 @@ import {
 function createHandler() {
   const authkitDomain = process.env.AUTHKIT_DOMAIN;
   if (!authkitDomain) {
-    // Return a proper error response instead of throwing
     return () => new Response(
       JSON.stringify({ 
         error: "Server configuration error",
