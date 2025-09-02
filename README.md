@@ -50,18 +50,7 @@ Key components:
 
 3. Configure environment variables:
 
-   Create a `.env.local` file in the root directory with the following variables:
-
-   ```env
-   # WorkOS Configuration
-   AUTHKIT_DOMAIN=your-authkit-domain
-   WORKOS_API_KEY=your-workos-api-key
-   WORKOS_CLIENT_ID=your-workos-client-id
-
-   # Redis Configuration (Upstash)
-   KV_REST_API_URL=your-upstash-url
-   KV_REST_API_TOKEN=your-upstash-token
-   ```
+   Copy [`.env.example`](./.env.example) to `.env.local` and update in the root directory with the following variables:
 
    > **Note:**:
    >
