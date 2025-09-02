@@ -50,9 +50,9 @@ Key components:
 
 3. Configure environment variables:
 
-   Copy [`.env.example`](./.env.example) to `.env.local` and update in the root directory with the following variables:
+   Copy [`.env.example`](./.env.example) to `.env.local` and set each value.
 
-   > **Note:**:
+   > **Note:**
    >
    > - You can find your WorkOS credentials in the [WorkOS dashboard](https://workos.com/docs/user-management/vanilla/nodejs/1-configure-your-project). 
    > - Make sure to set your redirect URI (`http://localhost:3000/callback` for local development or `https://<deployed-url>/callback` for production) in the dashboard.
