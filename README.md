@@ -50,20 +50,9 @@ Key components:
 
 3. Configure environment variables:
 
-   Create a `.env.local` file in the root directory with the following variables:
+   Copy [`.env.example`](./.env.example) to `.env.local` and set each environment variable appropriately.
 
-   ```env
-   # WorkOS Configuration
-   AUTHKIT_DOMAIN=your-authkit-domain
-   WORKOS_API_KEY=your-workos-api-key
-   WORKOS_CLIENT_ID=your-workos-client-id
-
-   # Redis Configuration (Upstash)
-   KV_REST_API_URL=your-upstash-url
-   KV_REST_API_TOKEN=your-upstash-token
-   ```
-
-   > **Note:**:
+   > **Note:**
    >
    > - You can find your WorkOS credentials in the [WorkOS dashboard](https://workos.com/docs/user-management/vanilla/nodejs/1-configure-your-project). 
    > - Make sure to set your redirect URI (`http://localhost:3000/callback` for local development or `https://<deployed-url>/callback` for production) in the dashboard.
