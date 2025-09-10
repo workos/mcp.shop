@@ -108,6 +108,121 @@ const handler = withAuthkit((request, auth) =>
           }
         },
       );
+
+      server.tool(
+        "search",
+        "Search for products available at mcp.shop. Returns a list of relevant products matching the search query.",
+        {
+          query: z.string(),
+        },
+        async (args) => {
+          const { query } = args;
+          
+          if (!query || !query.trim()) {
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify({ results: [] }),
+                },
+              ],
+            };
+          }
+
+          const searchQuery = query.toLowerCase();
+          const results = [];
+          
+          // Get the base URL for the shop
+          const mcpServerDomain = 
+            process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?? "localhost:3000";
+          const protocol = mcpServerDomain.startsWith("localhost") ? "http" : "https";
+          const baseUrl = `${protocol}://${mcpServerDomain}`;
+
+          // Search through all products
+          for (const [handle, product] of Object.entries(products)) {
+            // Check if query matches title, description, or handle
+            const titleMatch = product.title.toLowerCase().includes(searchQuery);
+            const descriptionMatch = product.descriptionHtml?.toLowerCase().includes(searchQuery) || false;
+            const handleMatch = handle.toLowerCase().includes(searchQuery);
+            
+            if (titleMatch || descriptionMatch || handleMatch) {
+              results.push({
+                id: handle,
+                title: product.title,
+                url: `${baseUrl}/${handle}`,
+              });
+            }
+          }
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({ results }),
+              },
+            ],
+          };
+        },
+      );
+
+      server.tool(
+        "fetch",
+        "Fetch detailed information about a specific product by its ID.",
+        {
+          id: z.string(),
+        },
+        async (args) => {
+          const { id } = args;
+          
+          if (!id || !products[id]) {
+            throw new Error(`Product with ID "${id}" not found`);
+          }
+
+          const product = products[id];
+          
+          // Get the base URL for the shop
+          const mcpServerDomain = 
+            process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?? "localhost:3000";
+          const protocol = mcpServerDomain.startsWith("localhost") ? "http" : "https";
+          const baseUrl = `${protocol}://${mcpServerDomain}`;
+
+          // Create detailed product information
+          const result = {
+            id,
+            title: product.title,
+            text: `${product.title}
+
+${product.descriptionHtml?.replace(/<[^>]*>/g, '') || ''}
+
+Price: ${product.priceRange.maxVariantPrice.amount} ${product.priceRange.maxVariantPrice.currencyCode}
+Available: ${product.availableForSale ? 'Yes' : 'No'}
+
+${product.options.length > 0 ? `Options:
+${product.options.map(option => `${option.name}: ${option.values.join(', ')}`).join('\n')}` : ''}
+
+${product.variants.length > 0 ? `Variants:
+${product.variants.map(variant => `${variant.title} - $${variant.price.amount} ${variant.price.currencyCode}`).join('\n')}` : ''}`,
+            url: `${baseUrl}/${id}`,
+            metadata: {
+              handle: product.handle,
+              availableForSale: product.availableForSale,
+              featuredImage: product.featuredImage,
+              priceRange: product.priceRange,
+              options: product.options,
+              variants: product.variants,
+            },
+          };
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(result),
+              },
+            ],
+          };
+        },
+      );
     },
     {
       // Optional server options
