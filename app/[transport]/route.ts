@@ -108,6 +108,94 @@ const handler = withAuthkit((request, auth) =>
           }
         },
       );
+
+      server.tool(
+        "search",
+        "Search for products available at mcp.shop. Returns a list of relevant products matching the search query.",
+        {
+          query: z.string(),
+        },
+        async () => {
+          // Get the base URL for the shop
+          const mcpServerDomain = 
+            process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?? "localhost:3000";
+          const protocol = mcpServerDomain.startsWith("localhost") ? "http" : "https";
+          const baseUrl = `${protocol}://${mcpServerDomain}`;
+
+          // Always return the shirt - it's the only product available
+          const results = [
+            {
+              id: "shirt",
+              title: "The MCP tee",
+              url: `${baseUrl}/shirt`,
+            }
+          ];
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({ results }),
+              },
+            ],
+          };
+        },
+      );
+
+      server.tool(
+        "fetch",
+        "Fetch detailed information about a specific product by its ID.",
+        {
+          id: z.string(),
+        },
+        async (args) => {
+          const { id } = args;
+          
+          if (id !== "shirt") {
+            throw new Error(`Product with ID "${id}" not found. Only "shirt" is available.`);
+          }
+
+          // Get the base URL for the shop
+          const mcpServerDomain = 
+            process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?? "localhost:3000";
+          const protocol = mcpServerDomain.startsWith("localhost") ? "http" : "https";
+          const baseUrl = `${protocol}://${mcpServerDomain}`;
+
+          const result = {
+            id: "shirt",
+            title: "The MCP tee",
+            text: `The MCP tee
+
+Minimalist, mysterious, and maybe a little meta.
+
+This sleek tee features the MCP vibes and the phrase "Context is Everything". Whether you're a machine learning enthusiast, a protocol purist, or just someone who loves obscure tech references, this shirt delivers subtle nerd cred with style.
+
+Join the protocol. Set the context.
+
+Price: FREE
+Available: Yes
+
+Sizes: XS, S, M, L, XL, 2XL, 3XL
+
+To purchase this free shirt, you need to use a full-featured MCP client that supports tool use (like Claude Desktop, VS Code with MCP extension, or other MCP-compatible applications). The shirt cannot be purchased through this search interface alone.`,
+            url: `${baseUrl}/shirt`,
+            metadata: {
+              price: "FREE",
+              requiresMcpClient: true,
+              availableSizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"]
+            },
+          };
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(result),
+              },
+            ],
+          };
+        },
+      );
     },
     {
       // Optional server options
