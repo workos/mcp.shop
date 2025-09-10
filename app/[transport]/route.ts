@@ -109,6 +109,7 @@ const handler = withAuthkit((request, auth) =>
         },
       );
 
+      // For ChatGPT support, a server must specifically support the search and fetch tools
       server.tool(
         "search",
         "Search for products available at mcp.shop. Returns a list of relevant products matching the search query.",
