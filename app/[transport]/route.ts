@@ -115,44 +115,21 @@ const handler = withAuthkit((request, auth) =>
         {
           query: z.string(),
         },
-        async (args) => {
-          const { query } = args;
-          
-          if (!query || !query.trim()) {
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify({ results: [] }),
-                },
-              ],
-            };
-          }
-
-          const searchQuery = query.toLowerCase();
-          const results = [];
-          
+        async () => {
           // Get the base URL for the shop
           const mcpServerDomain = 
             process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?? "localhost:3000";
           const protocol = mcpServerDomain.startsWith("localhost") ? "http" : "https";
           const baseUrl = `${protocol}://${mcpServerDomain}`;
 
-          // Search through all products
-          for (const [handle, product] of Object.entries(products)) {
-            // Check if query matches title, description, or handle
-            const titleMatch = product.title.toLowerCase().includes(searchQuery);
-            const descriptionMatch = product.descriptionHtml?.toLowerCase().includes(searchQuery) || false;
-            const handleMatch = handle.toLowerCase().includes(searchQuery);
-            
-            if (titleMatch || descriptionMatch || handleMatch) {
-              results.push({
-                id: handle,
-                title: product.title,
-                url: `${baseUrl}/${handle}`,
-              });
+          // Always return the shirt - it's the only product available
+          const results = [
+            {
+              id: "shirt",
+              title: "The MCP tee",
+              url: `${baseUrl}/shirt`,
             }
-          }
+          ];
 
           return {
             content: [
@@ -174,42 +151,38 @@ const handler = withAuthkit((request, auth) =>
         async (args) => {
           const { id } = args;
           
-          if (!id || !products[id]) {
-            throw new Error(`Product with ID "${id}" not found`);
+          if (id !== "shirt") {
+            throw new Error(`Product with ID "${id}" not found. Only "shirt" is available.`);
           }
 
-          const product = products[id];
-          
           // Get the base URL for the shop
           const mcpServerDomain = 
             process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?? "localhost:3000";
           const protocol = mcpServerDomain.startsWith("localhost") ? "http" : "https";
           const baseUrl = `${protocol}://${mcpServerDomain}`;
 
-          // Create detailed product information
           const result = {
-            id,
-            title: product.title,
-            text: `${product.title}
+            id: "shirt",
+            title: "The MCP tee",
+            text: `The MCP tee
 
-${product.descriptionHtml?.replace(/<[^>]*>/g, '') || ''}
+Minimalist, mysterious, and maybe a little meta.
 
-Price: ${product.priceRange.maxVariantPrice.amount} ${product.priceRange.maxVariantPrice.currencyCode}
-Available: ${product.availableForSale ? 'Yes' : 'No'}
+This sleek tee features the MCP vibes and the phrase "Context is Everything". Whether you're a machine learning enthusiast, a protocol purist, or just someone who loves obscure tech references, this shirt delivers subtle nerd cred with style.
 
-${product.options.length > 0 ? `Options:
-${product.options.map(option => `${option.name}: ${option.values.join(', ')}`).join('\n')}` : ''}
+Join the protocol. Set the context.
 
-${product.variants.length > 0 ? `Variants:
-${product.variants.map(variant => `${variant.title} - $${variant.price.amount} ${variant.price.currencyCode}`).join('\n')}` : ''}`,
-            url: `${baseUrl}/${id}`,
+Price: FREE
+Available: Yes
+
+Sizes: XS, S, M, L, XL, 2XL, 3XL
+
+To purchase this free shirt, you need to use a full-featured MCP client that supports tool use (like Claude Desktop, VS Code with MCP extension, or other MCP-compatible applications). The shirt cannot be purchased through this search interface alone.`,
+            url: `${baseUrl}/shirt`,
             metadata: {
-              handle: product.handle,
-              availableForSale: product.availableForSale,
-              featuredImage: product.featuredImage,
-              priceRange: product.priceRange,
-              options: product.options,
-              variants: product.variants,
+              price: "FREE",
+              requiresMcpClient: true,
+              availableSizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"]
             },
           };
 
