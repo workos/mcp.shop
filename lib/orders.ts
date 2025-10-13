@@ -27,7 +27,9 @@ export const placeOrder = async (
   console.log("placeOrder", args, user);
   // Check if Redis is configured
   if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
-    throw new Error("Redis is not configured. Please set KV_REST_API_URL and KV_REST_API_TOKEN environment variables.");
+    throw new Error(
+      "Redis is not configured. Please set KV_REST_API_URL and KV_REST_API_TOKEN environment variables.",
+    );
   }
 
   try {
@@ -48,13 +50,18 @@ export const placeOrder = async (
       isRunMcpShirt: isRunShirt,
     };
 
-    await withTimeout(redis.hset(`orders:${user.id}:${orderId}`, { ...order }), 1000);
+    await withTimeout(
+      redis.hset(`orders:${user.id}:${orderId}`, { ...order }),
+      1000,
+    );
 
     console.log("order placed successfully");
     return order;
   } catch (error) {
     if (error instanceof Error && error.message.includes("timed out")) {
-      throw new Error("Redis connection timed out. Please check your Redis configuration.");
+      throw new Error(
+        "Redis connection timed out. Please check your Redis configuration.",
+      );
     }
     throw error;
   }

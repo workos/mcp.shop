@@ -1,7 +1,7 @@
 import { baseURL } from "@/baseUrl";
 
 export const getAppsSdkCompatibleHtml = () => {
-    return `
+  return `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -577,4 +577,4 @@ export const getAppsSdkCompatibleHtml = () => {
   </body>
   </html>
     `;
-  };
+};

@@ -27,13 +27,13 @@ if (!authkitDomain) {
 }
 
 const jwks = jose.createRemoteJWKSet(
-  new URL(`https://${authkitDomain}/oauth2/jwks`)
+  new URL(`https://${authkitDomain}/oauth2/jwks`),
 );
 
 // Token verification function for MCP authentication
 export const verifyToken = async (
   req: Request,
-  bearerToken?: string
+  bearerToken?: string,
 ): Promise<AuthInfo | undefined> => {
   if (!bearerToken) {
     console.error("No bearer token provided");
@@ -49,7 +49,7 @@ export const verifyToken = async (
     });
 
     // Ensure the subject claim exists
-    if (!payload.sub || typeof payload.sub !== 'string') {
+    if (!payload.sub || typeof payload.sub !== "string") {
       console.error("Invalid or missing subject claim in JWT");
       return undefined;
     }
@@ -78,12 +78,12 @@ export const verifyToken = async (
       console.error("JWT token has expired");
       return undefined;
     }
-    
+
     if (error instanceof jose.errors.JWTClaimValidationFailed) {
       console.error("JWT claim validation failed", error.message);
       return undefined;
     }
-    
+
     if (error instanceof jose.errors.JWSSignatureVerificationFailed) {
       console.error("JWT signature verification failed");
       return undefined;

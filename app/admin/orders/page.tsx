@@ -52,7 +52,7 @@ export default function AdminOrdersPage() {
       header: "Order #",
       cell: (info) => (
         <span className="font-mono font-semibold text-purple-400">
-          #{info.getValue()}
+          #{info.getValue() as string}
         </span>
       ),
     },
