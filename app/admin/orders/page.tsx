@@ -33,7 +33,7 @@ export default function AdminOrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch("/admin/orders");
+      const response = await fetch("/api/admin/orders");
       if (!response.ok) {
         throw new Error(`Failed to fetch orders: ${response.statusText}`);
       }
@@ -225,7 +225,7 @@ export default function AdminOrdersPage() {
                         >
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                           {header.column.getCanSort() && (
                             <span className="text-neutral-500">
@@ -257,7 +257,7 @@ export default function AdminOrdersPage() {
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   ))}
@@ -270,11 +270,15 @@ export default function AdminOrdersPage() {
         {/* Pagination */}
         <div className="flex items-center justify-between border-t border-neutral-800 px-6 py-4">
           <div className="text-sm text-neutral-400">
-            Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{" "}
+            Showing{" "}
+            {table.getState().pagination.pageIndex *
+              table.getState().pagination.pageSize +
+              1}{" "}
+            to{" "}
             {Math.min(
               (table.getState().pagination.pageIndex + 1) *
                 table.getState().pagination.pageSize,
-              table.getFilteredRowModel().rows.length
+              table.getFilteredRowModel().rows.length,
             )}{" "}
             of {table.getFilteredRowModel().rows.length} orders
           </div>
@@ -306,4 +310,3 @@ export default function AdminOrdersPage() {
     </div>
   );
 }
-

@@ -1,10 +1,9 @@
-import { createMcpHandler, withMcpAuth} from "mcp-handler";
+import { createMcpHandler, withMcpAuth } from "mcp-handler";
 import { z } from "zod";
 import { placeOrder } from "@/lib/orders";
 import type { User } from "@/lib/with-authkit";
 import { verifyToken } from "@/lib/with-authkit";
 import { getAppsSdkCompatibleHtml } from "@/components/widget";
-
 
 // These are helpers for the Apps SDK Widget
 type ContentWidget = {
@@ -65,7 +64,7 @@ const handler = createMcpHandler(async (server) => {
           },
         },
       ],
-    })
+    }),
   );
 
   server.registerTool(
@@ -114,7 +113,7 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
           "openai/widgetAccessible": true,
         },
       };
-    }
+    },
   );
 
   // Tool to buy the shirt
@@ -122,28 +121,45 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
     "order_shirt",
     {
       title: "Order MCP Shirt",
-      description: "Place an order for an MCP tee shirt. By default orders a 'Context is Everything' shirt. Use the Show Store Items tool first.",
+      description:
+        "Place an order for an MCP tee shirt. By default orders a 'Context is Everything' shirt. Use the Show Store Items tool first.",
       inputSchema: {
-        size: z.enum(["XS", "S", "M", "L", "XL", "2XL", "3XL"]).describe("T-shirt size"),
+        size: z
+          .enum(["XS", "S", "M", "L", "XL", "2XL", "3XL"])
+          .describe("T-shirt size"),
         firstName: z.string().describe("First name"),
         lastName: z.string().describe("Last name"),
         email: z.string().email().describe("Email address"),
         company: z.string().describe("Company name"),
         mailingAddress: z.string().describe("Mailing address for shipping"),
-        specialCode: z.string().optional().describe("Optional special code to unlock RUN MCP shirt variant"),
+        specialCode: z
+          .string()
+          .optional()
+          .describe("Optional special code to unlock RUN MCP shirt variant"),
       },
       _meta: {
         "openai/widgetAccessible": true,
       },
     },
-    async ({ size, firstName, lastName, email, company, mailingAddress, specialCode }, { authInfo }) => {
+    async (
+      {
+        size,
+        firstName,
+        lastName,
+        email,
+        company,
+        mailingAddress,
+        specialCode,
+      },
+      { authInfo },
+    ) => {
       // Check if this is a RUN MCP shirt order
       const SPECIAL_CODE = "RUN_MCP_2025";
       const isRunMcpShirt = specialCode === SPECIAL_CODE;
-      
+
       // Get user from auth context
       const user = authInfo?.extra?.user as User;
-      
+
       if (!user) {
         return {
           content: [
@@ -155,7 +171,7 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
           isError: true,
         };
       }
-      
+
       try {
         // Place the order using the placeOrder function
         const order = await placeOrder(
@@ -165,12 +181,12 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
             tshirtSize: size,
             isRunMcpShirt,
           },
-          user
+          user,
         );
-        
+
         const shirtType = isRunMcpShirt ? "RUN MCP" : "Context is Everything";
         const shirtEmoji = isRunMcpShirt ? "⚡" : "🎯";
-        
+
         return {
           content: [
             {
@@ -187,9 +203,11 @@ Company: ${company}
 Shipping to: ${mailingAddress}
 Order Date: ${order.orderDate}
 
-${isRunMcpShirt 
-  ? "🎉 Congratulations! You've unlocked the exclusive RUN MCP shirt!" 
-  : "⚠️ Note: This is a demonstration order. As an enterprise-readiness company, we rarely ship physical merchandise. Your order has been logged but may not be fulfilled at least for a while."}
+${
+  isRunMcpShirt
+    ? "🎉 Congratulations! You've unlocked the exclusive RUN MCP shirt!"
+    : "⚠️ Note: This is a demonstration order. As an enterprise-readiness company, we rarely ship physical merchandise. Your order has been logged but may not be fulfilled at least for a while."
+}
 
 Thank you for trying out our MCP server!`,
             },
@@ -206,7 +224,7 @@ Thank you for trying out our MCP server!`,
           isError: true,
         };
       }
-    }
+    },
   );
 });
 
