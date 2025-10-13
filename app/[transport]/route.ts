@@ -1,201 +1,218 @@
-import { getOrders, placeOrder } from "@/lib/orders";
-import { products } from "@/lib/products";
-import { withAuthkit } from "@/lib/with-authkit";
-import { createMcpHandler } from "mcp-handler";
+import { createMcpHandler, withMcpAuth} from "mcp-handler";
 import { z } from "zod";
+import { placeOrder } from "@/lib/orders";
+import type { User } from "@/lib/with-authkit";
+import { verifyToken } from "@/lib/with-authkit";
+import { getAppsSdkCompatibleHtml } from "@/components/widget";
 
-const handler = withAuthkit((request, auth) =>
-  createMcpHandler(
-    (server) => {
-      server.tool(
-        "listMcpShopInventory",
-        "Returns a list of the items for sale at mcp.shop. " +
-          "mcp.shop is a promotional store hosted by WorkOS for MCP Night" +
-          "This tool should be used whenever someone wants to purchase " +
-          "products relating to MCP, model context protocol, or items from " +
-          "mcp.shop. Currently, everything is free.",
-        () => {
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify({
-                  title: "mcp.shop inventory",
-                  products: [
-                    {
-                      label: "Shirt",
-                      description: products.shirt.descriptionHtml,
-                      image_url: "https://mcp.shop/shirt.jpg",
-                    },
-                  ],
-                }),
-              },
-            ],
-          };
-        },
-      );
 
-      server.tool(
-        "buyMcpShopItem",
-        "Orders a t-shirt from the MCP shop. WorkOS is providing the items." +
-          "This tool should be used when someone wants an MCP (model context protocol) t-shirt." +
-          "We cannot fulfill their order without a valid U.S. based mailing address. " +
-          "Company is a required field." +
-          "tshirtSize is one of the standard t-shirt sizes (S, M, L, XL, XXL, XXL).",
+// These are helpers for the Apps SDK Widget
+type ContentWidget = {
+  id: string;
+  title: string;
+  templateUri: string;
+  invoking: string;
+  invoked: string;
+  html: string;
+  description: string;
+};
+
+function widgetMeta(widget: ContentWidget) {
+  return {
+    "openai/outputTemplate": widget.templateUri,
+    "openai/toolInvocation/invoking": widget.invoking,
+    "openai/toolInvocation/invoked": widget.invoked,
+    "openai/widgetAccessible": false,
+    "openai/resultCanProduceWidget": true,
+  } as const;
+}
+
+const handler = createMcpHandler(async (server) => {
+  const html = getAppsSdkCompatibleHtml();
+
+  const contentWidget: ContentWidget = {
+    id: "show_store_content",
+    title: "Show Store Items",
+    templateUri: "ui://widget/content-template.html",
+    invoking: "Loading content...",
+    invoked: "Content loaded",
+    html: html,
+    description: "Displays the store content",
+  };
+
+  // Register the resource for the widget
+  server.registerResource(
+    "store-widget",
+    contentWidget.templateUri,
+    {
+      title: contentWidget.title,
+      description: contentWidget.description,
+      mimeType: "text/html+skybridge",
+      _meta: {
+        "openai/widgetDescription": contentWidget.description,
+        "openai/widgetPrefersBorder": true,
+      },
+    },
+    async (uri) => ({
+      contents: [
         {
-          company: z.string(),
-          mailingAddress: z.string(),
-          tshirtSize: z.string(),
+          uri: uri.href,
+          mimeType: "text/html+skybridge",
+          text: `<html>${contentWidget.html}</html>`,
+          _meta: {
+            "openai/widgetDescription": contentWidget.description,
+            "openai/widgetPrefersBorder": true,
+          },
         },
-        async (args) => {
-          try {
-            const order = await placeOrder(args, auth.user);
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify({
-                    status: "success",
-                    ...order,
-                  }),
-                },
-              ],
-            };
-          } catch (e) {
-            console.error("Error placing order", e);
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: "Something went wrong. Try again later.",
-                },
-              ],
-            };
-          }
-        },
-      );
+      ],
+    })
+  );
 
-      server.tool(
-        "listMcpShopOrders",
-        "Lists the orders placed by the user at mcp.shop" +
-          "Use this tool if a user needs to review the orders they've " +
-          "placed. There is no way to adjust an order at this time. " +
-          "(The user should contact WorkOS instead).",
-        async () => {
-          try {
-            const orders = await getOrders(auth.user);
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify({
-                    status: "success",
-                    orders,
-                  }),
-                },
-              ],
-            };
-          } catch (e) {
-            console.error("Error listing orders", e);
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: "Something went wrong. Try again later.",
-                },
-              ],
-            };
-          }
-        },
-      );
+  server.registerTool(
+    contentWidget.id,
+    {
+      title: contentWidget.title,
+      description:
+        "Display information about available MCP shirts and show the widget to order the exclusive RUN MCP shirt",
+      inputSchema: {} as const,
+      _meta: {
+        ...widgetMeta(contentWidget),
+        "openai/widgetAccessible": true,
+      },
+    },
+    async () => {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `🎉 Welcome to the MCP Shirt Shop!
 
-      // For ChatGPT support, a server must specifically support the search and fetch tools
-      server.tool(
-        "search",
-        "Search for products available at mcp.shop. Returns a list of relevant products matching the search query.",
-        {
-          query: z.string(),
+This is a demonstration MCP server by WorkOS. We're an enterprise-readiness company, not a shirt vendor, so please note that shirts may not ship quickly (or at all) - this is primarily for demonstration purposes.
+
+We have TWO types of MCP shirts available, both FREE:
+
+1. **"Context is Everything" MCP Shirt** 
+   - The classic MCP shirt featuring the phrase "Context is Everything"
+   - Can be ordered directly via the standard MCP 'order_shirt' tool
+   - Available in sizes XS-3XL
+
+2. **"RUN MCP" Shirt** (Apps SDK Exclusive) ⚡
+   - A special edition shirt exclusive to ChatGPT Apps SDK users
+   - Can ONLY be ordered through the Apps SDK widget (shown above)
+   - Automatically unlocked when ordering via the widget
+   - Available in sizes XS-3XL
+
+To order the RUN MCP shirt, use the widget form above. To order a regular "Context is Everything" shirt, use the 'order_shirt' tool directly through MCP.`,
+          },
+        ],
+        structuredContent: {
+          timestamp: new Date().toISOString(),
+          shirtTypes: ["Context is Everything", "RUN MCP"],
         },
-        async () => {
-          // Always return the shirt - it's the only product available
-          const results = [
+        _meta: {
+          ...widgetMeta(contentWidget),
+          "openai/widgetAccessible": true,
+        },
+      };
+    }
+  );
+
+  // Tool to buy the shirt
+  server.registerTool(
+    "order_shirt",
+    {
+      title: "Order MCP Shirt",
+      description: "Place an order for an MCP tee shirt. By default orders a 'Context is Everything' shirt. Use the Show Store Items tool first.",
+      inputSchema: {
+        size: z.enum(["XS", "S", "M", "L", "XL", "2XL", "3XL"]).describe("T-shirt size"),
+        firstName: z.string().describe("First name"),
+        lastName: z.string().describe("Last name"),
+        email: z.string().email().describe("Email address"),
+        company: z.string().describe("Company name"),
+        mailingAddress: z.string().describe("Mailing address for shipping"),
+        specialCode: z.string().optional().describe("Optional special code to unlock RUN MCP shirt variant"),
+      },
+      _meta: {
+        "openai/widgetAccessible": true,
+      },
+    },
+    async ({ size, firstName, lastName, email, company, mailingAddress, specialCode }, { authInfo }) => {
+      // Check if this is a RUN MCP shirt order
+      const SPECIAL_CODE = "RUN_MCP_2025";
+      const isRunMcpShirt = specialCode === SPECIAL_CODE;
+      
+      // Get user from auth context
+      const user = authInfo?.extra?.user as User;
+      
+      if (!user) {
+        return {
+          content: [
             {
-              id: "shirt",
-              title: "The MCP tee",
-            }
-          ];
-
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify({ results }),
-              },
-            ],
-          };
-        },
-      );
-
-      server.tool(
-        "fetch",
-        "Fetch detailed information about a specific product by its ID.",
-        {
-          id: z.string(),
-        },
-        async (args) => {
-          const { id } = args;
-          
-          if (id !== "shirt") {
-            throw new Error(`Product with ID "${id}" not found. Only "shirt" is available.`);
-          }
-
-          const result = {
-            id: "shirt",
-            title: "The MCP tee",
-            text: `Context is Everything
-
-Minimalist, mysterious, and maybe a little meta.
-
-This sleek tee features the MCP vibes and the phrase "Context is Everything". Whether you're a machine learning enthusiast, a protocol purist, or just someone who loves obscure tech references, this shirt delivers subtle nerd cred with style.
-
-Join the protocol. Set the context.
-
-Price: FREE
-Available: Yes (but slow delivery)
-
-Sizes: XS, S, M, L, XL, 2XL, 3XL
-
-To purchase this free shirt, you need to use a full-featured MCP client that supports tool use (like Claude Desktop, VS Code with MCP extension, or other MCP-compatible applications). The shirt cannot be purchased through this search interface alone.`,
-            metadata: {
-              price: "FREE",
-              requiresMcpClient: true,
-              availableSizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"]
+              type: "text",
+              text: `❌ Authentication required to place an order.`,
             },
-          };
+          ],
+          isError: true,
+        };
+      }
+      
+      try {
+        // Place the order using the placeOrder function
+        const order = await placeOrder(
+          {
+            company,
+            mailingAddress,
+            tshirtSize: size,
+            isRunMcpShirt,
+          },
+          user
+        );
+        
+        const shirtType = isRunMcpShirt ? "RUN MCP" : "Context is Everything";
+        const shirtEmoji = isRunMcpShirt ? "⚡" : "🎯";
+        
+        return {
+          content: [
+            {
+              type: "text",
+              text: `${shirtEmoji} Order confirmed! 
 
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify(result),
-              },
-            ],
-          };
-        },
-      );
-    },
-    {
-      // Optional server options
-    },
-    {
-      // Optional configuration
-      redisUrl: process.env.REDIS_URL,
-      streamableHttpEndpoint: "/mcp",
-      sseEndpoint: "/sse",
-      maxDuration: 600,
-      verboseLogs: true,
-    },
-  )(request),
-);
+Order ID: ${order.id}
+Product: ${shirtType} MCP Shirt
+SKU: ${order.sku}
+Size: ${size}
+Name: ${firstName} ${lastName}
+Email: ${email}
+Company: ${company}
+Shipping to: ${mailingAddress}
+Order Date: ${order.orderDate}
 
-export { handler as GET, handler as POST };
+${isRunMcpShirt 
+  ? "🎉 Congratulations! You've unlocked the exclusive RUN MCP shirt!" 
+  : "⚠️ Note: This is a demonstration order. As an enterprise-readiness company, we rarely ship physical merchandise. Your order has been logged but may not be fulfilled at least for a while."}
+
+Thank you for trying out our MCP server!`,
+            },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `❌ Failed to place order: ${error instanceof Error ? error.message : "Unknown error"}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    }
+  );
+});
+
+// Make authorization required — the verifyToken function is defined in lib/with-authkit.ts
+const authHandler = withMcpAuth(handler, verifyToken, {
+  required: true,
+});
+
+export { authHandler as GET, authHandler as POST };
