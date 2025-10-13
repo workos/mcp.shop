@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 export async function Navbar() {
-  const { user } = await withAuth();
+  const { user } = await withAuth({ ensureSignedIn: false });
 
   return (
     <nav className="flex items-center justify-between p-4 text-neutral-400">
