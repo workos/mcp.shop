@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
     return [
       {
         // Apply CORS headers to API routes
-        source: "/api/:path*",
+        source: "/.well-known/:path*",
         headers: [
           { key: "Access-Control-Allow-Origin", value: "*" },
           {
