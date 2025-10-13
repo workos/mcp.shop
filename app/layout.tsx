@@ -2,10 +2,8 @@ import { AuthKitProvider } from "@workos-inc/authkit-nextjs/components";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
-import Footer from "@/components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,9 +47,7 @@ export default function RootLayout({
       >
         <AuthKitProvider>
           <Theme appearance="dark" className="flex flex-col">
-            <Navbar />
             <main className="flex-grow">{children}</main>
-            <Footer />
           </Theme>
         </AuthKitProvider>
       </body>
