@@ -5,13 +5,14 @@ export interface Order {
   id: number;
   userId: User["id"];
   orderDate: string;
-  sku: "MCP-NTSHRT-25-GW01";
+  sku: "MCP-NTSHRT-25-GW01" | "MCP-RUN-NTSHRT-25-GW01";
   firstName: string;
   lastName: string;
   email: string;
   company: string;
   mailingAddress: string;
   tshirtSize: string;
+  isRunMcpShirt: boolean;
 }
 
 export const placeOrder = async (
@@ -19,27 +20,44 @@ export const placeOrder = async (
     company: string;
     mailingAddress: string;
     tshirtSize: string;
+    isRunMcpShirt?: boolean;
   },
   user: User,
 ) => {
-  const orderId = await withTimeout(redis.incr("order:id:counter"), 500);
+  console.log("placeOrder", args, user);
+  // Check if Redis is configured
+  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+    throw new Error("Redis is not configured. Please set KV_REST_API_URL and KV_REST_API_TOKEN environment variables.");
+  }
 
-  const order: Order = {
-    id: orderId,
-    userId: user.id,
-    orderDate: new Date().toISOString(),
-    sku: "MCP-NTSHRT-25-GW01",
-    firstName: user.firstName ?? "UNKNOWN",
-    lastName: user.lastName ?? "UNKNOWN",
-    mailingAddress: args.mailingAddress ?? "UNKNOWN",
-    email: user.email,
-    company: args.company,
-    tshirtSize: args.tshirtSize,
-  };
+  try {
+    const orderId = await withTimeout(redis.incr("order:id:counter"), 1000);
+    const isRunShirt = args.isRunMcpShirt ?? false;
 
-  await withTimeout(redis.hset(`orders:${user.id}:${orderId}`, { ...order }));
+    const order: Order = {
+      id: orderId,
+      userId: user.id,
+      orderDate: new Date().toISOString(),
+      sku: isRunShirt ? "MCP-RUN-NTSHRT-25-GW01" : "MCP-NTSHRT-25-GW01",
+      firstName: user.firstName ?? "UNKNOWN",
+      lastName: user.lastName ?? "UNKNOWN",
+      mailingAddress: args.mailingAddress ?? "UNKNOWN",
+      email: user.email,
+      company: args.company,
+      tshirtSize: args.tshirtSize,
+      isRunMcpShirt: isRunShirt,
+    };
 
-  return order;
+    await withTimeout(redis.hset(`orders:${user.id}:${orderId}`, { ...order }), 1000);
+
+    console.log("order placed successfully");
+    return order;
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("timed out")) {
+      throw new Error("Redis connection timed out. Please check your Redis configuration.");
+    }
+    throw error;
+  }
 };
 
 const getOrdersMatchingPattern = async (pattern: string) => {
