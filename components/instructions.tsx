@@ -15,7 +15,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 declare module "react" {
   interface DialogHTMLAttributes<T> extends HTMLAttributes<T> {
-    closedby?: string;
+    closedby?: "none" | "any" | "closerequest";
   }
 }
 
@@ -132,9 +132,9 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                               className="my-3 break-words font-untitled force-untitled"
                               style={{ fontSize: "13.8px" }}
                             >
-                              Use this Cursor Deeplink or VS Code Add button to connect the MCP
-                              server to your Cursor or VS Code app. It can then be accessed
-                              via the agent chat.
+                              Use this Cursor Deeplink or VS Code Add button to
+                              connect the MCP server to your Cursor or VS Code
+                              app. It can then be accessed via the agent chat.
                             </p>
                             <div className="flex md:flex-row flex-col justify-left items-center gap-4">
                               <a

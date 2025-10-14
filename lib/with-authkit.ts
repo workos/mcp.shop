@@ -1,6 +1,6 @@
-import { NextRequest } from "next/server";
 import * as jose from "jose";
 import { getWorkOS } from "@workos-inc/authkit-nextjs";
+import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
 
 export type User = Awaited<
   ReturnType<ReturnType<typeof getWorkOS>["userManagement"]["getUser"]>
@@ -18,103 +18,40 @@ export interface Authorization {
   };
 }
 
-/**
- * Middleware to protect MCP server endpoints with AuthKit authentication.
- *
- * This implements the authorization flow for Model Context Protocol (MCP) servers
- * as specified in the MCP authorization spec. AuthKit acts as the OAuth 2.0
- * authorization server while your MCP server is the resource server.
- *
- * Prerequisites:
- * - Enable Dynamic Client Registration in WorkOS Dashboard under Applications → Configuration
- * - Set AUTHKIT_DOMAIN environment variable (e.g., "subdomain.authkit.app")
- * - Implement /.well-known/oauth-protected-resource endpoint in your app
- *
- * @param next - The handler function to call after successful authentication
- * @returns A middleware function that verifies AuthKit access tokens
- */
-export function withAuthkit(
-  next: (request: NextRequest, auth: Authorization) => Promise<Response>,
-): (request: NextRequest) => Promise<Response> {
-  const authkitDomain = process.env.AUTHKIT_DOMAIN;
+// Initialize JWKS client for AuthKit public key verification
+// This client fetches and caches AuthKit's public keys used to verify JWT signatures
+const authkitDomain = process.env.AUTHKIT_DOMAIN;
 
-  if (!authkitDomain) {
-    throw new Error("AUTHKIT_DOMAIN is not set");
+if (!authkitDomain) {
+  throw new Error("AUTHKIT_DOMAIN environment variable is required");
+}
+
+const jwks = jose.createRemoteJWKSet(
+  new URL(`https://${authkitDomain}/oauth2/jwks`),
+);
+
+// Token verification function for MCP authentication
+export const verifyToken = async (
+  req: Request,
+  bearerToken?: string,
+): Promise<AuthInfo | undefined> => {
+  if (!bearerToken) {
+    console.error("No bearer token provided");
+    return undefined;
   }
 
-  // Create a JWKS client to fetch and cache AuthKit's public keys
-  // These keys are used to verify the JWT signatures
-  const jwks = jose.createRemoteJWKSet(
-    new URL(`https://${authkitDomain}/oauth2/jwks`),
-  );
+  try {
+    // Verify the JWT access token issued by AuthKit
+    // This validates the signature, audience, issuer, and expiration
+    const { payload } = await jose.jwtVerify(bearerToken, jwks, {
+      // audience: process.env.WORKOS_CLIENT_ID,
+      issuer: `https://${authkitDomain}`,
+    });
 
-  const mcpServerDomain =
-    process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?? "localhost:3000";
-  const protocol = mcpServerDomain.startsWith("localhost") ? "http" : "https";
-
-  return async (request: NextRequest) => {
-    let resource: string;
-    switch (request.nextUrl.pathname) {
-      case "/mcp":
-      case "/sse":
-        resource = request.nextUrl.pathname;
-        break;
-      default:
-        resource = "";
-    }
-
-    // WWW-Authenticate header with resource_metadata challenge parameter
-    // This enables MCP clients to discover the authorization server dynamically
-    // when they receive a 401 response, promoting zero-config interoperability
-    const wwwAuthenticateHeader = [
-      'Bearer error="unauthorized"',
-      'error_description="Authorization needed"',
-      `resource_metadata="${protocol}://${mcpServerDomain}/.well-known/oauth-protected-resource${resource}"`,
-    ].join(", ");
-
-    const unauthorized = (error: string) =>
-      new Response(JSON.stringify({ error }), {
-        status: 401,
-        headers: {
-          "WWW-Authenticate": wwwAuthenticateHeader,
-          "Content-Type": "application/json",
-        },
-      });
-
-    // Extract Bearer token from Authorization header
-    const authorizationHeader = request.headers.get("Authorization");
-    if (!authorizationHeader) {
-      return unauthorized("Missing Authorization Header");
-    }
-
-    const [scheme = "", token] = authorizationHeader.split(" ");
-    if (!/^Bearer$/i.test(scheme) || !token) {
-      return unauthorized("Invalid Authorization Header");
-    }
-
-    let payload: Authorization["claims"];
-    try {
-      // Verify the JWT access token issued by AuthKit
-      // This validates the signature, audience, issuer, and expiration
-      ({ payload } = await jose.jwtVerify(token, jwks, {
-        audience: process.env.WORKOS_CLIENT_ID,
-        issuer: `https://${authkitDomain}`,
-      }));
-    } catch (error) {
-      if (
-        error instanceof jose.errors.JWTExpired ||
-        error instanceof jose.errors.JWKSInvalid
-      ) {
-        return unauthorized("Invalid or expired access token");
-      }
-
-      if (error instanceof jose.errors.JOSEError) {
-        console.error("Error initializing JWKS", { error });
-
-        return new Response("Internal server error", { status: 500 });
-      }
-
-      throw error;
+    // Ensure the subject claim exists
+    if (!payload.sub || typeof payload.sub !== "string") {
+      console.error("Invalid or missing subject claim in JWT");
+      return undefined;
     }
 
     // Fetch the full user profile from WorkOS using the subject claim
@@ -122,7 +59,43 @@ export function withAuthkit(
     const workos = getWorkOS();
     const user = await workos.userManagement.getUser(payload.sub);
 
-    // Pass the authenticated user context to the protected handler
-    return next(request, { user, accessToken: token, claims: payload });
-  };
-}
+    // Return AuthInfo with verified user information
+    return {
+      token: bearerToken,
+      scopes: ["read:orders", "write:orders"], // Add relevant scopes for your MCP server
+      clientId: user.id,
+      extra: {
+        user: user, // Store the full user object
+        userId: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        claims: payload,
+      },
+    };
+  } catch (error) {
+    if (error instanceof jose.errors.JWTExpired) {
+      console.error("JWT token has expired");
+      return undefined;
+    }
+
+    if (error instanceof jose.errors.JWTClaimValidationFailed) {
+      console.error("JWT claim validation failed", error.message);
+      return undefined;
+    }
+
+    if (error instanceof jose.errors.JWSSignatureVerificationFailed) {
+      console.error("JWT signature verification failed");
+      return undefined;
+    }
+
+    if (error instanceof jose.errors.JOSEError) {
+      console.error("JOSE error during token verification", error);
+      return undefined;
+    }
+
+    // For non-JOSE errors (e.g., WorkOS API errors), log and return undefined
+    console.error("Error verifying token", error);
+    return undefined;
+  }
+};
