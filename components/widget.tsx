@@ -99,14 +99,19 @@ export const getAppsSdkCompatibleHtml = (userData?: {
         display: flex;
         justify-content: center;
         align-items: flex-start;
+        min-height: 100vh;
+        max-height: 100vh;
       }
       
       .widget-container {
         width: 100%;
         max-width: 480px;
-        height: 100%;
+        height: 100vh;
+        max-height: 100vh;
         background: transparent;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
       }
       
       /* Responsive breakpoints */
@@ -142,10 +147,14 @@ export const getAppsSdkCompatibleHtml = (userData?: {
       .view {
         display: none;
         animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        max-height: 100%;
+        overflow: hidden;
       }
       
       .view.active {
-        display: block;
+        display: flex;
+        flex-direction: column;
       }
       
       .view.slide-out-left {
@@ -194,9 +203,12 @@ export const getAppsSdkCompatibleHtml = (userData?: {
         display: flex;
         flex-direction: column;
         height: 100%;
+        max-height: 100%;
         max-width: 480px;
         margin: 0 auto;
-        padding: var(--spacing-lg) var(--spacing-lg) 0;
+        padding: var(--spacing-lg);
+        overflow-y: auto;
+        overflow-x: hidden;
       }
       
       .product-image {
@@ -207,16 +219,19 @@ export const getAppsSdkCompatibleHtml = (userData?: {
         object-fit: cover;
         flex-shrink: 0;
         border-radius: var(--border-radius);
+        max-width: 100%;
       }
       
       .product-info {
-        padding: var(--spacing-xl);
+        padding: var(--spacing-xl) 0 0 0;
         display: flex;
         flex-direction: column;
+        gap: var(--spacing-lg);
+        flex-shrink: 0;
       }
       
       .product-header {
-        margin-bottom: var(--spacing-lg);
+        flex-shrink: 0;
       }
       
       .product-title {
@@ -266,6 +281,8 @@ export const getAppsSdkCompatibleHtml = (userData?: {
         box-shadow: 0 2px 8px rgba(255, 95, 79, 0.25);
         letter-spacing: -0.01em;
         margin-top: 0;
+        flex-shrink: 0;
+        min-height: 44px;
       }
       
       .cta-button:hover {
@@ -283,17 +300,20 @@ export const getAppsSdkCompatibleHtml = (userData?: {
       .form-view-content {
         padding: var(--spacing-xl);
         height: 100%;
+        max-height: 100%;
         max-width: 480px;
         margin: 0 auto;
         display: flex;
         flex-direction: column;
         overflow-y: auto;
+        overflow-x: hidden;
       }
       
       .form-header {
         margin-bottom: var(--spacing-lg);
         text-align: center;
         flex-shrink: 0;
+        min-height: fit-content;
       }
       
       .form-title {
@@ -310,10 +330,12 @@ export const getAppsSdkCompatibleHtml = (userData?: {
       
       .form-step {
         display: none;
+        flex-shrink: 0;
       }
       
       .form-step.active {
         display: block;
+        flex-shrink: 0;
       }
       
       .form-row {
@@ -564,8 +586,11 @@ export const getAppsSdkCompatibleHtml = (userData?: {
         text-align: center;
         padding: var(--spacing-2xl);
         height: 100%;
+        max-height: 100%;
         max-width: 480px;
         margin: 0 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
       
       .success-icon {
