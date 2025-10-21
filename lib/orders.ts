@@ -61,7 +61,7 @@ export const placeOrder = async (
   };
 
   const missingFields = Object.entries(requiredFields)
-    .filter(([_, value]) => !value || (typeof value === 'string' && value.trim() === ''))
+    .filter(([, value]) => !value || (typeof value === 'string' && value.trim() === ''))
     .map(([key]) => key);
 
   if (missingFields.length > 0) {
@@ -161,7 +161,7 @@ export const placeOrder = async (
 
     // Filter out null/undefined values for Redis (Redis doesn't accept null values)
     const orderForRedis = Object.fromEntries(
-      Object.entries(order).filter(([_, value]) => value != null)
+      Object.entries(order).filter(([, value]) => value != null)
     );
 
     await withTimeout(
