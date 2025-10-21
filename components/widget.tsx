@@ -1033,241 +1033,412 @@ export const getAppsSdkCompatibleHtml = (userData?: {
     </div>
     
     <script>
+      // Enhanced logging with namespace
+      const LOG_PREFIX = '[RUN MCP Widget]';
+      const DEBUG = false; // Set to true for verbose logging
+      
+      function log(level, message, data = {}) {
+        const timestamp = new Date().toISOString();
+        const logData = { timestamp, ...data };
+        
+        try {
+          if (level === 'error') {
+            console.error(LOG_PREFIX, message, logData);
+          } else if (level === 'warn') {
+            console.warn(LOG_PREFIX, message, logData);
+          } else if (DEBUG || level === 'info') {
+            console.log(LOG_PREFIX, message, logData);
+          }
+        } catch (e) {
+          // Failsafe if logging itself fails
+          console.error(LOG_PREFIX, 'Logging failed', e);
+        }
+      }
+      
       // State management and initialization
       const STATE_KEY = 'run_mcp_order_form';
-      const productView = document.getElementById('productView');
-      const formView = document.getElementById('formView');
-      const successView = document.getElementById('successView');
-      const orderNowBtn = document.getElementById('orderNowBtn');
-      const backBtn = document.getElementById('backBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      const doneBtn = document.getElementById('doneBtn');
-      const form = document.getElementById('orderForm');
-      const submitBtn = document.getElementById('submitBtn');
-      const statusMessage = document.getElementById('statusMessage');
-      const productImage = document.getElementById('productImage');
-      const formTitle = document.getElementById('formTitle');
-      const formSubtitle = document.getElementById('formSubtitle');
-      const step1 = document.getElementById('step1');
-      const step2 = document.getElementById('step2');
-      const successDetails = document.getElementById('successDetails');
       
-      // Prefilled user data from auth
-      const prefilledUserData = ${encodedUserData};
-      
-      let currentStep = 1;
-      let currentView = productView;
-      
-      // View management with animations
-      function showView(viewToShow, useAnimation = true) {
-        if (currentView === viewToShow) return;
-        
-        if (useAnimation) {
-          // Animate out current view
-          currentView.classList.add('slide-out-left');
-          
-          setTimeout(() => {
-            // Hide all views
-            document.querySelectorAll('.view').forEach(view => {
-              view.classList.remove('active', 'slide-out-left', 'slide-in-right');
-            });
-            
-            // Show and animate in new view
-            viewToShow.classList.add('active', 'slide-in-right');
-            currentView = viewToShow;
-            
-            // Clean up animation classes after animation completes
-            setTimeout(() => {
-              viewToShow.classList.remove('slide-in-right');
-            }, 400);
-          }, 400);
-        } else {
-          // No animation - instant switch
-          document.querySelectorAll('.view').forEach(view => {
-            view.classList.remove('active');
-          });
-          viewToShow.classList.add('active');
-          currentView = viewToShow;
-        }
-      }
-      
-      // Step management
-      function showStep(stepNumber) {
-        currentStep = stepNumber;
-        
-        // Update step visibility
-        step1.classList.remove('active');
-        step2.classList.remove('active');
-        
-        if (stepNumber === 1) {
-          step1.classList.add('active');
-          formTitle.textContent = 'Your Information';
-          formSubtitle.textContent = 'Step 1 of 2';
-          nextBtn.style.display = 'block';
-          submitBtn.style.display = 'none';
-        } else if (stepNumber === 2) {
-          step2.classList.add('active');
-          formTitle.textContent = 'Shipping Address';
-          formSubtitle.textContent = 'Step 2 of 2';
-          nextBtn.style.display = 'none';
-          submitBtn.style.display = 'block';
-        }
-        
-        logEvent('form_step_changed', { step: stepNumber });
-      }
-      
-      // Validate current step fields
-      function validateCurrentStep() {
-        const currentStepElement = currentStep === 1 ? step1 : step2;
-        const inputs = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
-        
-        let isValid = true;
-        inputs.forEach(input => {
-          if (!input.checkValidity()) {
-            isValid = false;
-            input.reportValidity();
+      // Safe element getters with error handling
+      function getElement(id, required = true) {
+        try {
+          const element = document.getElementById(id);
+          if (!element && required) {
+            log('error', \`Required element not found: \${id}\`);
           }
-        });
-        
-        return isValid;
+          return element;
+        } catch (e) {
+          log('error', \`Error getting element: \${id}\`, { error: e.message });
+          return null;
+        }
       }
       
-      // Telemetry helper
-      function logEvent(eventName, data = {}) {
-        console.log('[RUN MCP Widget]', eventName, {
-          timestamp: new Date().toISOString(),
-          ...data
-        });
-      }
+      const productView = getElement('productView');
+      const formView = getElement('formView');
+      const successView = getElement('successView');
+      const orderNowBtn = getElement('orderNowBtn');
+      const backBtn = getElement('backBtn');
+      const nextBtn = getElement('nextBtn');
+      const doneBtn = getElement('doneBtn');
+      const form = getElement('orderForm');
+      const submitBtn = getElement('submitBtn');
+      const statusMessage = getElement('statusMessage');
+      const productImage = getElement('productImage');
+      const formTitle = getElement('formTitle');
+      const formSubtitle = getElement('formSubtitle');
+      const step1 = getElement('step1');
+      const step2 = getElement('step2');
+      const successDetails = getElement('successDetails');
       
-      // Navigate to form view
-      orderNowBtn.addEventListener('click', () => {
-        logEvent('order_now_clicked');
-        showView(formView);
-        showStep(1);
-      });
-      
-      // Navigate back button
-      backBtn.addEventListener('click', () => {
-        logEvent('back_clicked');
-        
-        if (currentStep === 1) {
-          // Go back to product view
-          showView(productView);
-          statusMessage.className = 'status-message';
-          statusMessage.style.display = 'none';
-        } else {
-          // Go back to previous step
-          showStep(currentStep - 1);
-        }
-      });
-      
-      // Next button - go to next step
-      nextBtn.addEventListener('click', () => {
-        if (validateCurrentStep()) {
-          showStep(currentStep + 1);
-          saveFormState();
-        }
-      });
-      
-      // Done button - return to product view
-      doneBtn.addEventListener('click', () => {
-        logEvent('done_clicked');
-        showView(productView);
-        // Reset to step 1 for next order
-        showStep(1);
-      });
-      
-      // Initialize component
-      async function initialize() {
-        logEvent('component_loaded');
-        
-        // Prefill form with user data from auth if available
+      // Prefilled user data from auth with fallback
+      let prefilledUserData = null;
+      try {
+        prefilledUserData = ${encodedUserData};
         if (prefilledUserData) {
-          if (prefilledUserData.firstName) {
-            document.getElementById('firstName').value = prefilledUserData.firstName;
-          }
-          if (prefilledUserData.lastName) {
-            document.getElementById('lastName').value = prefilledUserData.lastName;
-          }
-          if (prefilledUserData.email) {
-            document.getElementById('email').value = prefilledUserData.email;
-          }
-          logEvent('prefilled_user_data', { 
+          log('info', 'User data prefilled', { 
             hasFirstName: !!prefilledUserData.firstName,
             hasLastName: !!prefilledUserData.lastName,
             hasEmail: !!prefilledUserData.email
           });
         }
-        
-        // Load initial state from window.openai.toolOutput if available
-        try {
-          const toolOutput = await window.openai?.toolOutput;
-          if (toolOutput?.structuredContent) {
-            logEvent('initial_state_loaded', { hasStructuredContent: true });
-          }
-        } catch (error) {
-          logEvent('initial_state_error', { error: error.message });
+      } catch (e) {
+        log('error', 'Failed to parse prefilled user data', { error: e.message });
+        prefilledUserData = null;
+      }
+      
+      let currentStep = 1;
+      let currentView = productView;
+      
+      // View management with animations and error handling
+      function showView(viewToShow, useAnimation = true) {
+        if (!viewToShow) {
+          log('error', 'showView called with null/undefined view');
+          return;
         }
         
-        // Restore form state from widget state (but don't override prefilled data)
+        if (currentView === viewToShow) {
+          log('debug', 'View already active, skipping transition');
+          return;
+        }
+        
         try {
-          const savedState = await window.openai?.getWidgetState?.(STATE_KEY);
-          if (savedState) {
-            // Only restore fields that aren't already prefilled
-            const stateToRestore = { ...savedState };
-            if (prefilledUserData?.firstName) delete stateToRestore.firstName;
-            if (prefilledUserData?.lastName) delete stateToRestore.lastName;
-            if (prefilledUserData?.email) delete stateToRestore.email;
+          if (useAnimation && currentView) {
+            // Animate out current view
+            currentView.classList.add('slide-out-left');
             
-            restoreFormState(stateToRestore);
-            logEvent('form_state_restored');
+            setTimeout(() => {
+              try {
+                // Hide all views
+                document.querySelectorAll('.view').forEach(view => {
+                  view.classList.remove('active', 'slide-out-left', 'slide-in-right');
+                });
+                
+                // Show and animate in new view
+                if (viewToShow) {
+                  viewToShow.classList.add('active', 'slide-in-right');
+                  currentView = viewToShow;
+                  
+                  // Clean up animation classes after animation completes
+                  setTimeout(() => {
+                    if (viewToShow) {
+                      viewToShow.classList.remove('slide-in-right');
+                    }
+                  }, 400);
+                }
+              } catch (e) {
+                log('error', 'Animation cleanup failed', { error: e.message });
+              }
+            }, 400);
+          } else {
+            // No animation - instant switch
+            document.querySelectorAll('.view').forEach(view => {
+              view.classList.remove('active');
+            });
+            viewToShow.classList.add('active');
+            currentView = viewToShow;
           }
-        } catch (error) {
-          logEvent('state_restore_error', { error: error.message });
+          
+          log('debug', 'View transition completed', { viewId: viewToShow.id });
+        } catch (e) {
+          log('error', 'showView failed', { error: e.message });
+          // Fallback: try direct view switch without animation
+          try {
+            document.querySelectorAll('.view').forEach(view => {
+              view.classList.remove('active');
+            });
+            viewToShow.classList.add('active');
+            currentView = viewToShow;
+          } catch (fallbackError) {
+            log('error', 'Fallback view switch failed', { error: fallbackError.message });
+          }
         }
       }
       
-      // Save form state
-      async function saveFormState() {
-        const state = {
-          size: document.getElementById('size').value,
-          firstName: document.getElementById('firstName').value,
-          lastName: document.getElementById('lastName').value,
-          company: document.getElementById('company').value,
-          phone: document.getElementById('phone').value,
-          email: document.getElementById('email').value,
-          streetAddress1: document.getElementById('streetAddress1').value,
-          streetAddress2: document.getElementById('streetAddress2').value,
-          city: document.getElementById('city').value,
-          state: document.getElementById('state').value,
-          zip: document.getElementById('zip').value,
-          country: document.getElementById('country').value,
-          timestamp: Date.now()
-        };
+      // Step management with error handling
+      function showStep(stepNumber) {
+        if (!step1 || !step2 || !formTitle || !formSubtitle || !nextBtn || !submitBtn) {
+          log('error', 'Missing form elements in showStep');
+          return;
+        }
         
         try {
-          await window.openai?.setWidgetState?.(STATE_KEY, state);
-          logEvent('form_state_saved');
-        } catch (error) {
-          logEvent('state_save_error', { error: error.message });
+          currentStep = stepNumber;
+          
+          // Update step visibility
+          step1.classList.remove('active');
+          step2.classList.remove('active');
+          
+          if (stepNumber === 1) {
+            step1.classList.add('active');
+            formTitle.textContent = 'Your Information';
+            formSubtitle.textContent = 'Step 1 of 2';
+            nextBtn.style.display = 'block';
+            submitBtn.style.display = 'none';
+          } else if (stepNumber === 2) {
+            step2.classList.add('active');
+            formTitle.textContent = 'Shipping Address';
+            formSubtitle.textContent = 'Step 2 of 2';
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'block';
+          }
+          
+          log('debug', 'Step changed', { step: stepNumber });
+        } catch (e) {
+          log('error', 'showStep failed', { step: stepNumber, error: e.message });
         }
       }
       
-      // Restore form state
+      // Validate current step fields with error handling
+      function validateCurrentStep() {
+        try {
+          const currentStepElement = currentStep === 1 ? step1 : step2;
+          if (!currentStepElement) {
+            log('error', 'Current step element not found');
+            return false;
+          }
+          
+          const inputs = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
+          
+          let isValid = true;
+          inputs.forEach(input => {
+            try {
+              if (!input.checkValidity()) {
+                isValid = false;
+                input.reportValidity();
+              }
+            } catch (e) {
+              log('error', 'Validation failed for input', { id: input.id, error: e.message });
+              isValid = false;
+            }
+          });
+          
+          return isValid;
+        } catch (e) {
+          log('error', 'validateCurrentStep failed', { error: e.message });
+          return false;
+        }
+      }
+      
+      // Navigate to form view with error handling
+      if (orderNowBtn) {
+        orderNowBtn.addEventListener('click', () => {
+          try {
+            log('info', 'Order Now clicked');
+            if (formView) {
+              showView(formView);
+              showStep(1);
+            } else {
+              log('error', 'Form view not found');
+            }
+          } catch (e) {
+            log('error', 'Order Now handler failed', { error: e.message });
+          }
+        });
+      } else {
+        log('error', 'Order Now button not found');
+      }
+      
+      // Navigate back button with error handling
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          try {
+            log('info', 'Back clicked');
+            
+            if (currentStep === 1) {
+              // Go back to product view
+              if (productView) {
+                showView(productView);
+                if (statusMessage) {
+                  statusMessage.className = 'status-message';
+                  statusMessage.style.display = 'none';
+                }
+              }
+            } else {
+              // Go back to previous step
+              showStep(currentStep - 1);
+            }
+          } catch (e) {
+            log('error', 'Back button handler failed', { error: e.message });
+          }
+        });
+      } else {
+        log('error', 'Back button not found');
+      }
+      
+      // Next button - go to next step with error handling
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          try {
+            if (validateCurrentStep()) {
+              showStep(currentStep + 1);
+              saveFormState();
+            }
+          } catch (e) {
+            log('error', 'Next button handler failed', { error: e.message });
+          }
+        });
+      } else {
+        log('error', 'Next button not found');
+      }
+      
+      // Done button - return to product view with error handling
+      if (doneBtn) {
+        doneBtn.addEventListener('click', () => {
+          try {
+            log('info', 'Done clicked');
+            if (productView) {
+              showView(productView);
+              // Reset to step 1 for next order
+              showStep(1);
+            }
+          } catch (e) {
+            log('error', 'Done button handler failed', { error: e.message });
+          }
+        });
+      } else {
+        log('error', 'Done button not found');
+      }
+      
+      // Initialize component with comprehensive error handling
+      async function initialize() {
+        log('info', 'Widget initializing');
+        
+        try {
+          // Prefill form with user data from auth if available
+          if (prefilledUserData) {
+            try {
+              const firstNameInput = getElement('firstName', false);
+              const lastNameInput = getElement('lastName', false);
+              const emailInput = getElement('email', false);
+              
+              if (prefilledUserData.firstName && firstNameInput) {
+                firstNameInput.value = prefilledUserData.firstName;
+              }
+              if (prefilledUserData.lastName && lastNameInput) {
+                lastNameInput.value = prefilledUserData.lastName;
+              }
+              if (prefilledUserData.email && emailInput) {
+                emailInput.value = prefilledUserData.email;
+              }
+              
+              log('info', 'User data prefilled successfully');
+            } catch (e) {
+              log('error', 'Failed to prefill user data', { error: e.message });
+            }
+          }
+          
+          // Load initial state from window.openai.toolOutput if available
+          try {
+            if (typeof window !== 'undefined' && window.openai) {
+              const toolOutput = await window.openai.toolOutput;
+              if (toolOutput?.structuredContent) {
+                log('debug', 'Tool output loaded', { hasStructuredContent: true });
+              }
+            }
+          } catch (error) {
+            log('warn', 'Could not load tool output', { error: error?.message || 'Unknown error' });
+          }
+          
+          // Restore form state from widget state (but don't override prefilled data)
+          try {
+            if (typeof window !== 'undefined' && window.openai?.getWidgetState) {
+              const savedState = await window.openai.getWidgetState(STATE_KEY);
+              if (savedState) {
+                // Only restore fields that aren't already prefilled
+                const stateToRestore = { ...savedState };
+                if (prefilledUserData?.firstName) delete stateToRestore.firstName;
+                if (prefilledUserData?.lastName) delete stateToRestore.lastName;
+                if (prefilledUserData?.email) delete stateToRestore.email;
+                
+                restoreFormState(stateToRestore);
+                log('info', 'Form state restored');
+              }
+            }
+          } catch (error) {
+            log('warn', 'Could not restore form state', { error: error?.message || 'Unknown error' });
+          }
+          
+          log('info', 'Widget initialization complete');
+        } catch (e) {
+          log('error', 'Widget initialization failed', { error: e.message });
+        }
+      }
+      
+      // Save form state with error handling
+      async function saveFormState() {
+        try {
+          if (typeof window === 'undefined' || !window.openai?.setWidgetState) {
+            log('debug', 'Widget state API not available');
+            return;
+          }
+          
+          const state = {};
+          const fieldIds = ['size', 'firstName', 'lastName', 'company', 'phone', 'email', 
+                           'streetAddress1', 'streetAddress2', 'city', 'state', 'zip', 'country'];
+          
+          fieldIds.forEach(id => {
+            try {
+              const element = document.getElementById(id);
+              if (element && element.value) {
+                state[id] = element.value;
+              }
+            } catch (e) {
+              log('warn', \`Could not save field: \${id}\`, { error: e.message });
+            }
+          });
+          
+          state.timestamp = Date.now();
+          
+          await window.openai.setWidgetState(STATE_KEY, state);
+          log('debug', 'Form state saved');
+        } catch (error) {
+          log('warn', 'Could not save form state', { error: error?.message || 'Unknown error' });
+        }
+      }
+      
+      // Restore form state with error handling
       function restoreFormState(state) {
         if (!state) return;
         
-        Object.keys(state).forEach(key => {
-          const input = document.getElementById(key);
-          if (input && state[key]) {
-            input.value = state[key];
-          }
-        });
+        try {
+          Object.keys(state).forEach(key => {
+            try {
+              const input = document.getElementById(key);
+              if (input && state[key]) {
+                input.value = state[key];
+              }
+            } catch (e) {
+              log('warn', \`Could not restore field: \${key}\`, { error: e.message });
+            }
+          });
+        } catch (e) {
+          log('error', 'Form state restoration failed', { error: e.message });
+        }
       }
       
-      // Auto-save form state on input
-      form.addEventListener('input', debounce(saveFormState, 500));
+      // Auto-save form state on input with error handling
+      if (form) {
+        form.addEventListener('input', debounce(saveFormState, 500));
+      }
       
       // Debounce helper
       function debounce(func, wait) {
@@ -1282,16 +1453,24 @@ export const getAppsSdkCompatibleHtml = (userData?: {
         };
       }
       
-      // Image error handling
-      productImage.addEventListener('error', () => {
-        logEvent('image_load_error');
-        productImage.alt = 'RUN MCP Shirt (image unavailable)';
-        productImage.style.display = 'none';
-      });
-      
-      productImage.addEventListener('load', () => {
-        logEvent('image_loaded');
-      });
+      // Image error handling with fallback
+      if (productImage) {
+        productImage.addEventListener('error', () => {
+          log('warn', 'Product image failed to load');
+          try {
+            productImage.alt = 'RUN MCP Shirt (image unavailable)';
+            productImage.style.display = 'none';
+          } catch (e) {
+            log('error', 'Image error handler failed', { error: e.message });
+          }
+        });
+        
+        productImage.addEventListener('load', () => {
+          log('debug', 'Product image loaded successfully');
+        });
+      } else {
+        log('warn', 'Product image element not found');
+      }
       
       // Show success view with order details
       function showSuccessView(orderData) {
@@ -1321,95 +1500,154 @@ export const getAppsSdkCompatibleHtml = (userData?: {
         showView(successView);
       }
       
-      // Form submission
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        logEvent('form_submit_started');
-        
-        // Validate form
-        if (!form.checkValidity()) {
-          logEvent('form_validation_failed');
-          form.reportValidity();
-          return;
-        }
-        
-        // UI state: loading
-        submitBtn.disabled = true;
-        submitBtn.classList.add('loading');
-        submitBtn.setAttribute('aria-busy', 'true');
-        backBtn.disabled = true;
-        statusMessage.className = 'status-message';
-        statusMessage.style.display = 'none';
-        
-        try {
-          const formData = {
-            size: document.getElementById('size').value,
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            email: document.getElementById('email').value,
-            company: document.getElementById('company').value,
-            phone: document.getElementById('phone').value,
-            streetAddress1: document.getElementById('streetAddress1').value,
-            streetAddress2: document.getElementById('streetAddress2').value || undefined,
-            city: document.getElementById('city').value,
-            state: document.getElementById('state').value.toUpperCase(),
-            zip: document.getElementById('zip').value,
-            country: document.getElementById('country').value.toUpperCase(),
-            specialCode: 'RUN_MCP_2025', // Automatically include for widget orders
-          };
+      // Form submission with comprehensive error handling
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          log('info', 'Form submission started');
           
-          logEvent('tool_call_started', { size: formData.size });
-          
-          // Call the order_shirt tool
-          const result = await window.openai?.callTool('order_shirt', formData);
-          
-          logEvent('tool_call_success', { result });
-          
-          // Extract order ID from result if available
-          let orderId = 'Pending';
-          if (result?.content?.[0]?.text) {
-            const orderIdMatch = result.content[0].text.match(/Order ID: ([\\w-]+)/);
-            if (orderIdMatch) {
-              orderId = orderIdMatch[1];
+          try {
+            // Validate form
+            if (!form.checkValidity()) {
+              log('warn', 'Form validation failed');
+              form.reportValidity();
+              return;
             }
+            
+            // Check if required elements exist
+            if (!submitBtn || !backBtn || !statusMessage) {
+              log('error', 'Required form elements missing');
+              return;
+            }
+            
+            // UI state: loading
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            submitBtn.setAttribute('aria-busy', 'true');
+            backBtn.disabled = true;
+            statusMessage.className = 'status-message';
+            statusMessage.style.display = 'none';
+            
+            try {
+              // Collect form data with safe element access
+              const formData = {
+                size: getElement('size', false)?.value || 'M',
+                firstName: getElement('firstName', false)?.value || '',
+                lastName: getElement('lastName', false)?.value || '',
+                email: getElement('email', false)?.value || '',
+                company: getElement('company', false)?.value || '',
+                phone: getElement('phone', false)?.value || '',
+                streetAddress1: getElement('streetAddress1', false)?.value || '',
+                streetAddress2: getElement('streetAddress2', false)?.value || undefined,
+                city: getElement('city', false)?.value || '',
+                state: (getElement('state', false)?.value || '').toUpperCase(),
+                zip: getElement('zip', false)?.value || '',
+                country: (getElement('country', false)?.value || '').toUpperCase(),
+                specialCode: 'RUN_MCP_2025', // Automatically include for widget orders
+              };
+              
+              log('info', 'Form data collected', { size: formData.size, email: formData.email });
+              
+              // Check if OpenAI API is available
+              if (typeof window === 'undefined' || !window.openai?.callTool) {
+                throw new Error('Widget API not available. Please try again.');
+              }
+              
+              // Call the order_shirt tool
+              const result = await window.openai.callTool('order_shirt', formData);
+              
+              log('info', 'Order placed successfully');
+              
+              // Extract order ID from result if available
+              let orderId = 'Pending';
+              if (result?.content?.[0]?.text) {
+                const orderIdMatch = result.content[0].text.match(/Order ID: ([\\w-]+)/);
+                if (orderIdMatch) {
+                  orderId = orderIdMatch[1];
+                }
+              }
+              
+              // Clear form and saved state
+              try {
+                form.reset();
+                if (window.openai?.setWidgetState) {
+                  await window.openai.setWidgetState(STATE_KEY, null);
+                }
+              } catch (e) {
+                log('warn', 'Could not clear form state', { error: e.message });
+              }
+              
+              // Show success view with order details
+              showSuccessView({
+                orderId: orderId,
+                size: formData.size,
+                email: formData.email,
+              });
+              
+            } catch (error) {
+              log('error', 'Order submission failed', { 
+                error: error?.message || 'Unknown error',
+                stack: error?.stack 
+              });
+              
+              // Error state
+              statusMessage.className = 'status-message error';
+              statusMessage.textContent = \`✗ \${error?.message || 'Failed to place order. Please try again.'}\`;
+              statusMessage.style.display = 'block';
+            } finally {
+              // Reset UI state
+              try {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                submitBtn.setAttribute('aria-busy', 'false');
+                backBtn.disabled = false;
+              } catch (e) {
+                log('error', 'Could not reset UI state', { error: e.message });
+              }
+            }
+          } catch (e) {
+            log('error', 'Form submit handler failed', { error: e.message });
           }
-          
-          // Clear form and saved state
-          form.reset();
-          await window.openai?.setWidgetState?.(STATE_KEY, null);
-          
-          logEvent('order_completed');
-          
-          // Show success view with order details
-          showSuccessView({
-            orderId: orderId,
-            size: formData.size,
-            email: formData.email,
-          });
-          
-        } catch (error) {
-          logEvent('tool_call_error', { 
-            error: error.message,
-            stack: error.stack 
-          });
-          
-          // Error state
-          statusMessage.className = 'status-message error';
-          statusMessage.textContent = \`✗ \${error.message || 'Failed to place order. Please try again.'}\`;
-        } finally {
-          // Reset UI state
-          submitBtn.disabled = false;
-          submitBtn.classList.remove('loading');
-          submitBtn.setAttribute('aria-busy', 'false');
-          backBtn.disabled = false;
-        }
-      });
-      
-      // Initialize on load
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initialize);
+        });
       } else {
-        initialize();
+        log('error', 'Form element not found');
+      }
+      
+      // Initialize on load with error handling
+      try {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => {
+            try {
+              initialize();
+            } catch (e) {
+              log('error', 'DOMContentLoaded initialization failed', { error: e.message });
+            }
+          });
+        } else {
+          initialize();
+        }
+      } catch (e) {
+        log('error', 'Widget startup failed', { error: e.message });
+      }
+      
+      // Global error handler for uncaught errors in widget
+      if (typeof window !== 'undefined') {
+        const originalErrorHandler = window.onerror;
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+          if (msg && typeof msg === 'string' && msg.includes('RUN MCP')) {
+            log('error', 'Uncaught widget error', { 
+              message: msg, 
+              line: lineNo, 
+              column: columnNo,
+              error: error?.message 
+            });
+          }
+          // Call original handler if it exists
+          if (originalErrorHandler) {
+            return originalErrorHandler(msg, url, lineNo, columnNo, error);
+          }
+          return false;
+        };
       }
     </script>
   </body>
