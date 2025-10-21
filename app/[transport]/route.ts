@@ -27,19 +27,17 @@ function widgetMeta(widget: ContentWidget) {
 }
 
 const handler = createMcpHandler(async (server) => {
-  const html = getAppsSdkCompatibleHtml();
-
   const contentWidget: ContentWidget = {
     id: "show_store_content",
     title: "Show Store Items",
     templateUri: "ui://widget/content-template.html",
     invoking: "Loading content...",
     invoked: "Content loaded",
-    html: html,
+    html: "", // Will be generated dynamically per request
     description: "Displays the store content",
   };
 
-  // Register the resource for the widget
+  // Register the resource for the widget - generate HTML dynamically with auth context
   server.registerResource(
     "store-widget",
     contentWidget.templateUri,
@@ -52,19 +50,31 @@ const handler = createMcpHandler(async (server) => {
         "openai/widgetPrefersBorder": true,
       },
     },
-    async (uri) => ({
-      contents: [
-        {
-          uri: uri.href,
-          mimeType: "text/html+skybridge",
-          text: `<html>${contentWidget.html}</html>`,
-          _meta: {
-            "openai/widgetDescription": contentWidget.description,
-            "openai/widgetPrefersBorder": true,
+    async (uri, { authInfo }) => {
+      // Get user from auth context to prefill widget
+      const user = authInfo?.extra?.user as User | undefined;
+      const userData = user ? {
+        firstName: user.firstName ?? undefined,
+        lastName: user.lastName ?? undefined,
+        email: user.email,
+      } : undefined;
+      
+      const html = getAppsSdkCompatibleHtml(userData);
+      
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            mimeType: "text/html+skybridge",
+            text: `<html>${html}</html>`,
+            _meta: {
+              "openai/widgetDescription": contentWidget.description,
+              "openai/widgetPrefersBorder": true,
+            },
           },
-        },
-      ],
-    }),
+        ],
+      };
+    },
   );
 
   server.registerTool(
@@ -131,11 +141,17 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
         lastName: z.string().describe("Last name"),
         email: z.string().email().describe("Email address"),
         company: z.string().describe("Company name"),
-        mailingAddress: z.string().describe("Mailing address for shipping"),
+        phone: z.string().optional().describe("Phone number"),
+        streetAddress1: z.string().describe("Street address line 1"),
+        streetAddress2: z.string().optional().describe("Street address line 2 (apartment, suite, etc.)"),
+        city: z.string().describe("City"),
+        state: z.string().length(2).describe("2-letter state code (e.g., CA, NY)"),
+        zip: z.string().describe("ZIP/Postal code"),
+        country: z.string().length(2).describe("2-letter country code (e.g., US, CA)"),
         specialCode: z
           .string()
           .optional()
-          .describe("Optional special code to unlock RUN MCP shirt variant. Only used internall by ChatGPT Apps SDK users."),
+          .describe("Optional special code to unlock RUN MCP shirt variant. Only used internally by ChatGPT Apps SDK users."),
       },
       _meta: {
         "openai/widgetAccessible": true,
@@ -148,7 +164,13 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
         lastName,
         email,
         company,
-        mailingAddress,
+        phone,
+        streetAddress1,
+        streetAddress2,
+        city,
+        state,
+        zip,
+        country,
         specialCode,
       },
       { authInfo },
@@ -176,8 +198,17 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
         // Place the order using the placeOrder function
         const order = await placeOrder(
           {
+            firstName,
+            lastName,
+            email,
             company,
-            mailingAddress,
+            phone,
+            streetAddress1,
+            streetAddress2,
+            city,
+            state,
+            zip,
+            country,
             tshirtSize: size,
             isRunMcpShirt,
           },
@@ -186,6 +217,15 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
 
         const shirtType = isRunMcpShirt ? "RUN MCP" : "Context is Everything";
         const shirtEmoji = isRunMcpShirt ? "⚡" : "🎯";
+
+        // Format address for display
+        const fullAddress = [
+          streetAddress1,
+          streetAddress2,
+          city,
+          `${state} ${zip}`,
+          country,
+        ].filter(Boolean).join("\n");
 
         return {
           content: [
@@ -197,10 +237,16 @@ Order ID: ${order.id}
 Product: ${shirtType} MCP Shirt
 SKU: ${order.sku}
 Size: ${size}
+
+Customer Information:
 Name: ${firstName} ${lastName}
 Email: ${email}
 Company: ${company}
-Shipping to: ${mailingAddress}
+${phone ? `Phone: ${phone}` : ""}
+
+Shipping Address:
+${fullAddress}
+
 Order Date: ${order.orderDate}
 
 ${

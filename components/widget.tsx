@@ -1,6 +1,15 @@
 import { baseURL } from "@/baseUrl";
 
-export const getAppsSdkCompatibleHtml = () => {
+export const getAppsSdkCompatibleHtml = (userData?: {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+}) => {
+  // Safely encode user data for JavaScript
+  const encodedUserData = userData
+    ? JSON.stringify(userData).replace(/</g, '\\u003c').replace(/>/g, '\\u003e')
+    : 'null';
+  
   return `
   <!DOCTYPE html>
   <html lang="en">
@@ -102,10 +111,6 @@ export const getAppsSdkCompatibleHtml = () => {
       
       /* Responsive breakpoints */
       @media (max-width: 520px) {
-        .product-view-content {
-          padding: var(--spacing-md) var(--spacing-md) 0;
-        }
-        
         .product-info {
           padding: var(--spacing-lg);
         }
@@ -116,10 +121,6 @@ export const getAppsSdkCompatibleHtml = () => {
       }
       
       @media (max-width: 360px) {
-        .product-view-content {
-          padding: var(--spacing-sm) var(--spacing-sm) 0;
-        }
-        
         .product-info {
           padding: var(--spacing-md);
         }
@@ -140,19 +141,51 @@ export const getAppsSdkCompatibleHtml = () => {
       /* View transitions */
       .view {
         display: none;
-        animation: fadeIn 0.3s ease-out;
+        animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
       
       .view.active {
         display: block;
       }
       
+      .view.slide-out-left {
+        animation: slideOutLeft 0.4s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+      }
+      
+      .view.slide-in-right {
+        animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
       @keyframes fadeIn {
         from { 
           opacity: 0;
+          transform: translateY(8px);
         }
         to { 
           opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes slideOutLeft {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+      }
+      
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
         }
       }
       
@@ -178,14 +211,12 @@ export const getAppsSdkCompatibleHtml = () => {
       
       .product-info {
         padding: var(--spacing-xl);
-        flex-grow: 1;
         display: flex;
         flex-direction: column;
       }
       
       .product-header {
-        margin-bottom: auto;
-        flex-grow: 1;
+        margin-bottom: var(--spacing-lg);
       }
       
       .product-title {
@@ -234,7 +265,7 @@ export const getAppsSdkCompatibleHtml = () => {
         transition: all var(--transition-fast);
         box-shadow: 0 2px 8px rgba(255, 95, 79, 0.25);
         letter-spacing: -0.01em;
-        margin-top: var(--spacing-md);
+        margin-top: 0;
       }
       
       .cta-button:hover {
@@ -275,6 +306,26 @@ export const getAppsSdkCompatibleHtml = () => {
       .form-subtitle {
         font-size: var(--font-size-sm);
         color: var(--color-text-secondary);
+      }
+      
+      .form-step {
+        display: none;
+      }
+      
+      .form-step.active {
+        display: block;
+      }
+      
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-sm);
+      }
+      
+      @media (max-width: 360px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
       }
       
       .form-group {
@@ -449,6 +500,20 @@ export const getAppsSdkCompatibleHtml = () => {
         to { transform: rotate(360deg); }
       }
       
+      /* Pulse animation on submit button when on step 2 */
+      .submit-btn:not(:disabled):not(.loading) {
+        animation: subtlePulse 2s ease-in-out infinite;
+      }
+      
+      @keyframes subtlePulse {
+        0%, 100% {
+          box-shadow: 0 2px 8px rgba(255, 95, 79, 0.25);
+        }
+        50% {
+          box-shadow: 0 2px 12px rgba(255, 95, 79, 0.4);
+        }
+      }
+      
       .status-message {
         margin-top: var(--spacing-md);
         padding: var(--spacing-sm) var(--spacing-md);
@@ -488,6 +553,160 @@ export const getAppsSdkCompatibleHtml = () => {
       @keyframes shimmer {
         0% { background-position: 200% 0; }
         100% { background-position: -200% 0; }
+      }
+      
+      /* Success View Styles */
+      .success-view-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: var(--spacing-2xl);
+        height: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+      
+      .success-icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: var(--spacing-xl);
+        animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      
+      .success-icon svg {
+        width: 100%;
+        height: 100%;
+      }
+      
+      .success-checkmark {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+        animation: drawCheck 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+      }
+      
+      .success-circle {
+        stroke-dasharray: 260;
+        stroke-dashoffset: 260;
+        animation: drawCircle 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+      
+      @keyframes successPop {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      
+      @keyframes drawCircle {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      
+      @keyframes drawCheck {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      
+      .success-title {
+        font-size: var(--font-size-2xl);
+        font-weight: 600;
+        margin-bottom: var(--spacing-sm);
+        letter-spacing: -0.02em;
+        animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards;
+      }
+      
+      .success-message {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        margin-bottom: var(--spacing-xl);
+        line-height: 1.6;
+        animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.5s backwards;
+      }
+      
+      .success-details {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--color-neutral-700);
+        border-radius: var(--border-radius-sm);
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+        width: 100%;
+        animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.6s backwards;
+      }
+      
+      .success-detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--spacing-sm) 0;
+        font-size: var(--font-size-sm);
+      }
+      
+      .success-detail-row:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      
+      .success-detail-label {
+        color: var(--color-text-muted);
+      }
+      
+      .success-detail-value {
+        color: var(--color-text);
+        font-weight: 500;
+      }
+      
+      .success-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+        width: 100%;
+        animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.7s backwards;
+      }
+      
+      .success-button {
+        flex: 1;
+        padding: var(--spacing-md) var(--spacing-lg);
+        background: var(--color-primary);
+        color: var(--color-primary-text);
+        border: none;
+        border-radius: var(--border-radius-sm);
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        box-shadow: 0 2px 8px rgba(255, 95, 79, 0.25);
+        letter-spacing: -0.01em;
+      }
+      
+      .success-button:hover {
+        background: var(--color-primary-hover);
+        box-shadow: 0 4px 16px rgba(255, 95, 79, 0.35);
+        transform: translateY(-1px);
+      }
+      
+      .success-button:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 4px rgba(255, 95, 79, 0.3);
+      }
+      
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       
       /* Accessibility: Reduced motion preference */
@@ -540,91 +759,190 @@ export const getAppsSdkCompatibleHtml = () => {
       <div id="formView" class="view">
         <div class="form-view-content">
           <div class="form-header">
-            <h2 class="form-title">Complete Your Order</h2>
-            <p class="form-subtitle">Fill in your details below</p>
+            <h2 class="form-title" id="formTitle">Your Information</h2>
+            <p class="form-subtitle" id="formSubtitle">Step 1 of 2</p>
           </div>
           
           <form id="orderForm" novalidate>
-            <div class="form-group">
-              <label class="form-label" for="size">Size *</label>
-              <select id="size" name="size" class="form-select" required aria-required="true">
-                <option value="XS">XS</option>
-                <option value="S">S</option>
-                <option value="M" selected>M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="2XL">2XL</option>
-                <option value="3XL">3XL</option>
-              </select>
+            <!-- Step 1: Basic Info -->
+            <div id="step1" class="form-step active">
+              <div class="form-group">
+                <label class="form-label" for="size">Size *</label>
+                <select id="size" name="size" class="form-select" required aria-required="true">
+                  <option value="XS">XS</option>
+                  <option value="S">S</option>
+                  <option value="M" selected>M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="2XL">2XL</option>
+                  <option value="3XL">3XL</option>
+                </select>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="firstName">First Name *</label>
+                  <input 
+                    type="text" 
+                    id="firstName" 
+                    name="firstName"
+                    class="form-input" 
+                    required 
+                    aria-required="true"
+                    autocomplete="given-name"
+                    placeholder="John"
+                  >
+                </div>
+              
+                <div class="form-group">
+                  <label class="form-label" for="lastName">Last Name *</label>
+                  <input 
+                    type="text" 
+                    id="lastName"
+                    name="lastName" 
+                    class="form-input" 
+                    required 
+                    aria-required="true"
+                    autocomplete="family-name"
+                    placeholder="Doe"
+                  >
+                </div>
+              </div>
+            
+              <div class="form-group">
+                <label class="form-label" for="company">Company *</label>
+                <input 
+                  type="text" 
+                  id="company"
+                  name="company" 
+                  class="form-input" 
+                  required 
+                  aria-required="true"
+                  autocomplete="organization"
+                  placeholder="Acme Inc."
+                >
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone *</label>
+                <input 
+                  type="tel" 
+                  id="phone"
+                  name="phone" 
+                  class="form-input" 
+                  required 
+                  aria-required="true"
+                  autocomplete="tel"
+                  placeholder="+1 (555) 123-4567"
+                >
+              </div>
+            
+              <div class="form-group">
+                <label class="form-label" for="email">Email *</label>
+                <input 
+                  type="email" 
+                  id="email"
+                  name="email" 
+                  class="form-input" 
+                  required 
+                  aria-required="true"
+                  autocomplete="email"
+                  placeholder="john@example.com"
+                >
+              </div>
             </div>
-          
-            <div class="form-group">
-              <label class="form-label" for="firstName">First Name *</label>
-              <input 
-                type="text" 
-                id="firstName" 
-                name="firstName"
-                class="form-input" 
-                required 
-                aria-required="true"
-                autocomplete="given-name"
-                placeholder="John"
-              >
-            </div>
-          
-            <div class="form-group">
-              <label class="form-label" for="lastName">Last Name *</label>
-              <input 
-                type="text" 
-                id="lastName"
-                name="lastName" 
-                class="form-input" 
-                required 
-                aria-required="true"
-                autocomplete="family-name"
-                placeholder="Doe"
-              >
-            </div>
-          
-            <div class="form-group">
-              <label class="form-label" for="email">Email *</label>
-              <input 
-                type="email" 
-                id="email"
-                name="email" 
-                class="form-input" 
-                required 
-                aria-required="true"
-                autocomplete="email"
-                placeholder="john@example.com"
-              >
-            </div>
-          
-            <div class="form-group">
-              <label class="form-label" for="company">Company *</label>
-              <input 
-                type="text" 
-                id="company"
-                name="company" 
-                class="form-input" 
-                required 
-                aria-required="true"
-                autocomplete="organization"
-                placeholder="Acme Inc."
-              >
-            </div>
-          
-            <div class="form-group">
-              <label class="form-label" for="mailingAddress">Mailing Address *</label>
-              <textarea 
-                id="mailingAddress"
-                name="mailingAddress" 
-                class="form-textarea" 
-                required 
-                aria-required="true"
-                autocomplete="street-address"
-                placeholder="123 Main St, City, State ZIP, Country"
-              ></textarea>
+            
+            <!-- Step 2: Address -->
+            <div id="step2" class="form-step">
+              <div class="form-group">
+                <label class="form-label" for="streetAddress1">Street Address *</label>
+                <input 
+                  type="text" 
+                  id="streetAddress1"
+                  name="streetAddress1" 
+                  class="form-input" 
+                  required 
+                  aria-required="true"
+                  autocomplete="address-line1"
+                  placeholder="123 Main Street"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="streetAddress2">Apt, Suite, etc. (Optional)</label>
+                <input 
+                  type="text" 
+                  id="streetAddress2"
+                  name="streetAddress2" 
+                  class="form-input" 
+                  autocomplete="address-line2"
+                  placeholder="Apartment 4B"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="city">City *</label>
+                <input 
+                  type="text" 
+                  id="city"
+                  name="city" 
+                  class="form-input" 
+                  required 
+                  aria-required="true"
+                  autocomplete="address-level2"
+                  placeholder="San Francisco"
+                >
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="state">State *</label>
+                  <input 
+                    type="text" 
+                    id="state"
+                    name="state" 
+                    class="form-input" 
+                    required 
+                    aria-required="true"
+                    autocomplete="address-level1"
+                    placeholder="CA"
+                    maxlength="2"
+                    pattern="[A-Z]{2}"
+                    style="text-transform: uppercase;"
+                  >
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label" for="zip">ZIP Code *</label>
+                  <input 
+                    type="text" 
+                    id="zip"
+                    name="zip" 
+                    class="form-input" 
+                    required 
+                    aria-required="true"
+                    autocomplete="postal-code"
+                    placeholder="94102"
+                  >
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="country">Country Code *</label>
+                <input 
+                  type="text" 
+                  id="country"
+                  name="country" 
+                  class="form-input" 
+                  required 
+                  aria-required="true"
+                  autocomplete="country"
+                  placeholder="US"
+                  maxlength="2"
+                  pattern="[A-Z]{2}"
+                  style="text-transform: uppercase;"
+                >
+              </div>
             </div>
             
             <div 
@@ -639,20 +957,77 @@ export const getAppsSdkCompatibleHtml = () => {
                 type="button" 
                 class="back-btn" 
                 id="backBtn"
-                aria-label="Go back to product view"
+                aria-label="Go back"
               >
                 Back
+              </button>
+              <button 
+                type="button" 
+                class="submit-btn" 
+                id="nextBtn"
+                aria-label="Continue to next step"
+              >
+                Continue
               </button>
               <button 
                 type="submit" 
                 class="submit-btn" 
                 id="submitBtn"
                 aria-label="Submit your order"
+                style="display: none;"
               >
                 Place Order
               </button>
             </div>
           </form>
+        </div>
+      </div>
+      
+      <!-- Success View -->
+      <div id="successView" class="view">
+        <div class="success-view-content">
+          <div class="success-icon">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle 
+                class="success-circle"
+                cx="40" 
+                cy="40" 
+                r="36" 
+                stroke="var(--color-success-text)" 
+                stroke-width="4"
+                fill="none"
+              />
+              <path 
+                class="success-checkmark"
+                d="M20 40 L32 52 L60 24" 
+                stroke="var(--color-success-text)" 
+                stroke-width="4" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"
+                fill="none"
+              />
+            </svg>
+          </div>
+          
+          <h2 class="success-title">Order Placed Successfully!</h2>
+          <p class="success-message">
+            Your RUN MCP shirt is on its way. We'll send you an email confirmation shortly.
+          </p>
+          
+          <div class="success-details" id="successDetails">
+            <!-- Details will be populated by JavaScript -->
+          </div>
+          
+          <div class="success-actions">
+            <button 
+              type="button" 
+              class="success-button" 
+              id="doneBtn"
+              aria-label="Return to products"
+            >
+              Done
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -662,19 +1037,99 @@ export const getAppsSdkCompatibleHtml = () => {
       const STATE_KEY = 'run_mcp_order_form';
       const productView = document.getElementById('productView');
       const formView = document.getElementById('formView');
+      const successView = document.getElementById('successView');
       const orderNowBtn = document.getElementById('orderNowBtn');
       const backBtn = document.getElementById('backBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const doneBtn = document.getElementById('doneBtn');
       const form = document.getElementById('orderForm');
       const submitBtn = document.getElementById('submitBtn');
       const statusMessage = document.getElementById('statusMessage');
       const productImage = document.getElementById('productImage');
+      const formTitle = document.getElementById('formTitle');
+      const formSubtitle = document.getElementById('formSubtitle');
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const successDetails = document.getElementById('successDetails');
       
-      // View management
-      function showView(viewToShow) {
-        document.querySelectorAll('.view').forEach(view => {
-          view.classList.remove('active');
+      // Prefilled user data from auth
+      const prefilledUserData = ${encodedUserData};
+      
+      let currentStep = 1;
+      let currentView = productView;
+      
+      // View management with animations
+      function showView(viewToShow, useAnimation = true) {
+        if (currentView === viewToShow) return;
+        
+        if (useAnimation) {
+          // Animate out current view
+          currentView.classList.add('slide-out-left');
+          
+          setTimeout(() => {
+            // Hide all views
+            document.querySelectorAll('.view').forEach(view => {
+              view.classList.remove('active', 'slide-out-left', 'slide-in-right');
+            });
+            
+            // Show and animate in new view
+            viewToShow.classList.add('active', 'slide-in-right');
+            currentView = viewToShow;
+            
+            // Clean up animation classes after animation completes
+            setTimeout(() => {
+              viewToShow.classList.remove('slide-in-right');
+            }, 400);
+          }, 400);
+        } else {
+          // No animation - instant switch
+          document.querySelectorAll('.view').forEach(view => {
+            view.classList.remove('active');
+          });
+          viewToShow.classList.add('active');
+          currentView = viewToShow;
+        }
+      }
+      
+      // Step management
+      function showStep(stepNumber) {
+        currentStep = stepNumber;
+        
+        // Update step visibility
+        step1.classList.remove('active');
+        step2.classList.remove('active');
+        
+        if (stepNumber === 1) {
+          step1.classList.add('active');
+          formTitle.textContent = 'Your Information';
+          formSubtitle.textContent = 'Step 1 of 2';
+          nextBtn.style.display = 'block';
+          submitBtn.style.display = 'none';
+        } else if (stepNumber === 2) {
+          step2.classList.add('active');
+          formTitle.textContent = 'Shipping Address';
+          formSubtitle.textContent = 'Step 2 of 2';
+          nextBtn.style.display = 'none';
+          submitBtn.style.display = 'block';
+        }
+        
+        logEvent('form_step_changed', { step: stepNumber });
+      }
+      
+      // Validate current step fields
+      function validateCurrentStep() {
+        const currentStepElement = currentStep === 1 ? step1 : step2;
+        const inputs = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
+        
+        let isValid = true;
+        inputs.forEach(input => {
+          if (!input.checkValidity()) {
+            isValid = false;
+            input.reportValidity();
+          }
         });
-        viewToShow.classList.add('active');
+        
+        return isValid;
       }
       
       // Telemetry helper
@@ -689,20 +1144,61 @@ export const getAppsSdkCompatibleHtml = () => {
       orderNowBtn.addEventListener('click', () => {
         logEvent('order_now_clicked');
         showView(formView);
+        showStep(1);
       });
       
-      // Navigate back to product view
+      // Navigate back button
       backBtn.addEventListener('click', () => {
         logEvent('back_clicked');
+        
+        if (currentStep === 1) {
+          // Go back to product view
+          showView(productView);
+          statusMessage.className = 'status-message';
+          statusMessage.style.display = 'none';
+        } else {
+          // Go back to previous step
+          showStep(currentStep - 1);
+        }
+      });
+      
+      // Next button - go to next step
+      nextBtn.addEventListener('click', () => {
+        if (validateCurrentStep()) {
+          showStep(currentStep + 1);
+          saveFormState();
+        }
+      });
+      
+      // Done button - return to product view
+      doneBtn.addEventListener('click', () => {
+        logEvent('done_clicked');
         showView(productView);
-        // Clear status message when going back
-        statusMessage.className = 'status-message';
-        statusMessage.style.display = 'none';
+        // Reset to step 1 for next order
+        showStep(1);
       });
       
       // Initialize component
       async function initialize() {
         logEvent('component_loaded');
+        
+        // Prefill form with user data from auth if available
+        if (prefilledUserData) {
+          if (prefilledUserData.firstName) {
+            document.getElementById('firstName').value = prefilledUserData.firstName;
+          }
+          if (prefilledUserData.lastName) {
+            document.getElementById('lastName').value = prefilledUserData.lastName;
+          }
+          if (prefilledUserData.email) {
+            document.getElementById('email').value = prefilledUserData.email;
+          }
+          logEvent('prefilled_user_data', { 
+            hasFirstName: !!prefilledUserData.firstName,
+            hasLastName: !!prefilledUserData.lastName,
+            hasEmail: !!prefilledUserData.email
+          });
+        }
         
         // Load initial state from window.openai.toolOutput if available
         try {
@@ -714,11 +1210,17 @@ export const getAppsSdkCompatibleHtml = () => {
           logEvent('initial_state_error', { error: error.message });
         }
         
-        // Restore form state from widget state
+        // Restore form state from widget state (but don't override prefilled data)
         try {
           const savedState = await window.openai?.getWidgetState?.(STATE_KEY);
           if (savedState) {
-            restoreFormState(savedState);
+            // Only restore fields that aren't already prefilled
+            const stateToRestore = { ...savedState };
+            if (prefilledUserData?.firstName) delete stateToRestore.firstName;
+            if (prefilledUserData?.lastName) delete stateToRestore.lastName;
+            if (prefilledUserData?.email) delete stateToRestore.email;
+            
+            restoreFormState(stateToRestore);
             logEvent('form_state_restored');
           }
         } catch (error) {
@@ -732,9 +1234,15 @@ export const getAppsSdkCompatibleHtml = () => {
           size: document.getElementById('size').value,
           firstName: document.getElementById('firstName').value,
           lastName: document.getElementById('lastName').value,
-          email: document.getElementById('email').value,
           company: document.getElementById('company').value,
-          mailingAddress: document.getElementById('mailingAddress').value,
+          phone: document.getElementById('phone').value,
+          email: document.getElementById('email').value,
+          streetAddress1: document.getElementById('streetAddress1').value,
+          streetAddress2: document.getElementById('streetAddress2').value,
+          city: document.getElementById('city').value,
+          state: document.getElementById('state').value,
+          zip: document.getElementById('zip').value,
+          country: document.getElementById('country').value,
           timestamp: Date.now()
         };
         
@@ -785,6 +1293,34 @@ export const getAppsSdkCompatibleHtml = () => {
         logEvent('image_loaded');
       });
       
+      // Show success view with order details
+      function showSuccessView(orderData) {
+        // Populate success details
+        const detailsHTML = \`
+          <div class="success-detail-row">
+            <span class="success-detail-label">Order ID</span>
+            <span class="success-detail-value">\${orderData.orderId || 'Pending'}</span>
+          </div>
+          <div class="success-detail-row">
+            <span class="success-detail-label">Product</span>
+            <span class="success-detail-value">RUN MCP Shirt</span>
+          </div>
+          <div class="success-detail-row">
+            <span class="success-detail-label">Size</span>
+            <span class="success-detail-value">\${orderData.size}</span>
+          </div>
+          <div class="success-detail-row">
+            <span class="success-detail-label">Email</span>
+            <span class="success-detail-value">\${orderData.email}</span>
+          </div>
+        \`;
+        
+        successDetails.innerHTML = detailsHTML;
+        
+        // Show success view with animation
+        showView(successView);
+      }
+      
       // Form submission
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -812,7 +1348,13 @@ export const getAppsSdkCompatibleHtml = () => {
             lastName: document.getElementById('lastName').value,
             email: document.getElementById('email').value,
             company: document.getElementById('company').value,
-            mailingAddress: document.getElementById('mailingAddress').value,
+            phone: document.getElementById('phone').value,
+            streetAddress1: document.getElementById('streetAddress1').value,
+            streetAddress2: document.getElementById('streetAddress2').value || undefined,
+            city: document.getElementById('city').value,
+            state: document.getElementById('state').value.toUpperCase(),
+            zip: document.getElementById('zip').value,
+            country: document.getElementById('country').value.toUpperCase(),
             specialCode: 'RUN_MCP_2025', // Automatically include for widget orders
           };
           
@@ -823,9 +1365,14 @@ export const getAppsSdkCompatibleHtml = () => {
           
           logEvent('tool_call_success', { result });
           
-          // Success state
-          statusMessage.className = 'status-message success';
-          statusMessage.textContent = '✓ Order placed! Check chat for details.';
+          // Extract order ID from result if available
+          let orderId = 'Pending';
+          if (result?.content?.[0]?.text) {
+            const orderIdMatch = result.content[0].text.match(/Order ID: ([\\w-]+)/);
+            if (orderIdMatch) {
+              orderId = orderIdMatch[1];
+            }
+          }
           
           // Clear form and saved state
           form.reset();
@@ -833,11 +1380,12 @@ export const getAppsSdkCompatibleHtml = () => {
           
           logEvent('order_completed');
           
-          // Return to product view after short delay
-          setTimeout(() => {
-            showView(productView);
-            statusMessage.className = 'status-message';
-          }, 2000);
+          // Show success view with order details
+          showSuccessView({
+            orderId: orderId,
+            size: formData.size,
+            email: formData.email,
+          });
           
         } catch (error) {
           logEvent('tool_call_error', { 
