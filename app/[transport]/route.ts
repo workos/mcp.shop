@@ -33,7 +33,7 @@ const handler = createMcpHandler(async (server) => {
     templateUri: "ui://widget/content-template.html",
     invoking: "Loading content...",
     invoked: "Content loaded",
-    html: "", // Will be generated dynamically per request
+    html: "", // Will be generated dynamically per request based on user state
     description: "Displays the store content",
   };
 
