@@ -55,7 +55,15 @@ export const placeOrder = async (
       1000,
     );
 
-    console.log("order placed successfully");
+    console.log("✅ Order placed successfully:", {
+      orderId: order.id,
+      userId: user.id,
+      email: user.email,
+      sku: order.sku,
+      size: order.tshirtSize,
+      isRunMcpShirt: order.isRunMcpShirt,
+    });
+    
     return order;
   } catch (error) {
     if (error instanceof Error && error.message.includes("timed out")) {
