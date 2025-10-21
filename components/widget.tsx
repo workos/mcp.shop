@@ -102,6 +102,10 @@ export const getAppsSdkCompatibleHtml = () => {
       
       /* Responsive breakpoints */
       @media (max-width: 520px) {
+        .product-view-content {
+          padding: var(--spacing-md) var(--spacing-md) 0;
+        }
+        
         .product-info {
           padding: var(--spacing-lg);
         }
@@ -112,6 +116,10 @@ export const getAppsSdkCompatibleHtml = () => {
       }
       
       @media (max-width: 360px) {
+        .product-view-content {
+          padding: var(--spacing-sm) var(--spacing-sm) 0;
+        }
+        
         .product-info {
           padding: var(--spacing-md);
         }
@@ -155,6 +163,7 @@ export const getAppsSdkCompatibleHtml = () => {
         height: 100%;
         max-width: 480px;
         margin: 0 auto;
+        padding: var(--spacing-lg) var(--spacing-lg) 0;
       }
       
       .product-image {
@@ -164,6 +173,7 @@ export const getAppsSdkCompatibleHtml = () => {
         aspect-ratio: 1 / 1;
         object-fit: cover;
         flex-shrink: 0;
+        border-radius: var(--border-radius);
       }
       
       .product-info {
