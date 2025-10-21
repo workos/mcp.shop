@@ -135,7 +135,7 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
         specialCode: z
           .string()
           .optional()
-          .describe("Optional special code to unlock RUN MCP shirt variant"),
+          .describe("Optional special code to unlock RUN MCP shirt variant. Only used internall by ChatGPT Apps SDK users."),
       },
       _meta: {
         "openai/widgetAccessible": true,

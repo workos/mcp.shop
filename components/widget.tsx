@@ -7,42 +7,67 @@ export const getAppsSdkCompatibleHtml = () => {
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
+    <meta name="color-scheme" content="dark">
     <title>Order RUN MCP Shirt</title>
     <style>
-      /* CSS Variables for consistent design tokens */
+      /* CSS Variables for consistent design tokens - matching mcp.shop design system */
       :root {
-        --color-bg: light-dark(#ffffff, #1a1a1a);
-        --color-text: light-dark(#1a1a1a, #ededed);
-        --color-text-secondary: light-dark(#666666, #999999);
-        --color-border: light-dark(#e0e0e0, rgba(255, 255, 255, 0.1));
-        --color-input-bg: light-dark(#f5f5f5, rgba(255, 255, 255, 0.05));
-        --color-primary: #afa9ff;
-        --color-primary-hover: #c0bbff;
-        --color-primary-text: #05080d;
-        --color-success-bg: light-dark(rgba(76, 175, 80, 0.1), rgba(126, 255, 126, 0.1));
-        --color-success-text: light-dark(#2e7d32, #7eff7e);
-        --color-error-bg: light-dark(rgba(244, 67, 54, 0.1), rgba(255, 126, 126, 0.1));
-        --color-error-text: light-dark(#c62828, #ff7e7e);
-        --color-focus: var(--color-primary);
+        /* Dark theme colors matching globals.css */
+        --color-bg: #05080d;
+        --color-text: #ededed;
+        --color-text-secondary: rgba(255, 255, 255, 0.7);
+        --color-text-muted: rgba(255, 255, 255, 0.5);
+        --color-border: #404040;
+        --color-input-bg: rgba(255, 255, 255, 0.05);
+        --color-input-border: rgba(255, 255, 255, 0.1);
         
+        /* Red accent color for highlights */
+        --color-primary: #ff5f4f;
+        --color-primary-hover: #ff7e6f;
+        --color-primary-text: #ffffff;
+        --color-primary-glow: rgba(255, 95, 79, 0.2);
+        
+        /* Neutral backgrounds matching the app */
+        --color-neutral-950: #0a0a0a;
+        --color-neutral-900: #171717;
+        --color-neutral-800: #262626;
+        --color-neutral-700: #404040;
+        
+        /* Status colors */
+        --color-success-bg: rgba(126, 255, 126, 0.1);
+        --color-success-text: #7eff7e;
+        --color-success-border: rgba(126, 255, 126, 0.3);
+        --color-error-bg: rgba(255, 126, 126, 0.1);
+        --color-error-text: #ff7e7e;
+        --color-error-border: rgba(255, 126, 126, 0.3);
+        
+        /* Spacing */
         --spacing-xs: 4px;
         --spacing-sm: 8px;
         --spacing-md: 12px;
         --spacing-lg: 16px;
         --spacing-xl: 24px;
+        --spacing-2xl: 32px;
         
-        --border-radius: 8px;
-        --border-radius-sm: 6px;
+        /* Border radius */
+        --border-radius: 12px;
+        --border-radius-sm: 8px;
+        --border-radius-xs: 6px;
+        --border-radius-full: 9999px;
         
+        /* Typography */
         --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         --font-size-xs: 12px;
-        --font-size-sm: 13px;
+        --font-size-sm: 13.8px;
         --font-size-base: 14px;
         --font-size-lg: 16px;
         --font-size-xl: 20px;
+        --font-size-2xl: 24px;
+        --font-size-3xl: 32px;
         
+        /* Transitions */
         --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-smooth: 0.55s ease-in-out;
       }
       
       * {
@@ -57,38 +82,100 @@ export const getAppsSdkCompatibleHtml = () => {
         font-family: var(--font-family);
         font-size: var(--font-size-base);
         line-height: 1.5;
-        padding: var(--spacing-lg);
+        padding: 0;
+        margin: 0;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
       }
       
       .widget-container {
+        width: 100%;
         max-width: 480px;
-        margin: 0 auto;
+        height: 100%;
+        background: transparent;
+        overflow: hidden;
       }
       
       /* Responsive breakpoints */
-      @media (max-width: 480px) {
-        body {
+      @media (max-width: 520px) {
+        .product-info {
+          padding: var(--spacing-lg);
+        }
+        
+        .form-view-content {
+          padding: var(--spacing-lg);
+        }
+      }
+      
+      @media (max-width: 360px) {
+        .product-info {
           padding: var(--spacing-md);
         }
         
-        .widget-container {
-          max-width: 100%;
+        .form-view-content {
+          padding: var(--spacing-md);
         }
+        
+        .product-title {
+          font-size: var(--font-size-lg);
+        }
+        
+        .form-title {
+          font-size: var(--font-size-base);
+        }
+      }
+      
+      /* View transitions */
+      .view {
+        display: none;
+        animation: fadeIn 0.3s ease-out;
+      }
+      
+      .view.active {
+        display: block;
+      }
+      
+      @keyframes fadeIn {
+        from { 
+          opacity: 0;
+        }
+        to { 
+          opacity: 1;
+        }
+      }
+      
+      /* Product View Styles */
+      .product-view-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        max-width: 480px;
+        margin: 0 auto;
       }
       
       .product-image {
         width: 100%;
         height: auto;
-        border-radius: var(--border-radius);
-        margin-bottom: var(--spacing-lg);
         display: block;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+      
+      .product-info {
+        padding: var(--spacing-xl);
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
       }
       
       .product-header {
-        margin-bottom: var(--spacing-lg);
+        margin-bottom: auto;
+        flex-grow: 1;
       }
       
       .product-title {
@@ -96,29 +183,96 @@ export const getAppsSdkCompatibleHtml = () => {
         font-weight: 600;
         margin-bottom: var(--spacing-sm);
         line-height: 1.3;
+        letter-spacing: -0.01em;
       }
       
       .product-subtitle {
-        font-size: var(--font-size-base);
+        font-size: var(--font-size-sm);
         color: var(--color-text-secondary);
         display: flex;
         align-items: center;
         gap: var(--spacing-sm);
+        flex-wrap: wrap;
       }
       
       .badge {
         display: inline-flex;
         align-items: center;
-        padding: 2px var(--spacing-sm);
+        padding: 3px var(--spacing-sm);
+        background: linear-gradient(90deg, rgba(255, 95, 79, 0.15) 0%, rgba(254, 180, 123, 0.15) 100%);
+        color: var(--color-text);
+        border-radius: var(--border-radius-full);
+        font-size: var(--font-size-xs);
+        font-weight: 500;
+      }
+      
+      .free-label {
+        color: var(--color-text-secondary);
+        font-size: var(--font-size-sm);
+      }
+      
+      .cta-button {
+        width: 100%;
+        padding: var(--spacing-md) var(--spacing-lg);
         background: var(--color-primary);
         color: var(--color-primary-text);
-        border-radius: 4px;
-        font-size: var(--font-size-xs);
+        border: none;
+        border-radius: var(--border-radius-sm);
+        font-size: var(--font-size-base);
         font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        box-shadow: 0 2px 8px rgba(255, 95, 79, 0.25);
+        letter-spacing: -0.01em;
+        margin-top: var(--spacing-md);
+      }
+      
+      .cta-button:hover {
+        background: var(--color-primary-hover);
+        box-shadow: 0 4px 16px rgba(255, 95, 79, 0.35);
+        transform: translateY(-1px);
+      }
+      
+      .cta-button:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 4px rgba(255, 95, 79, 0.3);
+      }
+      
+      /* Form View Styles */
+      .form-view-content {
+        padding: var(--spacing-xl);
+        height: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      
+      .form-header {
+        margin-bottom: var(--spacing-lg);
+        text-align: center;
+        flex-shrink: 0;
+      }
+      
+      .form-title {
+        font-size: var(--font-size-lg);
+        font-weight: 600;
+        margin-bottom: var(--spacing-xs);
+        letter-spacing: -0.01em;
+      }
+      
+      .form-subtitle {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
       }
       
       .form-group {
         margin-bottom: var(--spacing-md);
+      }
+      
+      .form-group:last-of-type {
+        margin-bottom: 0;
       }
       
       .form-label {
@@ -127,6 +281,7 @@ export const getAppsSdkCompatibleHtml = () => {
         font-weight: 500;
         margin-bottom: var(--spacing-sm);
         color: var(--color-text);
+        letter-spacing: -0.01em;
       }
       
       .form-input,
@@ -134,18 +289,19 @@ export const getAppsSdkCompatibleHtml = () => {
       .form-textarea {
         width: 100%;
         padding: var(--spacing-sm) var(--spacing-md);
-        background: var(--color-input-bg);
-        border: 1px solid var(--color-border);
-        border-radius: var(--border-radius-sm);
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--color-neutral-700);
+        border-radius: var(--border-radius-xs);
         color: var(--color-text);
-        font-size: var(--font-size-base);
+        font-size: var(--font-size-sm);
         font-family: inherit;
-        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        transition: all var(--transition-fast);
       }
       
       .form-textarea {
         resize: vertical;
         min-height: 72px;
+        line-height: 1.5;
       }
       
       /* Accessibility: Focus states */
@@ -153,15 +309,40 @@ export const getAppsSdkCompatibleHtml = () => {
       .form-select:focus,
       .form-textarea:focus {
         outline: none;
-        border-color: var(--color-focus);
-        box-shadow: 0 0 0 3px rgba(175, 169, 255, 0.1);
+        border-color: var(--color-primary);
+        background: rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 0 2px var(--color-primary-glow);
       }
       
       .form-input:focus-visible,
       .form-select:focus-visible,
       .form-textarea:focus-visible {
-        outline: 2px solid var(--color-focus);
+        outline: 2px solid var(--color-primary);
         outline-offset: 2px;
+      }
+      
+      /* Hover states */
+      .form-input:hover:not(:focus),
+      .form-select:hover:not(:focus),
+      .form-textarea:hover:not(:focus) {
+        border-color: var(--color-neutral-700);
+        background: rgba(0, 0, 0, 0.35);
+      }
+      
+      /* Placeholder styling */
+      .form-input::placeholder,
+      .form-textarea::placeholder {
+        color: var(--color-text-muted);
+        opacity: 1;
+      }
+      
+      /* Select dropdown styling */
+      .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23ededed' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right var(--spacing-md) center;
+        padding-right: var(--spacing-2xl);
       }
       
       /* Input validation states */
@@ -170,52 +351,84 @@ export const getAppsSdkCompatibleHtml = () => {
         border-color: var(--color-error-text);
       }
       
-      .order-btn {
-        width: 100%;
-        padding: var(--spacing-md) var(--spacing-xl);
+      /* Button Styles */
+      .form-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-lg);
+        flex-shrink: 0;
+      }
+      
+      .back-btn {
+        padding: var(--spacing-sm) var(--spacing-lg);
+        background: rgba(0, 0, 0, 0.3);
+        color: var(--color-text-secondary);
+        border: 1px solid var(--color-neutral-700);
+        border-radius: var(--border-radius-xs);
+        font-size: var(--font-size-sm);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        letter-spacing: -0.01em;
+      }
+      
+      .back-btn:hover {
+        color: var(--color-text);
+        border-color: var(--color-text-secondary);
+        background: rgba(255, 255, 255, 0.05);
+      }
+      
+      .submit-btn {
+        flex: 1;
+        padding: var(--spacing-sm) var(--spacing-lg);
         background: var(--color-primary);
         color: var(--color-primary-text);
         border: none;
-        border-radius: var(--border-radius-sm);
-        font-size: var(--font-size-base);
+        border-radius: var(--border-radius-xs);
+        font-size: var(--font-size-sm);
         font-weight: 600;
         cursor: pointer;
-        transition: background var(--transition-fast), transform var(--transition-fast);
-        margin-top: var(--spacing-lg);
+        transition: all var(--transition-fast);
+        box-shadow: 0 2px 8px rgba(255, 95, 79, 0.25);
+        letter-spacing: -0.01em;
       }
       
-      .order-btn:hover:not(:disabled) {
+      .submit-btn:hover:not(:disabled) {
         background: var(--color-primary-hover);
+        box-shadow: 0 4px 12px rgba(255, 95, 79, 0.35);
+        transform: translateY(-1px);
       }
       
-      .order-btn:active:not(:disabled) {
-        transform: scale(0.98);
+      .submit-btn:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 1px 4px rgba(255, 95, 79, 0.3);
       }
       
-      .order-btn:focus-visible {
-        outline: 2px solid var(--color-focus);
+      .submit-btn:focus-visible {
+        outline: 2px solid var(--color-primary);
         outline-offset: 2px;
       }
       
-      .order-btn:disabled {
-        opacity: 0.6;
+      .submit-btn:disabled {
+        opacity: 0.5;
         cursor: not-allowed;
+        box-shadow: none;
       }
       
-      .order-btn.loading {
+      .submit-btn.loading {
         position: relative;
         color: transparent;
       }
       
-      .order-btn.loading::after {
+      .submit-btn.loading::after {
         content: "";
         position: absolute;
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
         top: 50%;
         left: 50%;
-        margin-left: -8px;
-        margin-top: -8px;
+        margin-left: -7px;
+        margin-top: -7px;
         border: 2px solid var(--color-primary-text);
         border-radius: 50%;
         border-top-color: transparent;
@@ -228,38 +441,34 @@ export const getAppsSdkCompatibleHtml = () => {
       
       .status-message {
         margin-top: var(--spacing-md);
-        padding: var(--spacing-md);
-        border-radius: var(--border-radius-sm);
-        font-size: var(--font-size-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: var(--border-radius-xs);
+        font-size: var(--font-size-xs);
         display: none;
-        animation: fadeIn 0.2s ease-in;
-      }
-      
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-4px); }
-        to { opacity: 1; transform: translateY(0); }
+        font-weight: 500;
+        text-align: center;
       }
       
       .status-message.success {
         background: var(--color-success-bg);
         color: var(--color-success-text);
-        border: 1px solid var(--color-success-text);
+        border: 1px solid var(--color-success-border);
         display: block;
       }
       
       .status-message.error {
         background: var(--color-error-bg);
         color: var(--color-error-text);
-        border: 1px solid var(--color-error-text);
+        border: 1px solid var(--color-error-border);
         display: block;
       }
       
       /* Loading skeleton for image */
       .product-image.loading {
         background: linear-gradient(90deg, 
-          var(--color-input-bg) 25%, 
-          var(--color-border) 50%, 
-          var(--color-input-bg) 75%
+          var(--color-neutral-900) 25%, 
+          var(--color-neutral-800) 50%, 
+          var(--color-neutral-900) 75%
         );
         background-size: 200% 100%;
         animation: shimmer 1.5s infinite;
@@ -285,130 +494,178 @@ export const getAppsSdkCompatibleHtml = () => {
   </head>
   <body>
     <div class="widget-container">
-      <img 
-        src="${baseURL}/RUN_MCP.png" 
-        alt="RUN MCP Shirt - Front view showing exclusive Apps SDK design" 
-        class="product-image"
-        id="productImage"
-        loading="eager"
-      >
-      
-      <div class="product-header">
-        <h1 class="product-title">RUN MCP Shirt</h1>
-        <p class="product-subtitle">
-          <span class="badge">Apps SDK Exclusive</span>
-          <span>Free with setup</span>
-        </p>
+      <!-- Product View -->
+      <div id="productView" class="view active">
+        <div class="product-view-content">
+          <img 
+            src="${baseURL}/RUN_MCP.png" 
+            alt="RUN MCP Shirt - Front view showing exclusive Apps SDK design" 
+            class="product-image"
+            id="productImage"
+            loading="eager"
+          >
+          
+          <div class="product-info">
+            <div class="product-header">
+              <h1 class="product-title">RUN MCP Shirt</h1>
+              <div class="product-subtitle">
+                <span class="badge">Apps SDK Exclusive</span>
+                <span class="free-label">Free with setup</span>
+              </div>
+            </div>
+            
+            <button 
+              type="button"
+              class="cta-button" 
+              id="orderNowBtn"
+              aria-label="Order the RUN MCP shirt"
+            >
+              Order Now
+            </button>
+          </div>
+        </div>
       </div>
       
-      <form id="orderForm" novalidate>
-        <div class="form-group">
-          <label class="form-label" for="size">Size *</label>
-          <select id="size" name="size" class="form-select" required aria-required="true">
-            <option value="XS">XS</option>
-            <option value="S">S</option>
-            <option value="M" selected>M</option>
-            <option value="L">L</option>
-            <option value="XL">XL</option>
-            <option value="2XL">2XL</option>
-            <option value="3XL">3XL</option>
-          </select>
+      <!-- Form View -->
+      <div id="formView" class="view">
+        <div class="form-view-content">
+          <div class="form-header">
+            <h2 class="form-title">Complete Your Order</h2>
+            <p class="form-subtitle">Fill in your details below</p>
+          </div>
+          
+          <form id="orderForm" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="size">Size *</label>
+              <select id="size" name="size" class="form-select" required aria-required="true">
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M" selected>M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="2XL">2XL</option>
+                <option value="3XL">3XL</option>
+              </select>
+            </div>
+          
+            <div class="form-group">
+              <label class="form-label" for="firstName">First Name *</label>
+              <input 
+                type="text" 
+                id="firstName" 
+                name="firstName"
+                class="form-input" 
+                required 
+                aria-required="true"
+                autocomplete="given-name"
+                placeholder="John"
+              >
+            </div>
+          
+            <div class="form-group">
+              <label class="form-label" for="lastName">Last Name *</label>
+              <input 
+                type="text" 
+                id="lastName"
+                name="lastName" 
+                class="form-input" 
+                required 
+                aria-required="true"
+                autocomplete="family-name"
+                placeholder="Doe"
+              >
+            </div>
+          
+            <div class="form-group">
+              <label class="form-label" for="email">Email *</label>
+              <input 
+                type="email" 
+                id="email"
+                name="email" 
+                class="form-input" 
+                required 
+                aria-required="true"
+                autocomplete="email"
+                placeholder="john@example.com"
+              >
+            </div>
+          
+            <div class="form-group">
+              <label class="form-label" for="company">Company *</label>
+              <input 
+                type="text" 
+                id="company"
+                name="company" 
+                class="form-input" 
+                required 
+                aria-required="true"
+                autocomplete="organization"
+                placeholder="Acme Inc."
+              >
+            </div>
+          
+            <div class="form-group">
+              <label class="form-label" for="mailingAddress">Mailing Address *</label>
+              <textarea 
+                id="mailingAddress"
+                name="mailingAddress" 
+                class="form-textarea" 
+                required 
+                aria-required="true"
+                autocomplete="street-address"
+                placeholder="123 Main St, City, State ZIP, Country"
+              ></textarea>
+            </div>
+            
+            <div 
+              id="statusMessage" 
+              class="status-message" 
+              role="alert" 
+              aria-live="polite"
+            ></div>
+            
+            <div class="form-actions">
+              <button 
+                type="button" 
+                class="back-btn" 
+                id="backBtn"
+                aria-label="Go back to product view"
+              >
+                Back
+              </button>
+              <button 
+                type="submit" 
+                class="submit-btn" 
+                id="submitBtn"
+                aria-label="Submit your order"
+              >
+                Place Order
+              </button>
+            </div>
+          </form>
         </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="firstName">First Name *</label>
-          <input 
-            type="text" 
-            id="firstName" 
-            name="firstName"
-            class="form-input" 
-            required 
-            aria-required="true"
-            autocomplete="given-name"
-            placeholder="Enter your first name"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="lastName">Last Name *</label>
-          <input 
-            type="text" 
-            id="lastName"
-            name="lastName" 
-            class="form-input" 
-            required 
-            aria-required="true"
-            autocomplete="family-name"
-            placeholder="Enter your last name"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="email">Email *</label>
-          <input 
-            type="email" 
-            id="email"
-            name="email" 
-            class="form-input" 
-            required 
-            aria-required="true"
-            autocomplete="email"
-            placeholder="your.email@example.com"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="company">Company *</label>
-          <input 
-            type="text" 
-            id="company"
-            name="company" 
-            class="form-input" 
-            required 
-            aria-required="true"
-            autocomplete="organization"
-            placeholder="Your company name"
-          >
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="mailingAddress">Mailing Address *</label>
-          <textarea 
-            id="mailingAddress"
-            name="mailingAddress" 
-            class="form-textarea" 
-            required 
-            aria-required="true"
-            autocomplete="street-address"
-            placeholder="Street address, city, state/province, postal code, country"
-          ></textarea>
-        </div>
-        
-        <button 
-          type="submit" 
-          class="order-btn" 
-          id="orderBtn"
-          aria-label="Place your order for the RUN MCP shirt"
-        >
-          Place Order
-        </button>
-      </form>
-      
-      <div 
-        id="statusMessage" 
-        class="status-message" 
-        role="alert" 
-        aria-live="polite"
-      ></div>
+      </div>
     </div>
     
     <script>
       // State management and initialization
       const STATE_KEY = 'run_mcp_order_form';
+      const productView = document.getElementById('productView');
+      const formView = document.getElementById('formView');
+      const orderNowBtn = document.getElementById('orderNowBtn');
+      const backBtn = document.getElementById('backBtn');
       const form = document.getElementById('orderForm');
-      const orderBtn = document.getElementById('orderBtn');
+      const submitBtn = document.getElementById('submitBtn');
       const statusMessage = document.getElementById('statusMessage');
       const productImage = document.getElementById('productImage');
+      
+      // View management
+      function showView(viewToShow) {
+        document.querySelectorAll('.view').forEach(view => {
+          view.classList.remove('active');
+        });
+        viewToShow.classList.add('active');
+      }
       
       // Telemetry helper
       function logEvent(eventName, data = {}) {
@@ -417,6 +674,21 @@ export const getAppsSdkCompatibleHtml = () => {
           ...data
         });
       }
+      
+      // Navigate to form view
+      orderNowBtn.addEventListener('click', () => {
+        logEvent('order_now_clicked');
+        showView(formView);
+      });
+      
+      // Navigate back to product view
+      backBtn.addEventListener('click', () => {
+        logEvent('back_clicked');
+        showView(productView);
+        // Clear status message when going back
+        statusMessage.className = 'status-message';
+        statusMessage.style.display = 'none';
+      });
       
       // Initialize component
       async function initialize() {
@@ -516,9 +788,10 @@ export const getAppsSdkCompatibleHtml = () => {
         }
         
         // UI state: loading
-        orderBtn.disabled = true;
-        orderBtn.classList.add('loading');
-        orderBtn.setAttribute('aria-busy', 'true');
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+        submitBtn.setAttribute('aria-busy', 'true');
+        backBtn.disabled = true;
         statusMessage.className = 'status-message';
         statusMessage.style.display = 'none';
         
@@ -542,13 +815,19 @@ export const getAppsSdkCompatibleHtml = () => {
           
           // Success state
           statusMessage.className = 'status-message success';
-          statusMessage.textContent = '✓ Order placed successfully! Check the chat for your order details.';
+          statusMessage.textContent = '✓ Order placed! Check chat for details.';
           
           // Clear form and saved state
           form.reset();
           await window.openai?.setWidgetState?.(STATE_KEY, null);
           
           logEvent('order_completed');
+          
+          // Return to product view after short delay
+          setTimeout(() => {
+            showView(productView);
+            statusMessage.className = 'status-message';
+          }, 2000);
           
         } catch (error) {
           logEvent('tool_call_error', { 
@@ -558,12 +837,13 @@ export const getAppsSdkCompatibleHtml = () => {
           
           // Error state
           statusMessage.className = 'status-message error';
-          statusMessage.textContent = \`✗ \${error.message || 'Failed to place order. Please try again or check the chat for details.'}\`;
+          statusMessage.textContent = \`✗ \${error.message || 'Failed to place order. Please try again.'}\`;
         } finally {
           // Reset UI state
-          orderBtn.disabled = false;
-          orderBtn.classList.remove('loading');
-          orderBtn.setAttribute('aria-busy', 'false');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('loading');
+          submitBtn.setAttribute('aria-busy', 'false');
+          backBtn.disabled = false;
         }
       });
       
