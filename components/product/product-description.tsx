@@ -13,7 +13,7 @@ export function ProductDescription({ product }: { product: Product }) {
     <div className="px-4 md:px-0">
       <div className="mb-2 flex flex-col pb-4 border-neutral-700 gap-2">
         <h1 className="mb-2 text-5xl font-mediu font-untitled force-untitled">
-          {product.title}
+          Context is Everything
         </h1>
         <Badge
           color="gray"
@@ -32,23 +32,26 @@ export function ProductDescription({ product }: { product: Product }) {
       </div>
       <div className="mb-6">
         <div className="font-untitled force-untitled text-lg mb-2 text-white">
-          Order your shirt for free through MCP or ChatGPT Apps SDK.
+          Get a free t-shirt with ChatGPT Apps SDK.
         </div>
         <div className="font-untitled force-untitled mb-2 text-base text-white/70">
-          This sleek tee features the MCP vibes and the phrase “Context is
-          Everything”. Whether you’re a machine learning enthusiast, a protocol
-          purist, or just someone who loves obscure tech references, this shirt
-          delivers subtle nerd cred with style.
+          Interfaces like ChatGPTs Apps SDK and Anthropics MCP are the new way 
+          do interact with services. Auhtkit allows you to connect your servers to
+          ChatGPT, and every MCP supporting AI agent. 
+          See how it works by ordering a (free) t-shirt. 
+          If you want to build your own MCP server, 
+          check out <a href="https://workos.com/mcp" target="_blank" rel="noopener noreferrer" className="underline">workos.com/mcp</a> or 
+          use this website as a template on <a href="https://github.com/workos/mcp.shop" target="_blank" rel="noopener noreferrer" className="underline">Github</a>.
+
         </div>
         <div className="font-untitled force-untitled text-lg text-white text-base">
-          Join the protocol. Set the context.
+          See the power of MCP and the Apps SDK in action.
         </div>
       </div>
-      <VariantSelector options={product.options} variants={product.variants} />
 
       <div className="flex flex-col gap-4">
         <Instructions openButtonLabel="Order on MCP" />
-        <ChatGPTInstructions openButtonLabel="Order with ChatGPT" />
+        <ChatGPTInstructions openButtonLabel="Order with ChatGPT App" />
       </div>
     </div>
   );
