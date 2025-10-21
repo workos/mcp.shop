@@ -54,71 +54,104 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
               <Cross2Icon className="w-4 h-4" />
             </button>
             <div className="w-full overflow-x-hidden pt-0">
-              <h1 className="text-xl font-bold font-untitled force-untitled">
-                Order with ChatGPT
-              </h1>
-              <p
-                className="break-words font-untitled force-untitled mb-1 mt-2"
-                style={{ fontSize: "13.8px" }}
-              >
-                Now you can order your MCP Shop tee directly through ChatGPT using the Apps SDK integration.
-              </p>
-              <p
-                className="break-words mt-2 font-untitled force-untitled mb-6"
-                style={{ fontSize: "13.8px" }}
-              >
-                Simply visit our{" "}
-                <Link
-                  href="https://chatgpt.com/g/g-68112k8tk-mcp-shop"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mcp-link inline-flex items-center gap-1 no-underline"
-                >
-                  ChatGPT GPT{" "}
-                  <ExternalLinkIcon className="inline w-4 h-4 align-baseline" />
-                </Link>
-                {" "}and place your order through the conversation interface.
-              </p>
-
-              <div className="bg-neutral-900 rounded-lg p-4 mb-6">
-                <h2 className="font-untitled force-untitled text-base font-semibold mb-3 text-white">
-                  How to add MCP URL to ChatGPT
-                </h2>
+              <div className="mb-6">
+                <h1 className="text-xl font-bold font-untitled force-untitled mb-2 text-white">
+                  Unlock a Top-Secret Apps SDK Only Shirt
+                </h1>
                 <p
-                  className="break-words font-untitled force-untitled mb-3"
+                  className="break-words font-untitled force-untitled text-white/60"
                   style={{ fontSize: "13.8px" }}
                 >
-                  To connect the MCP Shop server to ChatGPT, use the following URL:
-                </p>
-                <code className="block bg-neutral-800 p-3 rounded mb-3 text-white/80 font-mono text-sm">
-                  https://mcp.shop/mcp
-                </code>
-                <p
-                  className="break-words font-untitled force-untitled text-white/70"
-                  style={{ fontSize: "13.8px" }}
-                >
-                  This enables you to order shirts directly through ChatGPT using the Apps SDK integration.
+                  Follow these steps to access the exclusive RUN MCP shirt design through ChatGPT's Apps SDK.
                 </p>
               </div>
 
-              <div className="flex justify-center mt-4">
-                <a
-                  href="https://chatgpt.com/g/g-68112k8tk-mcp-shop"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block"
+              <div className="space-y-3 mb-6">
+                <div className="bg-neutral-900 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-white/70 text-sm">
+                      1
+                    </span>
+                    <div className="flex-1">
+                      <p
+                        className="font-untitled force-untitled text-white/80"
+                        style={{ fontSize: "13.8px" }}
+                      >
+                        Turn on ChatGPT developer mode at{" "}
+                        <Link
+                          href="https://chatgpt.com/#settings/Connectors/Advanced"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mcp-link inline-flex items-center gap-1 no-underline"
+                        >
+                          this link
+                          <ExternalLinkIcon className="inline w-3 h-3 align-baseline" />
+                        </Link>
+                        , which allows you to add new connectors.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-neutral-900 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-white/70 text-sm">
+                      2
+                    </span>
+                    <div className="flex-1">
+                      <p
+                        className="font-untitled force-untitled text-white/80"
+                        style={{ fontSize: "13.8px" }}
+                      >
+                        Create a <strong className="text-white">New Connector</strong> with OAuth turned on. This server is protected by AuthKit.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-neutral-900 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-white/70 text-sm">
+                      3
+                    </span>
+                    <div className="flex-1">
+                      <p
+                        className="font-untitled force-untitled text-white/80 mb-2"
+                        style={{ fontSize: "13.8px" }}
+                      >
+                        Add <strong className="text-white">MCP Shop</strong>. Set the MCP Server URL to:
+                      </p>
+                      <code className="block bg-neutral-800 p-2 rounded text-white/70 font-mono text-xs">
+                        https://mcp.shop/mcp
+                      </code>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-neutral-900 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-white/70 text-sm">
+                      4
+                    </span>
+                    <div className="flex-1">
+                      <p
+                        className="font-untitled force-untitled text-white/80"
+                        style={{ fontSize: "13.8px" }}
+                      >
+                        You can now <code className="bg-neutral-800 px-1.5 py-0.5 rounded text-xs text-white/70">@mcp.shop</code> and ask it to show you the store items.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-4 mb-4">
+                <p
+                  className="font-untitled force-untitled text-white/70 text-center"
+                  style={{ fontSize: "13.8px" }}
                 >
-                  <Button
-                    color="gray"
-                    variant="solid"
-                    highContrast
-                    size="3"
-                    className="font-untitled force-untitled"
-                  >
-                    Open ChatGPT GPT
-                    <ExternalLinkIcon className="inline w-4 h-4 ml-1" />
-                  </Button>
-                </a>
+                  Once connected, you'll unlock access to the exclusive <strong className="text-white">RUN MCP</strong> shirt design.
+                </p>
               </div>
             </div>
           </div>
@@ -133,8 +166,14 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
         onClick={() => {
           setDialogOpen(true);
         }}
+        className="relative"
       >
-        {openButtonLabel}
+        <span className="flex items-center gap-2">
+          <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold rounded-full bg-white/10 text-white/70">
+            New
+          </span>
+          {openButtonLabel}
+        </span>
       </Button>
     </>
   );
