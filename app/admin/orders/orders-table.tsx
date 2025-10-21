@@ -143,6 +143,18 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
       header: "Company",
     },
     {
+      accessorKey: "phone",
+      header: "Phone",
+      cell: (info) => {
+        const phone = info.getValue() as string | undefined;
+        return phone ? (
+          <span className="font-mono text-sm">{phone}</span>
+        ) : (
+          <span className="text-xs text-neutral-500">N/A</span>
+        );
+      },
+    },
+    {
       accessorKey: "tshirtSize",
       header: "Size",
       cell: (info) => (
@@ -167,13 +179,30 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
       ),
     },
     {
-      accessorKey: "mailingAddress",
-      header: "Mailing Address",
-      cell: (info) => (
-        <span className="max-w-xs truncate text-sm">
-          {info.getValue() as string}
-        </span>
-      ),
+      id: "address",
+      header: "Shipping Address",
+      cell: (info) => {
+        const order = info.row.original;
+        // Check if order has new granular fields
+        if (order.streetAddress1) {
+          return (
+            <div className="max-w-xs text-sm">
+              <div>{order.streetAddress1}</div>
+              {order.streetAddress2 && <div>{order.streetAddress2}</div>}
+              <div>
+                {order.city}, {order.state} {order.zip}
+              </div>
+              <div>{order.country}</div>
+            </div>
+          );
+        }
+        // Fall back to legacy mailingAddress field
+        return (
+          <span className="max-w-xs truncate text-sm">
+            {order.mailingAddress}
+          </span>
+        );
+      },
     },
     {
       accessorKey: "sent",

@@ -10,6 +10,15 @@ export interface Order {
   lastName: string;
   email: string;
   company: string;
+  phone?: string;
+  // Address fields
+  streetAddress1: string;
+  streetAddress2?: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  // Legacy field for backward compatibility
   mailingAddress: string;
   tshirtSize: string;
   isRunMcpShirt: boolean;
@@ -19,8 +28,17 @@ export interface Order {
 
 export const placeOrder = async (
   args: {
+    firstName: string;
+    lastName: string;
+    email: string;
     company: string;
-    mailingAddress: string;
+    phone?: string;
+    streetAddress1: string;
+    streetAddress2?: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
     tshirtSize: string;
     isRunMcpShirt?: boolean;
   },
@@ -38,16 +56,34 @@ export const placeOrder = async (
     const orderId = await withTimeout(redis.incr("order:id:counter"), 1000);
     const isRunShirt = args.isRunMcpShirt ?? false;
 
+    // Build legacy mailingAddress from components for backward compatibility
+    const mailingAddressParts = [
+      args.streetAddress1,
+      args.streetAddress2,
+      args.city,
+      args.state,
+      args.zip,
+      args.country,
+    ].filter(Boolean);
+    const mailingAddress = mailingAddressParts.join(", ");
+
     const order: Order = {
       id: orderId,
       userId: user.id,
       orderDate: new Date().toISOString(),
       sku: isRunShirt ? "MCP-RUN-NTSHRT-25-GW01" : "MCP-NTSHRT-25-GW01",
-      firstName: user.firstName ?? "UNKNOWN",
-      lastName: user.lastName ?? "UNKNOWN",
-      mailingAddress: args.mailingAddress ?? "UNKNOWN",
-      email: user.email,
+      firstName: args.firstName,
+      lastName: args.lastName,
+      email: args.email,
       company: args.company,
+      phone: args.phone,
+      streetAddress1: args.streetAddress1,
+      streetAddress2: args.streetAddress2,
+      city: args.city,
+      state: args.state,
+      zip: args.zip,
+      country: args.country,
+      mailingAddress: mailingAddress,
       tshirtSize: args.tshirtSize,
       isRunMcpShirt: isRunShirt,
       sent: false,
