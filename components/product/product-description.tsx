@@ -4,7 +4,6 @@ import Price from "@/components/price";
 import { Product } from "@/lib/products";
 import { Instructions } from "@/components/instructions";
 import { ChatGPTInstructions } from "@/components/chatgpt-instructions";
-import { VariantSelector } from "./variant-selector";
 import { Badge } from "@radix-ui/themes";
 import React from "react";
 

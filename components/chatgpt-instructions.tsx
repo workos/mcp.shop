@@ -62,7 +62,7 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
                   className="break-words font-untitled force-untitled text-white/60"
                   style={{ fontSize: "13.8px" }}
                 >
-                  Follow these steps to access the exclusive RUN MCP shirt design through ChatGPT's Apps SDK.
+                  Follow these steps to access the exclusive RUN MCP shirt design through ChatGPT&apos;s Apps SDK.
                 </p>
               </div>
 
@@ -150,7 +150,7 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
                   className="font-untitled force-untitled text-white/70 text-center"
                   style={{ fontSize: "13.8px" }}
                 >
-                  Once connected, you'll unlock access to the exclusive <strong className="text-white">RUN MCP</strong> shirt design.
+                  Once connected, you&apos;ll unlock access to the exclusive <strong className="text-white">RUN MCP</strong> shirt design.
                 </p>
               </div>
             </div>

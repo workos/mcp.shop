@@ -143,11 +143,12 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                                 rel="noopener noreferrer"
                                 className="inline-block"
                               >
-                                {/* TODO: Add a Next.js Image instead of img here */}
-                                <img
-                                  src="mcp-install-light.png"
+                                <Image
+                                  src="/mcp-install-light.png"
                                   alt="Add mcp.shop to Cursor"
-                                  style={{ maxHeight: "32px" }}
+                                  width={160}
+                                  height={32}
+                                  style={{ maxHeight: "32px", width: "auto" }}
                                 />
                               </a>
                               <a
@@ -156,10 +157,12 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                                 rel="noopener noreferrer"
                                 className="inline-block"
                               >
-                                <img
+                                <Image
                                   src="https://img.shields.io/badge/VS_Code-Install_mcp.shop-0098FF?style=flat-square&logo=visualstudiocode&logoColor=ffffff"
                                   alt="Install in VS Code"
-                                  style={{ maxHeight: "32px" }}
+                                  width={200}
+                                  height={32}
+                                  style={{ maxHeight: "32px", width: "auto" }}
                                 />
                               </a>
                             </div>
