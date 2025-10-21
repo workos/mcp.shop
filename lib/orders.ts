@@ -13,6 +13,8 @@ export interface Order {
   mailingAddress: string;
   tshirtSize: string;
   isRunMcpShirt: boolean;
+  sent: boolean;
+  deleted?: boolean;
 }
 
 export const placeOrder = async (
@@ -48,6 +50,8 @@ export const placeOrder = async (
       company: args.company,
       tshirtSize: args.tshirtSize,
       isRunMcpShirt: isRunShirt,
+      sent: false,
+      deleted: false,
     };
 
     await withTimeout(
@@ -90,5 +94,46 @@ export const getOrders = async (user: User): Promise<Order[]> => {
 };
 
 export const getOrdersForAllUsers = async (): Promise<Order[]> => {
-  return getOrdersMatchingPattern(`orders:*`);
+  const allOrders = await getOrdersMatchingPattern(`orders:*`);
+  // Filter out deleted orders
+  return allOrders.filter(order => !order.deleted);
+};
+
+export const updateOrderSentStatus = async (
+  userId: string,
+  orderId: number,
+  sent: boolean,
+): Promise<void> => {
+  try {
+    await withTimeout(
+      redis.hset(`orders:${userId}:${orderId}`, { sent }),
+      1000,
+    );
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("timed out")) {
+      throw new Error(
+        "Redis connection timed out. Please check your Redis configuration.",
+      );
+    }
+    throw error;
+  }
+};
+
+export const deleteOrder = async (
+  userId: string,
+  orderId: number,
+): Promise<void> => {
+  try {
+    await withTimeout(
+      redis.hset(`orders:${userId}:${orderId}`, { deleted: true }),
+      1000,
+    );
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("timed out")) {
+      throw new Error(
+        "Redis connection timed out. Please check your Redis configuration.",
+      );
+    }
+    throw error;
+  }
 };
