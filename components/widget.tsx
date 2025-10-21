@@ -1207,7 +1207,7 @@ export const getAppsSdkCompatibleHtml = (userData?: {
         }
       }
       
-      // Validate current step fields with error handling
+      // Validate current step fields with error handling and custom validation
       function validateCurrentStep() {
         try {
           const currentStepElement = currentStep === 1 ? step1 : step2;
@@ -1219,17 +1219,85 @@ export const getAppsSdkCompatibleHtml = (userData?: {
           const inputs = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
           
           let isValid = true;
+          let firstInvalidInput = null;
+          
           inputs.forEach(input => {
             try {
+              // Check basic HTML5 validation
               if (!input.checkValidity()) {
                 isValid = false;
-                input.reportValidity();
+                if (!firstInvalidInput) firstInvalidInput = input;
+                return;
               }
+              
+              // Additional custom validations
+              const value = input.value?.trim();
+              
+              // Email validation (if email field)
+              if (input.type === 'email' && value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                  input.setCustomValidity('Please enter a valid email address (e.g., name@example.com)');
+                  isValid = false;
+                  if (!firstInvalidInput) firstInvalidInput = input;
+                  return;
+                } else {
+                  input.setCustomValidity('');
+                }
+              }
+              
+              // State code validation
+              if (input.id === 'state' && value) {
+                if (value.length !== 2 || !/^[A-Z]{2}$/i.test(value)) {
+                  input.setCustomValidity('State must be a 2-letter code (e.g., CA, NY)');
+                  isValid = false;
+                  if (!firstInvalidInput) firstInvalidInput = input;
+                  return;
+                } else {
+                  input.setCustomValidity('');
+                }
+              }
+              
+              // Country code validation
+              if (input.id === 'country' && value) {
+                if (value.length !== 2 || !/^[A-Z]{2}$/i.test(value)) {
+                  input.setCustomValidity('Country must be a 2-letter code (e.g., US, CA, GB)');
+                  isValid = false;
+                  if (!firstInvalidInput) firstInvalidInput = input;
+                  return;
+                } else {
+                  input.setCustomValidity('');
+                }
+              }
+              
+              // ZIP code validation
+              if (input.id === 'zip' && value) {
+                if (value.length < 3 || value.length > 10) {
+                  input.setCustomValidity('ZIP/postal code must be between 3-10 characters');
+                  isValid = false;
+                  if (!firstInvalidInput) firstInvalidInput = input;
+                  return;
+                } else {
+                  input.setCustomValidity('');
+                }
+              }
+              
+              // Check for empty required fields
+              if (input.hasAttribute('required') && (!value || value === '')) {
+                isValid = false;
+                if (!firstInvalidInput) firstInvalidInput = input;
+              }
+              
             } catch (e) {
               log('error', 'Validation failed for input', { id: input.id, error: e.message });
               isValid = false;
             }
           });
+          
+          // Show validation message for first invalid input
+          if (!isValid && firstInvalidInput) {
+            firstInvalidInput.reportValidity();
+          }
           
           return isValid;
         } catch (e) {
@@ -1374,7 +1442,15 @@ export const getAppsSdkCompatibleHtml = (userData?: {
               }
             }
           } catch (error) {
-            log('warn', 'Could not restore form state', { error: error?.message || 'Unknown error' });
+            // 403 errors are expected if widget state permission is not granted
+            if (error?.message?.includes('403') || error?.status === 403) {
+              log('debug', 'Widget state restore blocked (403) - permissions not granted');
+            } else {
+              log('warn', 'Could not restore form state', { 
+                error: error?.message || 'Unknown error',
+                status: error?.status 
+              });
+            }
           }
           
           log('info', 'Widget initialization complete');
@@ -1409,9 +1485,18 @@ export const getAppsSdkCompatibleHtml = (userData?: {
           state.timestamp = Date.now();
           
           await window.openai.setWidgetState(STATE_KEY, state);
-          log('debug', 'Form state saved');
+          log('debug', 'Form state saved successfully');
         } catch (error) {
-          log('warn', 'Could not save form state', { error: error?.message || 'Unknown error' });
+          // 403 errors are expected if widget state permission is not granted
+          // Log as debug instead of warn to reduce noise
+          if (error?.message?.includes('403') || error?.status === 403) {
+            log('debug', 'Widget state save blocked (403) - permissions not granted');
+          } else {
+            log('warn', 'Could not save form state', { 
+              error: error?.message || 'Unknown error',
+              status: error?.status 
+            });
+          }
         }
       }
       
