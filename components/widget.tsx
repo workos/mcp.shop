@@ -849,28 +849,24 @@ export const getAppsSdkCompatibleHtml = (userData?: {
               </div>
               
               <div class="form-group">
-                <label class="form-label" for="phone">Phone *</label>
+                <label class="form-label" for="phone">Phone</label>
                 <input 
                   type="tel" 
                   id="phone"
                   name="phone" 
                   class="form-input" 
-                  required 
-                  aria-required="true"
                   autocomplete="tel"
                   placeholder="+1 (555) 123-4567"
                 >
               </div>
             
               <div class="form-group">
-                <label class="form-label" for="email">Email *</label>
+                <label class="form-label" for="email">Email</label>
                 <input 
                   type="email" 
                   id="email"
                   name="email" 
                   class="form-input" 
-                  required 
-                  aria-required="true"
                   autocomplete="email"
                   placeholder="john@example.com"
                 >
