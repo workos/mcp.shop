@@ -1255,55 +1255,49 @@ export const getAppsSdkCompatibleHtml = (userData?: {
                 return;
               }
               
-              // Additional custom validations
+              // Additional custom validations (relaxed)
               const value = input.value?.trim();
               
-              // Email validation (if email field)
+              // Clear any previous custom validity
+              input.setCustomValidity('');
+              
+              // Relaxed email validation - just check for @ symbol
               if (input.type === 'email' && value) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(value)) {
-                  input.setCustomValidity('Please enter a valid email address (e.g., name@example.com)');
+                if (!value.includes('@')) {
+                  input.setCustomValidity('Please include an @ in the email address');
                   isValid = false;
                   if (!firstInvalidInput) firstInvalidInput = input;
                   return;
-                } else {
-                  input.setCustomValidity('');
                 }
               }
               
-              // State code validation
+              // State code validation - just check length, allow any characters
               if (input.id === 'state' && value) {
-                if (value.length !== 2 || !/^[A-Z]{2}$/i.test(value)) {
-                  input.setCustomValidity('State must be a 2-letter code (e.g., CA, NY)');
+                if (value.length > 3) {
+                  input.setCustomValidity('State code should be 2-3 characters (e.g., CA, NY)');
                   isValid = false;
                   if (!firstInvalidInput) firstInvalidInput = input;
                   return;
-                } else {
-                  input.setCustomValidity('');
                 }
               }
               
-              // Country code validation
+              // Country code validation - just check length, allow any characters
               if (input.id === 'country' && value) {
-                if (value.length !== 2 || !/^[A-Z]{2}$/i.test(value)) {
-                  input.setCustomValidity('Country must be a 2-letter code (e.g., US, CA, GB)');
+                if (value.length > 3) {
+                  input.setCustomValidity('Country code should be 2-3 characters (e.g., US, CA, GB)');
                   isValid = false;
                   if (!firstInvalidInput) firstInvalidInput = input;
                   return;
-                } else {
-                  input.setCustomValidity('');
                 }
               }
               
-              // ZIP code validation
+              // ZIP code validation - more lenient
               if (input.id === 'zip' && value) {
-                if (value.length < 3 || value.length > 10) {
-                  input.setCustomValidity('ZIP/postal code must be between 3-10 characters');
+                if (value.length < 2 || value.length > 15) {
+                  input.setCustomValidity('ZIP/postal code should be between 2-15 characters');
                   isValid = false;
                   if (!firstInvalidInput) firstInvalidInput = input;
                   return;
-                } else {
-                  input.setCustomValidity('');
                 }
               }
               
