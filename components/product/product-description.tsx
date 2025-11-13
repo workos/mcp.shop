@@ -35,7 +35,7 @@ export function ProductDescription({ product }: { product: Product }) {
         </div>
         <div className="font-untitled force-untitled mb-2 text-base text-white/70">
           Interfaces like ChatGPTs Apps SDK and Anthropics MCP are the new way 
-          do interact with services. Auhtkit allows you to connect your servers to
+          do interact with services. AuthKit allows you to connect your servers to
           ChatGPT, and every MCP supporting AI agent. 
           See how it works by ordering a (free) t-shirt. 
           If you want to build your own MCP server, 
