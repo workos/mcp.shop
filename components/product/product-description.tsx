@@ -40,7 +40,7 @@ export function ProductDescription({ product }: { product: Product }) {
           See how it works by ordering a (free) t-shirt. 
           If you want to build your own MCP server, 
           check out <a href="https://workos.com/mcp" target="_blank" rel="noopener noreferrer" className="underline">workos.com/mcp</a> or 
-          use this website as a template on <a href="https://github.com/workos/mcp.shop" target="_blank" rel="noopener noreferrer" className="underline">Github</a>.
+          use this website as a template on <a href="https://github.com/workos/mcp.shop" target="_blank" rel="noopener noreferrer" className="underline">GitHub</a>.
 
         </div>
         <div className="font-untitled force-untitled text-lg text-white text-base">
