@@ -163,6 +163,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                                   width={200}
                                   height={32}
                                   style={{ maxHeight: "32px", width: "auto" }}
+                                  unoptimized
                                 />
                               </a>
                             </div>
