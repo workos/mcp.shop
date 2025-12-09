@@ -277,6 +277,7 @@ Thank you for trying out our MCP server!`,
 // Make authorization required — the verifyToken function is defined in lib/with-authkit.ts
 const authHandler = withMcpAuth(handler, verifyToken, {
   required: true,
+  resourceMetadataPath: "/.well-known/oauth-protected-resource/mcp",
 });
 
 export { authHandler as GET, authHandler as POST };
