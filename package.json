@@ -20,7 +20,7 @@
     "@radix-ui/themes": "^3.2.1",
     "@tanstack/react-table": "^8.21.3",
     "@upstash/redis": "^1.34.9",
-    "@workos-inc/authkit-nextjs": "^2.3.2",
+    "@workos-inc/authkit-nextjs": "^2.11.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.12.1",
     "jose": "^6.0.11",
