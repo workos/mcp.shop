@@ -1,6 +1,7 @@
 import * as jose from "jose";
 import { getWorkOS } from "@workos-inc/authkit-nextjs";
 import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 export type User = Awaited<
   ReturnType<ReturnType<typeof getWorkOS>["userManagement"]["getUser"]>
@@ -74,28 +75,43 @@ export const verifyToken = async (
       },
     };
   } catch (error) {
+    // PostHog: Track token verification failures
+    const posthog = getPostHogClient();
+    let errorType = "unknown_error";
+    let errorMessage = "Unknown error";
+
     if (error instanceof jose.errors.JWTExpired) {
       console.error("JWT token has expired");
-      return undefined;
-    }
-
-    if (error instanceof jose.errors.JWTClaimValidationFailed) {
+      errorType = "jwt_expired";
+      errorMessage = "JWT token has expired";
+    } else if (error instanceof jose.errors.JWTClaimValidationFailed) {
       console.error("JWT claim validation failed", error.message);
-      return undefined;
-    }
-
-    if (error instanceof jose.errors.JWSSignatureVerificationFailed) {
+      errorType = "jwt_claim_validation_failed";
+      errorMessage = error.message;
+    } else if (error instanceof jose.errors.JWSSignatureVerificationFailed) {
       console.error("JWT signature verification failed");
-      return undefined;
-    }
-
-    if (error instanceof jose.errors.JOSEError) {
+      errorType = "jws_signature_verification_failed";
+      errorMessage = "JWT signature verification failed";
+    } else if (error instanceof jose.errors.JOSEError) {
       console.error("JOSE error during token verification", error);
-      return undefined;
+      errorType = "jose_error";
+      errorMessage = error.message;
+    } else {
+      console.error("Error verifying token", error);
+      errorType = "other_error";
+      errorMessage = error instanceof Error ? error.message : "Unknown error";
     }
 
-    // For non-JOSE errors (e.g., WorkOS API errors), log and return undefined
-    console.error("Error verifying token", error);
+    posthog.capture({
+      distinctId: "anonymous",
+      event: "token_verification_failed",
+      properties: {
+        error_type: errorType,
+        error_message: errorMessage,
+      },
+    });
+    await posthog.shutdown();
+
     return undefined;
   }
 };

@@ -3,10 +3,8 @@
 import Link from "next/link";
 import * as React from "react";
 import { Button } from "@radix-ui/themes";
-import {
-  Cross2Icon,
-  ExternalLinkIcon,
-} from "@radix-ui/react-icons";
+import { Cross2Icon, ExternalLinkIcon } from "@radix-ui/react-icons";
+import posthog from "posthog-js";
 
 declare module "react" {
   interface DialogHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -19,7 +17,9 @@ interface ChatGPTInstructionsProps {
   openButtonLabel: string;
 }
 
-export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProps) => {
+export const ChatGPTInstructions = ({
+  openButtonLabel,
+}: ChatGPTInstructionsProps) => {
   const dialogRef = React.useRef<HTMLDialogElement>(null);
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -62,7 +62,8 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
                   className="break-words font-untitled force-untitled text-white/60"
                   style={{ fontSize: "13.8px" }}
                 >
-                  Follow these steps to access the exclusive RUN MCP shirt design through ChatGPT&apos;s Apps SDK.
+                  Follow these steps to access the exclusive RUN MCP shirt
+                  design through ChatGPT&apos;s Apps SDK.
                 </p>
               </div>
 
@@ -103,7 +104,10 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
                         className="font-untitled force-untitled text-white/80"
                         style={{ fontSize: "13.8px" }}
                       >
-                        Create a <strong className="text-white">New Connector</strong> with OAuth turned on. This server is protected by AuthKit.
+                        Create a{" "}
+                        <strong className="text-white">New Connector</strong>{" "}
+                        with OAuth turned on. This server is protected by
+                        AuthKit.
                       </p>
                     </div>
                   </div>
@@ -119,7 +123,8 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
                         className="font-untitled force-untitled text-white/80 mb-2"
                         style={{ fontSize: "13.8px" }}
                       >
-                        Add <strong className="text-white">MCP Shop</strong>. Set the MCP Server URL to:
+                        Add <strong className="text-white">MCP Shop</strong>.
+                        Set the MCP Server URL to:
                       </p>
                       <code className="block bg-neutral-800 p-2 rounded text-white/70 font-mono text-xs">
                         https://mcp.shop/mcp
@@ -138,7 +143,11 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
                         className="font-untitled force-untitled text-white/80"
                         style={{ fontSize: "13.8px" }}
                       >
-                        You can now <code className="bg-neutral-800 px-1.5 py-0.5 rounded text-xs text-white/70">@mcp.shop</code> and ask it to show you the store items.
+                        You can now{" "}
+                        <code className="bg-neutral-800 px-1.5 py-0.5 rounded text-xs text-white/70">
+                          @mcp.shop
+                        </code>{" "}
+                        and ask it to show you the store items.
                       </p>
                     </div>
                   </div>
@@ -150,7 +159,8 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
                   className="font-untitled force-untitled text-white/70 text-center"
                   style={{ fontSize: "13.8px" }}
                 >
-                  Once connected, you&apos;ll unlock access to the exclusive <strong className="text-white">RUN MCP</strong> shirt design.
+                  Once connected, you&apos;ll unlock access to the exclusive{" "}
+                  <strong className="text-white">RUN MCP</strong> shirt design.
                 </p>
               </div>
             </div>
@@ -165,6 +175,7 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
         size="3"
         onClick={() => {
           setDialogOpen(true);
+          posthog.capture("chatgpt_instructions_dialog_opened");
         }}
         className="relative"
       >
@@ -178,4 +189,3 @@ export const ChatGPTInstructions = ({ openButtonLabel }: ChatGPTInstructionsProp
     </>
   );
 };
-

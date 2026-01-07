@@ -7,9 +7,9 @@ export const getAppsSdkCompatibleHtml = (userData?: {
 }) => {
   // Safely encode user data for JavaScript
   const encodedUserData = userData
-    ? JSON.stringify(userData).replace(/</g, '\\u003c').replace(/>/g, '\\u003e')
-    : 'null';
-  
+    ? JSON.stringify(userData).replace(/</g, "\\u003c").replace(/>/g, "\\u003e")
+    : "null";
+
   return `
   <!DOCTYPE html>
   <html lang="en">

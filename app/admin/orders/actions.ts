@@ -5,7 +5,7 @@ import { updateOrderSentStatus, deleteOrder } from "@/lib/orders";
 export async function updateSentStatus(
   userId: string,
   orderId: number,
-  sent: boolean
+  sent: boolean,
 ) {
   try {
     await updateOrderSentStatus(userId, orderId, sent);
@@ -25,4 +25,3 @@ export async function softDeleteOrder(userId: string, orderId: number) {
     return { success: false, error: "Failed to delete order" };
   }
 }
-

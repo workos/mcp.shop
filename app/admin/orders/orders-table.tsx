@@ -19,6 +19,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { updateSentStatus, softDeleteOrder } from "./actions";
+import posthog from "posthog-js";
 
 export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -33,19 +34,32 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
 
     // Optimistically update the UI
     setOrders((prev) =>
-      prev.map((o) => (o.id === order.id ? { ...o, sent: newSentStatus } : o))
+      prev.map((o) => (o.id === order.id ? { ...o, sent: newSentStatus } : o)),
     );
 
     try {
-      const result = await updateSentStatus(order.userId, order.id, newSentStatus);
-      
+      const result = await updateSentStatus(
+        order.userId,
+        order.id,
+        newSentStatus,
+      );
+
       if (!result.success) {
         throw new Error(result.error || "Failed to update order");
       }
+
+      // PostHog: Track admin sent status toggle
+      posthog.capture("admin_order_sent_toggled", {
+        order_id: order.id,
+        new_sent_status: newSentStatus,
+        sku: order.sku,
+      });
     } catch (error) {
       // Revert on error
       setOrders((prev) =>
-        prev.map((o) => (o.id === order.id ? { ...o, sent: !newSentStatus } : o))
+        prev.map((o) =>
+          o.id === order.id ? { ...o, sent: !newSentStatus } : o,
+        ),
       );
       console.error("Error updating sent status:", error);
       alert("Failed to update order status");
@@ -70,10 +84,16 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
 
     try {
       const result = await softDeleteOrder(order.userId, order.id);
-      
+
       if (!result.success) {
         throw new Error(result.error || "Failed to delete order");
       }
+
+      // PostHog: Track admin order deletion
+      posthog.capture("admin_order_deleted", {
+        order_id: order.id,
+        sku: order.sku,
+      });
     } catch (error) {
       // Revert on error
       setOrders((prev) => [...prev, order].sort((a, b) => a.id - b.id));
@@ -103,13 +123,14 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
       header: "Order Date",
       cell: (info) => {
         const dateValue = info.getValue();
-        if (!dateValue) return <span className="text-sm text-neutral-500">N/A</span>;
-        
+        if (!dateValue)
+          return <span className="text-sm text-neutral-500">N/A</span>;
+
         const date = new Date(dateValue as string);
         if (isNaN(date.getTime())) {
           return <span className="text-sm text-neutral-500">Invalid Date</span>;
         }
-        
+
         return (
           <span className="text-sm">
             {Intl.DateTimeFormat("en-US", {
@@ -343,7 +364,9 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
                         {header.column.getCanFilter() ? (
                           <input
                             type="text"
-                            value={(header.column.getFilterValue() ?? "") as string}
+                            value={
+                              (header.column.getFilterValue() ?? "") as string
+                            }
                             onChange={(e) =>
                               header.column.setFilterValue(e.target.value)
                             }
@@ -384,7 +407,8 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
         {/* Results Summary */}
         <div className="border-t border-neutral-800 px-6 py-4">
           <div className="text-sm text-neutral-400">
-            Showing {table.getFilteredRowModel().rows.length} of {orders.length} orders
+            Showing {table.getFilteredRowModel().rows.length} of {orders.length}{" "}
+            orders
           </div>
         </div>
       </div>
@@ -398,4 +422,3 @@ export function OrdersTable({ initialOrders }: { initialOrders: Order[] }) {
     </div>
   );
 }
-

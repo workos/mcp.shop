@@ -1,4 +1,4 @@
-import { getSignInUrl, signOut, withAuth } from "@workos-inc/authkit-nextjs";
+import { getSignInUrl, withAuth } from "@workos-inc/authkit-nextjs";
 import Link from "next/link";
 import Image from "next/image";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
@@ -27,6 +27,21 @@ export async function Navbar() {
               className="inline"
               action={async () => {
                 "use server";
+                const { withAuth } = await import("@workos-inc/authkit-nextjs");
+                const { user: currentUser } = await withAuth({
+                  ensureSignedIn: false,
+                });
+                if (currentUser) {
+                  const { getPostHogClient } =
+                    await import("@/lib/posthog-server");
+                  const posthog = getPostHogClient();
+                  posthog.capture({
+                    distinctId: currentUser.id,
+                    event: "sign_out",
+                  });
+                  await posthog.shutdown();
+                }
+                const { signOut } = await import("@workos-inc/authkit-nextjs");
                 await signOut();
               }}
             >

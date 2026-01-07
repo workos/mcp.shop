@@ -1,5 +1,6 @@
 import redis, { scan, withTimeout } from "@/lib/redis";
 import { User } from "./with-authkit";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 export interface Order {
   id: number;
@@ -45,7 +46,7 @@ export const placeOrder = async (
   user: User,
 ) => {
   console.log("placeOrder", args, user);
-  
+
   // Validate required inputs
   const requiredFields = {
     firstName: args.firstName,
@@ -61,42 +62,47 @@ export const placeOrder = async (
   };
 
   const missingFields = Object.entries(requiredFields)
-    .filter(([, value]) => !value || (typeof value === 'string' && value.trim() === ''))
+    .filter(
+      ([, value]) =>
+        !value || (typeof value === "string" && value.trim() === ""),
+    )
     .map(([key]) => key);
 
   if (missingFields.length > 0) {
     throw new Error(
-      `Missing required fields: ${missingFields.join(', ')}. Please fill in all required information.`
+      `Missing required fields: ${missingFields.join(", ")}. Please fill in all required information.`,
     );
   }
 
   // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(args.email)) {
-    throw new Error('Invalid email address format.');
+    throw new Error("Invalid email address format.");
   }
 
   // Validate state code (2 letters)
   if (args.state.length !== 2 || !/^[A-Z]{2}$/i.test(args.state)) {
-    throw new Error('State must be a 2-letter code (e.g., CA, NY).');
+    throw new Error("State must be a 2-letter code (e.g., CA, NY).");
   }
 
   // Validate country code (2 letters)
   if (args.country.length !== 2 || !/^[A-Z]{2}$/i.test(args.country)) {
-    throw new Error('Country must be a 2-letter code (e.g., US, CA).');
+    throw new Error("Country must be a 2-letter code (e.g., US, CA).");
   }
 
   // Validate t-shirt size
-  const validSizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
+  const validSizes = ["XS", "S", "M", "L", "XL", "2XL", "3XL"];
   if (!validSizes.includes(args.tshirtSize)) {
-    throw new Error(`Invalid t-shirt size. Must be one of: ${validSizes.join(', ')}.`);
+    throw new Error(
+      `Invalid t-shirt size. Must be one of: ${validSizes.join(", ")}.`,
+    );
   }
 
   // Validate ZIP code (basic check - not empty and reasonable length)
   if (args.zip.length < 3 || args.zip.length > 10) {
-    throw new Error('Invalid ZIP/postal code format.');
+    throw new Error("Invalid ZIP/postal code format.");
   }
-  
+
   // Check if Redis is configured
   if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
     throw new Error(
@@ -161,7 +167,7 @@ export const placeOrder = async (
 
     // Filter out null/undefined values for Redis (Redis doesn't accept null values)
     const orderForRedis = Object.fromEntries(
-      Object.entries(order).filter(([, value]) => value != null)
+      Object.entries(order).filter(([, value]) => value != null),
     );
 
     await withTimeout(
@@ -177,9 +183,40 @@ export const placeOrder = async (
       size: order.tshirtSize,
       isRunMcpShirt: order.isRunMcpShirt,
     });
-    
+
+    // PostHog: Track successful order placement
+    const posthog = getPostHogClient();
+    posthog.capture({
+      distinctId: user.id,
+      event: "order_placed",
+      properties: {
+        order_id: order.id,
+        sku: order.sku,
+        tshirt_size: order.tshirtSize,
+        is_run_mcp_shirt: order.isRunMcpShirt,
+        company: order.company,
+        country: order.country,
+        state: order.state,
+        city: order.city,
+      },
+    });
+    await posthog.shutdown();
+
     return order;
   } catch (error) {
+    // PostHog: Track failed order
+    const posthog = getPostHogClient();
+    posthog.capture({
+      distinctId: user.id,
+      event: "order_failed",
+      properties: {
+        error_message: error instanceof Error ? error.message : "Unknown error",
+        tshirt_size: args.tshirtSize,
+        is_run_mcp_shirt: args.isRunMcpShirt ?? false,
+      },
+    });
+    await posthog.shutdown();
+
     if (error instanceof Error && error.message.includes("timed out")) {
       throw new Error(
         "Redis connection timed out. Please check your Redis configuration.",
@@ -206,7 +243,7 @@ export const getOrders = async (user: User): Promise<Order[]> => {
 export const getOrdersForAllUsers = async (): Promise<Order[]> => {
   const allOrders = await getOrdersMatchingPattern(`orders:*`);
   // Filter out deleted orders
-  return allOrders.filter(order => !order.deleted);
+  return allOrders.filter((order) => !order.deleted);
 };
 
 export const updateOrderSentStatus = async (

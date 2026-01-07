@@ -1,10 +1,30 @@
 import { withAuth } from "@workos-inc/authkit-nextjs";
 import { getOrders, Order } from "@/lib/orders";
 import { Instructions } from "@/components/instructions";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 export default async function OrdersPage() {
   const { user } = await withAuth({ ensureSignedIn: true });
   const orders = await getOrders(user);
+
+  // PostHog: Track orders page view and identify user
+  const posthog = getPostHogClient();
+  posthog.identify({
+    distinctId: user.id,
+    properties: {
+      email: user.email,
+      first_name: user.firstName,
+      last_name: user.lastName,
+    },
+  });
+  posthog.capture({
+    distinctId: user.id,
+    event: "orders_page_viewed",
+    properties: {
+      orders_count: orders.length,
+    },
+  });
+  await posthog.shutdown();
 
   return (
     <div className="mx-auto max-w-[--breakpoint-2xl] px-4 py-10">

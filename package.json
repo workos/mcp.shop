@@ -26,6 +26,8 @@
     "jose": "^6.0.11",
     "mcp-handler": "^1.0.2",
     "next": "15.5.9",
+    "posthog-js": "^1.315.1",
+    "posthog-node": "^5.19.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",

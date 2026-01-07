@@ -34,14 +34,29 @@ export function ProductDescription({ product }: { product: Product }) {
           Get a free t-shirt with ChatGPT Apps SDK.
         </div>
         <div className="font-untitled force-untitled mb-2 text-base text-white/70">
-          Interfaces like ChatGPTs Apps SDK and Anthropics MCP are the new way 
-          do interact with services. AuthKit allows you to connect your servers to
-          ChatGPT, and every MCP supporting AI agent. 
-          See how it works by ordering a (free) t-shirt. 
-          If you want to build your own MCP server, 
-          check out <a href="https://workos.com/mcp" target="_blank" rel="noopener noreferrer" className="underline">workos.com/mcp</a> or 
-          use this website as a template on <a href="https://github.com/workos/mcp.shop" target="_blank" rel="noopener noreferrer" className="underline">GitHub</a>.
-
+          Interfaces like ChatGPTs Apps SDK and Anthropics MCP are the new way
+          do interact with services. AuthKit allows you to connect your servers
+          to ChatGPT, and every MCP supporting AI agent. See how it works by
+          ordering a (free) t-shirt. If you want to build your own MCP server,
+          check out{" "}
+          <a
+            href="https://workos.com/mcp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            workos.com/mcp
+          </a>{" "}
+          or use this website as a template on{" "}
+          <a
+            href="https://github.com/workos/mcp.shop"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            GitHub
+          </a>
+          .
         </div>
         <div className="font-untitled force-untitled text-lg text-white text-base">
           See the power of MCP and the Apps SDK in action.

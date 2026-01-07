@@ -12,6 +12,7 @@ import {
   InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import { motion, AnimatePresence } from "framer-motion";
+import posthog from "posthog-js";
 
 declare module "react" {
   interface DialogHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -96,7 +97,14 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
                 collapsible
                 className="w-full flex flex-col gap-2"
                 value={accordionOpen}
-                onValueChange={setAccordionOpen}
+                onValueChange={(value) => {
+                  setAccordionOpen(value);
+                  if (value) {
+                    posthog.capture("mcp_option_expanded", {
+                      option: value,
+                    });
+                  }
+                }}
               >
                 <Accordion.Item value="cursor-integration">
                   <Accordion.Header>
@@ -370,6 +378,7 @@ export const Instructions = ({ openButtonLabel }: InstructionsProps) => {
         onClick={() => {
           setAccordionOpen(undefined);
           setDialogOpen(true);
+          posthog.capture("mcp_instructions_dialog_opened");
         }}
       >
         {openButtonLabel}

@@ -4,6 +4,7 @@ import { placeOrder } from "@/lib/orders";
 import type { User } from "@/lib/with-authkit";
 import { verifyToken } from "@/lib/with-authkit";
 import { getAppsSdkCompatibleHtml } from "@/components/widget";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 // These are helpers for the Apps SDK Widget
 type ContentWidget = {
@@ -53,14 +54,16 @@ const handler = createMcpHandler(async (server) => {
     async (uri, { authInfo }) => {
       // Get user from auth context to prefill widget
       const user = authInfo?.extra?.user as User | undefined;
-      const userData = user ? {
-        firstName: user.firstName ?? undefined,
-        lastName: user.lastName ?? undefined,
-        email: user.email,
-      } : undefined;
-      
+      const userData = user
+        ? {
+            firstName: user.firstName ?? undefined,
+            lastName: user.lastName ?? undefined,
+            email: user.email,
+          }
+        : undefined;
+
       const html = getAppsSdkCompatibleHtml(userData);
-      
+
       return {
         contents: [
           {
@@ -89,7 +92,29 @@ const handler = createMcpHandler(async (server) => {
         "openai/widgetAccessible": true,
       },
     },
-    async () => {
+    async (_, { authInfo }) => {
+      // PostHog: Track MCP tool invocation
+      const user = authInfo?.extra?.user as User | undefined;
+      const posthog = getPostHogClient();
+      if (user) {
+        posthog.identify({
+          distinctId: user.id,
+          properties: {
+            email: user.email,
+            first_name: user.firstName,
+            last_name: user.lastName,
+          },
+        });
+      }
+      posthog.capture({
+        distinctId: user?.id ?? "anonymous",
+        event: "mcp_tool_invoked",
+        properties: {
+          tool_name: "show_store_content",
+        },
+      });
+      await posthog.shutdown();
+
       return {
         content: [
           {
@@ -143,15 +168,26 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
         company: z.string().describe("Company name"),
         phone: z.string().optional().describe("Phone number"),
         streetAddress1: z.string().describe("Street address line 1"),
-        streetAddress2: z.string().optional().describe("Street address line 2 (apartment, suite, etc.)"),
+        streetAddress2: z
+          .string()
+          .optional()
+          .describe("Street address line 2 (apartment, suite, etc.)"),
         city: z.string().describe("City"),
-        state: z.string().length(2).describe("2-letter state code (e.g., CA, NY)"),
+        state: z
+          .string()
+          .length(2)
+          .describe("2-letter state code (e.g., CA, NY)"),
         zip: z.string().describe("ZIP/Postal code"),
-        country: z.string().length(2).describe("2-letter country code (e.g., US, CA)"),
+        country: z
+          .string()
+          .length(2)
+          .describe("2-letter country code (e.g., US, CA)"),
         specialCode: z
           .string()
           .optional()
-          .describe("Optional special code to unlock RUN MCP shirt variant. Only used internally by ChatGPT Apps SDK users."),
+          .describe(
+            "Optional special code to unlock RUN MCP shirt variant. Only used internally by ChatGPT Apps SDK users.",
+          ),
       },
       _meta: {
         "openai/widgetAccessible": true,
@@ -181,6 +217,29 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
 
       // Get user from auth context
       const user = authInfo?.extra?.user as User;
+
+      // PostHog: Track MCP order_shirt tool invocation
+      const posthog = getPostHogClient();
+      if (user) {
+        posthog.identify({
+          distinctId: user.id,
+          properties: {
+            email: user.email,
+            first_name: user.firstName,
+            last_name: user.lastName,
+          },
+        });
+      }
+      posthog.capture({
+        distinctId: user?.id ?? "anonymous",
+        event: "mcp_tool_invoked",
+        properties: {
+          tool_name: "order_shirt",
+          is_run_mcp_shirt: isRunMcpShirt,
+          tshirt_size: size,
+        },
+      });
+      await posthog.shutdown();
 
       if (!user) {
         return {
@@ -225,7 +284,9 @@ To order the RUN MCP shirt, use the widget form above. To order a regular "Conte
           city,
           `${state} ${zip}`,
           country,
-        ].filter(Boolean).join("\n");
+        ]
+          .filter(Boolean)
+          .join("\n");
 
         return {
           content: [
