@@ -280,4 +280,17 @@ const authHandler = withMcpAuth(handler, verifyToken, {
   resourceMetadataPath: "/.well-known/oauth-protected-resource/mcp",
 });
 
-export { authHandler as GET, authHandler as POST };
+export { authHandler as GET };
+
+export async function POST(req: Request, ctx: { params: Promise<{ transport: string }> }) {
+  const accept = req.headers.get('accept') ?? '';
+  if (!accept.includes('text/event-stream')) {
+    req = new Request(req, {
+      headers: {
+        ...Object.fromEntries(req.headers.entries()),
+        accept: 'application/json, text/event-stream',
+      },
+    });
+  }
+  return authHandler(req, ctx);
+}
