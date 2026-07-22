@@ -1,12 +1,15 @@
 "use server";
 
 import { updateOrderSentStatus, deleteOrder } from "@/lib/orders";
+import { requireAdmin } from "@/lib/admin-auth";
 
 export async function updateSentStatus(
   userId: string,
   orderId: number,
   sent: boolean
 ) {
+  await requireAdmin();
+
   try {
     await updateOrderSentStatus(userId, orderId, sent);
     return { success: true };
@@ -17,6 +20,8 @@ export async function updateSentStatus(
 }
 
 export async function softDeleteOrder(userId: string, orderId: number) {
+  await requireAdmin();
+
   try {
     await deleteOrder(userId, orderId);
     return { success: true };
@@ -25,4 +30,3 @@ export async function softDeleteOrder(userId: string, orderId: number) {
     return { success: false, error: "Failed to delete order" };
   }
 }
-
